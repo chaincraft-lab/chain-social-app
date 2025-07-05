@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-dark;
+    font-family: 'Roboto', Arial, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-bold;
+  }
+  a {
+    @apply text-primary hover:text-secondary transition-colors;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-colors;
+  }
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-opacity-90;
+  }
+  .btn-secondary {
+    @apply bg-secondary text-white hover:bg-opacity-90;
+  }
+  .card {
+    @apply bg-white rounded-lg shadow-md p-4;
+  }
+  .news-title {
+    @apply text-xl font-bold mb-2;
+  }
+  .news-excerpt {
+    @apply text-sm text-dark/80;
+  }
+} 

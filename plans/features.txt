@@ -1,0 +1,11 @@
+İnternet sitesi özellikleri:
+	1.	Haber sitesi kimliğine sahip olmalı, yani çok sayıda sayfa içermeli ve geniş bir içerik yapısına uygun olmalı.
+	2.	Altyapısı güçlü olmalı, günlük en az 10.000 ziyaretçiyi sorunsuz bir şekilde kaldırabilecek kapasitede olmalı.
+	3.	Sayfalar arası geçiş ve yükleme hızı hızlı olmalı, site yavaş çalışmamalı ve kullanıcı deneyimini olumsuz etkilememeli.
+	4.	Yönetim paneli basit ve kullanıcı dostu olmalı, ekip üyeleri sitenin kontrolünü kolaylıkla sağlayabilmeli.
+	5.	İleride aktif edilebilecek bir abonelik ve çevrimiçi ödeme sistemi için altyapısı hazır olmalı.
+	6.	Site, Google Search Console ve Google Analytics ile entegre çalışmalı, böylece SEO ve performans analizleri düzenli olarak takip edilebilmeli.
+	7.	Sitede arka planda çalışan bir bülten (mailing) sistemi bulunmalı, kullanıcılar e-posta bültenlerine kolayca abone olabilmeli.
+	8.	Site hem mobil hem de masaüstü cihazlarla uyumlu olmalı, tüm ekran boyutlarında sorunsuz çalışmalı.
+    9. Tasarımda banner(reklam) ölçüleri önemli. Farklı uygulamalardan açınca reklam haberi kapatmamalı felan. Reklamlar admin panelinden yönetilecek ve süreli olacak. Kim tıkladı hangi ıp den ülkeden vs. Tıkladı loglanacak
+
