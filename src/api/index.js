@@ -39,7 +39,7 @@ const news = [
     image: 'https://picsum.photos/id/1/800/450',
     date: '2023-06-15T10:30:00',
     category: { id: 2, name: 'Hava', slug: 'hava' },
-    author: { id: 1, name: 'Ahmet Yılmaz' },
+    author: { id: 1, name: 'Adil Pamuk' },
     tags: ['mmu', 'kaan', 'tusaş', 'savaş uçağı']
   },
   {

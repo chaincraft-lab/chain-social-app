@@ -186,10 +186,9 @@ export default {
         { title: "Analiz", subtitles: ["Stratejik Yorum", "Uzman Görüşü", "Röportajlar"] },
         { title: "Galeri", subtitles: ["Fotoğraf", "Video", "3D ve Animasyonlar"] },
         { title: "Etkinlikler", subtitles: ["Fuarlar", "Lansmanlar", "Konferanslar"] },
-        { title: "Blog / Yorum", subtitles: ["Köşe Yazıları", "Tartışmalar"] },
-        { title: "Dergi / Arşiv", subtitles: ["Tüm Haberler", "Dergiler", "PDF Arşiv"] },
+        { title: "Blog", subtitles: ["Köşe Yazıları", "Tartışmalar"] },
+        { title: "Arşiv", subtitles: ["Tüm Haberler", "Dergiler", "PDF Arşiv"] },
         { title: "Hakkımızda", subtitles: ["Ekibimiz", "İletişim", "Reklam"] },
-        { title: "Dil Seçimi", subtitles: ["Türkçe", "English"] }
       ]
     }
   },

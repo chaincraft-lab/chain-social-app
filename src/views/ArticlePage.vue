@@ -232,7 +232,7 @@ export default {
         date: new Date().toISOString(),
         category: { id: 1, name: 'Gündem', slug: 'gundem' },
         author: {
-          name: 'Ahmet Yılmaz',
+          name: 'Adil Pamuk',
           title: 'Baş Editör',
           avatar: 'https://i.pravatar.cc/100?img=1'
         },
