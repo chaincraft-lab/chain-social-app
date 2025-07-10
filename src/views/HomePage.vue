@@ -70,35 +70,219 @@
       </div>
     </section>
     
-    <!-- Categories Grid -->
-    <section v-for="category in mainCategories" :key="category.id" class="category-section">
+    <!-- Defense Categories Grid -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="md:col-span-1">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-dark">Kara</h2>
+          <router-link 
+            :to="{ name: 'category', params: { slug: 'kara' } }"
+            class="text-sm text-primary hover:text-secondary transition-colors"
+          >
+            Tümünü Gör
+          </router-link>
+        </div>
+        
+        <div class="space-y-4">
+          <NewsCard 
+            v-if="getCategoryNewsBySlug('kara')[0]"
+            :news="getCategoryNewsBySlug('kara')[0]" 
+            :show-excerpt="true"
+            excerpt-length="120"
+          />
+          
+          <div v-for="news in getCategoryNewsBySlug('kara').slice(1, 3)" 
+               :key="news.id" 
+               class="flex items-center space-x-3 py-2 border-b border-light-200 last:border-0">
+            <div class="flex-shrink-0 w-20 h-20">
+              <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
+            </div>
+            <div>
+              <h3 class="font-medium text-sm line-clamp-2">
+                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-primary">
+                  {{ news.title }}
+                </router-link>
+              </h3>
+              <div class="text-xs text-dark/60 mt-1">{{ formatDate(news.date) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="md:col-span-1">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-dark">Hava</h2>
+          <router-link 
+            :to="{ name: 'category', params: { slug: 'hava' } }"
+            class="text-sm text-primary hover:text-secondary transition-colors"
+          >
+            Tümünü Gör
+          </router-link>
+        </div>
+        
+        <div class="space-y-4">
+          <NewsCard 
+            v-if="getCategoryNewsBySlug('hava')[0]"
+            :news="getCategoryNewsBySlug('hava')[0]" 
+            :show-excerpt="true"
+            excerpt-length="120"
+          />
+          
+          <div v-for="news in getCategoryNewsBySlug('hava').slice(1, 3)" 
+               :key="news.id" 
+               class="flex items-center space-x-3 py-2 border-b border-light-200 last:border-0">
+            <div class="flex-shrink-0 w-20 h-20">
+              <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
+            </div>
+            <div>
+              <h3 class="font-medium text-sm line-clamp-2">
+                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-primary">
+                  {{ news.title }}
+                </router-link>
+              </h3>
+              <div class="text-xs text-dark/60 mt-1">{{ formatDate(news.date) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="md:col-span-1">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-dark">Deniz</h2>
+          <router-link 
+            :to="{ name: 'category', params: { slug: 'deniz' } }"
+            class="text-sm text-primary hover:text-secondary transition-colors"
+          >
+            Tümünü Gör
+          </router-link>
+        </div>
+        
+        <div class="space-y-4">
+          <NewsCard 
+            v-if="getCategoryNewsBySlug('deniz')[0]"
+            :news="getCategoryNewsBySlug('deniz')[0]" 
+            :show-excerpt="true"
+            excerpt-length="120"
+          />
+          
+          <div v-for="news in getCategoryNewsBySlug('deniz').slice(1, 3)" 
+               :key="news.id" 
+               class="flex items-center space-x-3 py-2 border-b border-light-200 last:border-0">
+            <div class="flex-shrink-0 w-20 h-20">
+              <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
+            </div>
+            <div>
+              <h3 class="font-medium text-sm line-clamp-2">
+                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-primary">
+                  {{ news.title }}
+                </router-link>
+              </h3>
+              <div class="text-xs text-dark/60 mt-1">{{ formatDate(news.date) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Technology and Projects -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Technology Section -->
+      <section>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-dark">Teknoloji</h2>
+          <router-link 
+            :to="{ name: 'category', params: { slug: 'teknoloji' } }"
+            class="text-sm text-primary hover:text-secondary transition-colors"
+          >
+            Tümünü Gör
+          </router-link>
+        </div>
+        
+        <div class="space-y-4">
+          <NewsCard 
+            v-if="getCategoryNewsBySlug('teknoloji')[0]"
+            :news="getCategoryNewsBySlug('teknoloji')[0]" 
+            :show-excerpt="true"
+            excerpt-length="150"
+          />
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div v-for="news in getCategoryNewsBySlug('teknoloji').slice(1, 3)" 
+                 :key="news.id" 
+                 class="flex flex-col space-y-2">
+              <div class="w-full aspect-w-16 aspect-h-9">
+                <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
+              </div>
+              <h3 class="font-medium text-sm">
+                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-primary">
+                  {{ news.title }}
+                </router-link>
+              </h3>
+              <div class="text-xs text-dark/60">{{ formatDate(news.date) }}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Projects Section -->
+      <section>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-dark">Projeler</h2>
+          <router-link 
+            :to="{ name: 'category', params: { slug: 'projeler' } }"
+            class="text-sm text-primary hover:text-secondary transition-colors"
+          >
+            Tümünü Gör
+          </router-link>
+        </div>
+        
+        <div class="space-y-4">
+          <NewsCard 
+            v-if="getCategoryNewsBySlug('projeler')[0]"
+            :news="getCategoryNewsBySlug('projeler')[0]" 
+            :show-excerpt="true"
+            excerpt-length="150"
+          />
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div v-for="news in getCategoryNewsBySlug('projeler').slice(1, 3)" 
+                 :key="news.id" 
+                 class="flex flex-col space-y-2">
+              <div class="w-full aspect-w-16 aspect-h-9">
+                <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
+              </div>
+              <h3 class="font-medium text-sm">
+                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-primary">
+                  {{ news.title }}
+                </router-link>
+              </h3>
+              <div class="text-xs text-dark/60">{{ formatDate(news.date) }}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    
+    <!-- International News -->
+    <section>
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-bold text-dark">{{ category.name }}</h2>
+        <h2 class="text-xl font-bold text-dark">Uluslararası</h2>
         <router-link 
-          :to="{ name: 'category', params: { slug: category.slug } }"
+          :to="{ name: 'category', params: { slug: 'uluslararasi' } }"
           class="text-sm text-primary hover:text-secondary transition-colors"
         >
           Tümünü Gör
         </router-link>
       </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div v-if="getCategoryNews(category.id)[0]" class="md:col-span-2">
-          <NewsCard 
-            :news="getCategoryNews(category.id)[0]" 
-            show-excerpt
-            excerpt-length="200"
-            title-class="text-xl"
-            show-read-more
-          />
-        </div>
-        
-        <div v-for="news in getCategoryNews(category.id).slice(1, 3)" :key="news.id">
-          <NewsCard 
-            :news="news" 
-            :show-excerpt="false"
-          />
-        </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <NewsCard 
+          v-for="news in getCategoryNewsBySlug('uluslararasi').slice(0, 3)" 
+          :key="news.id" 
+          :news="news"
+          :show-excerpt="true"
+          excerpt-length="100"
+        />
       </div>
     </section>
   </div>
@@ -107,7 +291,9 @@
 <script>
 import { mapState } from 'vuex'
 import { onMounted, ref } from 'vue'
-import Swiper, { Navigation, Pagination, Autoplay } from 'swiper'
+// Swiper 11.x için önerilen import yöntemi
+import Swiper from 'swiper'
+import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
@@ -171,6 +357,11 @@ export default {
       return this.latestNews
         .filter(news => news.category && news.category.id === categoryId)
         .slice(0, 5)
+    },
+    getCategoryNewsBySlug(slug) {
+      return this.latestNews
+        .filter(news => news.category && news.category.slug === slug)
+        .slice(0, 5)
     }
   }
 }
@@ -204,11 +395,15 @@ export default {
   background: theme('colors.primary.DEFAULT');
 }
 
-.category-section {
-  margin-bottom: 3rem;
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
 }
 
-.category-section:last-child {
-  margin-bottom: 0;
+@media (max-width: 640px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style> 

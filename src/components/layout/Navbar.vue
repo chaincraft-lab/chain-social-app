@@ -62,15 +62,33 @@
       <div class="relative">
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center justify-between py-3">
-          <ul class="flex items-center space-x-8">
-            <li v-for="category in categories" :key="category.id">
-              <router-link 
-                :to="{ name: 'category', params: { slug: category.slug } }"
-                class="text-dark hover:text-primary font-medium"
-                active-class="text-primary"
+          <ul class="flex items-center space-x-6">
+            <li v-for="(menuItem, index) in menu" :key="index" class="relative group">
+              <a 
+                href="#" 
+                class="text-dark hover:text-primary font-medium flex items-center"
+                @click.prevent="toggleDropdown(index)"
               >
-                {{ category.name }}
-              </router-link>
+                {{ menuItem.title }}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </a>
+              
+              <!-- Dropdown Menu -->
+              <div 
+                v-show="activeDropdown === index" 
+                class="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md py-2 z-50"
+              >
+                <a 
+                  v-for="(subtitle, subIndex) in menuItem.subtitles" 
+                  :key="subIndex" 
+                  href="#"
+                  class="block px-4 py-2 text-sm text-dark hover:bg-light-100 hover:text-primary"
+                >
+                  {{ subtitle }}
+                </a>
+              </div>
             </li>
           </ul>
           
@@ -98,16 +116,31 @@
             </div>
           </div>
           
-          <!-- Mobile Categories -->
+          <!-- Mobile Menu -->
           <ul class="px-4 space-y-3">
-            <li v-for="category in categories" :key="category.id">
-              <router-link 
-                :to="{ name: 'category', params: { slug: category.slug } }"
-                class="block text-dark hover:text-primary font-medium"
-                active-class="text-primary"
-              >
-                {{ category.name }}
-              </router-link>
+            <li v-for="(menuItem, index) in menu" :key="index">
+              <div>
+                <button 
+                  @click="toggleMobileSubmenu(index)"
+                  class="flex items-center justify-between w-full text-left text-dark hover:text-primary font-medium py-1"
+                >
+                  {{ menuItem.title }}
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" :class="{'transform rotate-180': mobileActiveSubmenu === index}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                <div v-show="mobileActiveSubmenu === index" class="pl-4 mt-2 space-y-2">
+                  <a 
+                    v-for="(subtitle, subIndex) in menuItem.subtitles" 
+                    :key="subIndex" 
+                    href="#"
+                    class="block text-sm text-dark hover:text-primary"
+                  >
+                    {{ subtitle }}
+                  </a>
+                </div>
+              </div>
             </li>
           </ul>
           
@@ -143,7 +176,21 @@ export default {
   data() {
     return {
       isMobileMenuOpen: false,
-      currentDate: ''
+      currentDate: '',
+      activeDropdown: null,
+      mobileActiveSubmenu: null,
+      menu: [
+        { title: "Haberler", subtitles: ["Kara", "Hava", "Deniz", "Uzay", "Siber", "Uluslararası"] },
+        { title: "Teknoloji", subtitles: ["Yeni Gelişmeler", "Tanıtımlar", "İncelemeler"] },
+        { title: "Projeler", subtitles: ["Projeler", "İhaleler", "Firma Ortaklıkları"] },
+        { title: "Analiz", subtitles: ["Stratejik Yorum", "Uzman Görüşü", "Röportajlar"] },
+        { title: "Galeri", subtitles: ["Fotoğraf", "Video", "3D ve Animasyonlar"] },
+        { title: "Etkinlikler", subtitles: ["Fuarlar", "Lansmanlar", "Konferanslar"] },
+        { title: "Blog / Yorum", subtitles: ["Köşe Yazıları", "Tartışmalar"] },
+        { title: "Dergi / Arşiv", subtitles: ["Tüm Haberler", "Dergiler", "PDF Arşiv"] },
+        { title: "Hakkımızda", subtitles: ["Ekibimiz", "İletişim", "Reklam"] },
+        { title: "Dil Seçimi", subtitles: ["Türkçe", "English"] }
+      ]
     }
   },
   computed: {
@@ -159,13 +206,55 @@ export default {
     this.$router.afterEach(() => {
       this.isMobileMenuOpen = false
     })
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', this.closeDropdownOnClickOutside)
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.closeDropdownOnClickOutside)
   },
   methods: {
     updateCurrentDate() {
       const now = new Date()
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
       this.currentDate = now.toLocaleDateString('tr-TR', options)
+    },
+    toggleDropdown(index) {
+      if (this.activeDropdown === index) {
+        this.activeDropdown = null
+      } else {
+        this.activeDropdown = index
+      }
+    },
+    toggleMobileSubmenu(index) {
+      if (this.mobileActiveSubmenu === index) {
+        this.mobileActiveSubmenu = null
+      } else {
+        this.mobileActiveSubmenu = index
+      }
+    },
+    closeDropdownOnClickOutside(event) {
+      if (!event.target.closest('.group')) {
+        this.activeDropdown = null
+      }
     }
   }
 }
-</script> 
+</script>
+
+<style>
+.slide-in-up {
+  animation: slideInUp 0.3s ease-out forwards;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style> 
