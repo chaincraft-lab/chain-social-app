@@ -5,12 +5,30 @@
       <div class="p-2 bg-secondary text-white text-xs font-bold uppercase tracking-wider rounded-t-lg">
         Sponsorlu İçerik
       </div>
-      <div class="p-4 flex justify-center">
-        <a href="https://www.aselsan.com.tr" target="_blank" class="block w-full">
-          <div class="bg-gray-200 w-full h-64 flex items-center justify-center text-gray-500">
-            ASELSAN
-          </div>
-        </a>
+      <div class="p-4">
+        <!-- Leaderboard Banner (728x90) -->
+        <div class="mb-6 w-full overflow-hidden rounded-lg">
+          <a href="#" target="_blank" class="block">
+            <img src="@/assets/reklam/reklam_1.jpeg" alt="Savunma Sanayii Reklamı" class="w-full h-auto" />
+          </a>
+          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
+        </div>
+        
+        <!-- Medium Rectangle Banner (300x250) -->
+        <div class="mb-6 w-full overflow-hidden rounded-lg">
+          <a href="#" target="_blank" class="block">
+            <img src="@/assets/reklam/reklam_2.jpg" alt="Savunma Sanayii Reklamı" class="w-full h-auto" />
+          </a>
+          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
+        </div>
+        
+        <!-- Skyscraper Banner (160x600) - Only visible on larger screens -->
+        <div class="hidden lg:block mb-6 w-full overflow-hidden rounded-lg">
+          <a href="#" target="_blank" class="block">
+            <img src="@/assets/reklam/reklam_3.jpg" alt="Savunma Sanayii Reklamı" class="w-full h-auto" />
+          </a>
+          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
+        </div>
       </div>
     </div>
     

@@ -7,8 +7,8 @@
     <main class="flex-grow py-6">
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <!-- Left Sidebar -->
-          <div class="lg:col-span-3">
+          <!-- Left Sidebar - Hidden on Mobile -->
+          <div class="hidden lg:block lg:col-span-3">
             <Sidebar position="left" :showAds="false" :showNewsletter="false" />
           </div>
           
@@ -17,8 +17,8 @@
             <router-view />
           </div>
           
-          <!-- Right Sidebar -->
-          <div class="lg:col-span-3">
+          <!-- Right Sidebar - Hidden on Mobile -->
+          <div class="hidden lg:block lg:col-span-3">
             <Sidebar position="right" :showCategories="false" />
           </div>
         </div>

@@ -5,7 +5,7 @@
       roundedClasses,
       shadowClasses,
       hoverClasses,
-      { 'border border-gray-200': border },
+      { 'border border-dark-700': border },
       className
     ]"
   >
@@ -55,15 +55,15 @@ export default {
     },
     headerClass: {
       type: String,
-      default: 'border-b border-gray-200 bg-gray-50'
+      default: 'border-b border-dark-700 bg-altmenu'
     },
     bodyClass: {
       type: String,
-      default: 'bg-white'
+      default: 'bg-altmenu'
     },
     footerClass: {
       type: String,
-      default: 'border-t border-gray-200 bg-gray-50'
+      default: 'border-t border-dark-700 bg-altmenu'
     }
   },
   computed: {

@@ -10,6 +10,7 @@ import MainLayout from './layouts/MainLayout.vue'
 import HomePage from './views/HomePage.vue'
 import CategoryPage from './views/CategoryPage.vue'
 import ArticlePage from './views/ArticlePage.vue'
+import DefenseLeaguePage from './views/DefenseLeaguePage.vue'
 
 // Create router
 const router = createRouter({
@@ -21,7 +22,9 @@ const router = createRouter({
       children: [
         { path: '', component: HomePage, name: 'home' },
         { path: '/category/:slug', component: CategoryPage, name: 'category' },
-        { path: '/article/:slug', component: ArticlePage, name: 'article' }
+        { path: '/article/:slug', component: ArticlePage, name: 'article' },
+        { path: '/defense-leagues', component: DefenseLeaguePage, name: 'defense-leagues' },
+        { path: '/defense-leagues/:category', component: DefenseLeaguePage, name: 'defense-leagues-category' }
       ]
     }
   ]

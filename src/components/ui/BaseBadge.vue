@@ -39,14 +39,14 @@ export default {
   computed: {
     variantClasses() {
       const variants = {
-        primary: 'bg-primary text-white',
-        secondary: 'bg-secondary text-white',
-        success: 'bg-green-500 text-white',
-        danger: 'bg-red-500 text-white',
-        warning: 'bg-yellow-500 text-white',
-        info: 'bg-blue-500 text-white',
+        primary: 'bg-primary text-light',
+        secondary: 'bg-secondary text-dark',
+        success: 'bg-green-500 text-light',
+        danger: 'bg-red-500 text-light',
+        warning: 'bg-yellow-500 text-light',
+        info: 'bg-blue-500 text-light',
         light: 'bg-light text-dark',
-        dark: 'bg-dark text-white'
+        dark: 'bg-dark text-light'
       }
       
       return variants[this.variant] || variants.primary

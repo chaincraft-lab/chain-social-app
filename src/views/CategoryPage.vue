@@ -2,7 +2,7 @@
   <div>
     <!-- Category Header -->
     <div class="bg-light rounded-lg p-6 mb-6">
-      <h1 class="text-2xl md:text-3xl font-bold mb-2">{{ currentCategory?.name || 'Kategori' }}</h1>
+      <h1 class="text-2xl md:text-3xl font-bold mb-2 text-dark">{{ currentCategory?.name || 'Kategori' }}</h1>
       <p class="text-dark/70">
         {{ currentCategory?.description || 'Bu kategorideki tüm haberleri görüntülüyorsunuz.' }}
       </p>
@@ -10,7 +10,7 @@
     
     <!-- Category News -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div v-for="(news, index) in categoryNews" :key="news?.id || index" class="card">
+      <div v-for="(news, index) in categoryNews" :key="news?.id || index" class="bg-white rounded-lg shadow-md p-4">
         <div class="aspect-[16/9] bg-gray-200 rounded-lg overflow-hidden mb-3">
           <img 
             :src="news?.image || `https://picsum.photos/id/${index + 50}/400/225`" 
@@ -21,10 +21,10 @@
         <span class="text-xs text-primary font-medium mb-1 block">
           {{ currentCategory?.name || 'Kategori' }}
         </span>
-        <h3 class="news-title">
+        <h3 class="text-xl font-bold mb-2 text-dark">
           {{ news?.title || `${currentCategory?.name || 'Kategori'} Haberi ${index + 1}` }}
         </h3>
-        <p class="news-excerpt mb-3">
+        <p class="text-sm text-dark/80 mb-3">
           {{ news?.excerpt || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris.' }}
         </p>
         <div class="text-xs text-dark/60">
