@@ -24,6 +24,17 @@
             </div>
           </div>
           
+          <!-- Abone Ol Butonu -->
+          <button 
+            @click="showSubscribeModal = true"
+            class="hidden md:flex items-center space-x-1 bg-secondary hover:bg-secondary/80 text-white py-2 px-4 rounded-full text-sm font-medium transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <span>Abone Ol</span>
+          </button>
+          
           <!-- Mobile Menu Button -->
           <button 
             @click="isMobileMenuOpen = !isMobileMenuOpen" 
@@ -121,15 +132,29 @@
           
           <!-- Mobile Search -->
           <div class="relative px-4 py-3 border-b border-dark-700">
-            <input 
-              type="text" 
-              placeholder="Haber ara..." 
-              class="w-full py-2 pl-10 pr-4 text-sm bg-dark-700 border-none rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 text-light placeholder-light/70"
-            />
-            <div class="absolute inset-y-0 left-0 flex items-center pl-7 pointer-events-none">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-light/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+            <div class="flex items-center gap-2">
+              <div class="relative flex-1">
+                <input 
+                  type="text" 
+                  placeholder="Haber ara..." 
+                  class="w-full py-2 pl-10 pr-4 text-sm bg-dark-700 border-none rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 text-light placeholder-light/70"
+                />
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-light/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+              </div>
+              
+              <!-- Mobil Abone Ol Butonu -->
+              <button 
+                @click="showSubscribeModal = true"
+                class="flex items-center bg-secondary hover:bg-secondary/80 text-white py-2 px-3 rounded-full text-sm font-medium transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+              </button>
             </div>
           </div>
           
@@ -217,6 +242,81 @@
       </div>
     </div>
   </nav>
+  
+  <!-- Abonelik Modal -->
+  <div v-if="showSubscribeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-dark/80" @click="showSubscribeModal = false"></div>
+    
+    <!-- Modal Content -->
+    <div class="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-auto overflow-hidden">
+      <!-- Modal Header -->
+      <div class="bg-secondary text-white p-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-semibold">Savunma Bültenine Abone Ol</h3>
+          <button 
+            @click="showSubscribeModal = false" 
+            class="text-white hover:text-light/80 focus:outline-none"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Modal Body -->
+      <div class="p-6">
+        <p class="text-gray-700 mb-4">
+          Savunma sanayii ile ilgili en güncel haberleri, analizleri ve etkinlikleri içeren haftalık bültenimize abone olun.
+        </p>
+        
+        <form @submit.prevent="subscribeNewsletter">
+          <div class="mb-4">
+            <label for="subscribe-email" class="block text-sm font-medium text-gray-700 mb-1">E-posta Adresiniz</label>
+            <input 
+              type="email" 
+              id="subscribe-email"
+              v-model="subscribeEmail"
+              placeholder="ornek@mail.com" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              required
+            />
+          </div>
+          
+          <div class="mb-4">
+            <label class="flex items-start">
+              <input 
+                type="checkbox" 
+                v-model="subscribeConsent"
+                class="mt-1 h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary" 
+                required
+              />
+              <span class="ml-2 text-sm text-gray-600">
+                Kişisel verilerimin işlenmesine ve tarafıma elektronik ileti gönderilmesine izin veriyorum.
+              </span>
+            </label>
+          </div>
+          
+          <div class="flex justify-end">
+            <button 
+              type="button" 
+              class="mr-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+              @click="showSubscribeModal = false"
+            >
+              İptal
+            </button>
+            <button 
+              type="submit" 
+              class="px-4 py-2 text-sm font-medium text-white bg-secondary hover:bg-secondary/80 rounded-md transition-colors"
+            >
+              Abone Ol
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -231,6 +331,9 @@ export default {
       activeDropdown: null,
       mobileActiveSubmenu: null,
       currentLanguage: 'Türkçe',
+      showSubscribeModal: false,
+      subscribeEmail: '',
+      subscribeConsent: false,
       menu: [
         { 
           title: "Haberler", 
