@@ -25,28 +25,26 @@
           </div>
           
           <!-- Abone Ol Butonu -->
-          <button 
+          <v-btn 
             @click="showSubscribeModal = true"
-            class="hidden md:flex items-center space-x-1 bg-secondary hover:bg-secondary/80 text-white py-2 px-4 rounded-full text-sm font-medium transition-colors"
+            color="secondary"
+            variant="flat"
+            rounded="pill"
+            size="small"
+            class="hidden md:flex text-none"
+            prepend-icon="mdi-bell"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-            </svg>
-            <span>Abone Ol</span>
-          </button>
+            Abone Ol
+          </v-btn>
           
           <!-- Mobile Menu Button -->
-          <button 
+          <!-- <v-btn 
             @click="isMobileMenuOpen = !isMobileMenuOpen" 
-            class="p-2 text-light md:hidden focus:outline-none"
-          >
-            <svg v-if="!isMobileMenuOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+            :icon="isMobileMenuOpen ? 'mdi-close' : 'mdi-menu'"
+            variant="text"
+            color="white"
+            class="md:hidden"
+          ></v-btn> -->
           
           <!-- Social Icons -->
           <div class="hidden md:flex items-center space-x-3">
@@ -147,14 +145,15 @@
               </div>
               
               <!-- Mobil Abone Ol Butonu -->
-              <button 
+              <v-btn 
                 @click="showSubscribeModal = true"
-                class="flex items-center bg-secondary hover:bg-secondary/80 text-white py-2 px-3 rounded-full text-sm font-medium transition-colors"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-              </button>
+                color="secondary"
+                variant="flat"
+                rounded="pill"
+                size="small"
+                icon="mdi-bell"
+                class="flex-shrink-0"
+              ></v-btn>
             </div>
           </div>
           
@@ -244,79 +243,71 @@
   </nav>
   
   <!-- Abonelik Modal -->
-  <div v-if="showSubscribeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-    <!-- Backdrop -->
-    <div class="absolute inset-0 bg-dark/80" @click="showSubscribeModal = false"></div>
-    
-    <!-- Modal Content -->
-    <div class="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-auto overflow-hidden">
+  <v-dialog v-model="showSubscribeModal" max-width="500px">
+    <v-card>
       <!-- Modal Header -->
-      <div class="bg-secondary text-white p-4">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-semibold">Savunma Bültenine Abone Ol</h3>
-          <button 
-            @click="showSubscribeModal = false" 
-            class="text-white hover:text-light/80 focus:outline-none"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      </div>
+      <v-card-title class="bg-secondary text-white">
+        <span class="text-lg font-semibold">Savunma Bültenine Abone Ol</span>
+        <v-spacer></v-spacer>
+        <v-btn 
+          @click="showSubscribeModal = false" 
+          icon="mdi-close"
+          variant="text"
+          color="white"
+          size="small"
+        ></v-btn>
+      </v-card-title>
       
       <!-- Modal Body -->
-      <div class="p-6">
+      <v-card-text class="pt-6">
         <p class="text-gray-700 mb-4">
           Savunma sanayii ile ilgili en güncel haberleri, analizleri ve etkinlikleri içeren haftalık bültenimize abone olun.
         </p>
         
-        <form @submit.prevent="subscribeNewsletter">
-          <div class="mb-4">
-            <label for="subscribe-email" class="block text-sm font-medium text-gray-700 mb-1">E-posta Adresiniz</label>
-            <input 
-              type="email" 
-              id="subscribe-email"
-              v-model="subscribeEmail"
-              placeholder="ornek@mail.com" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-              required
-            />
-          </div>
+        <v-form @submit.prevent="subscribeNewsletter">
+          <v-text-field
+            v-model="subscribeEmail"
+            label="E-posta Adresiniz"
+            placeholder="ornek@mail.com"
+            type="email"
+            variant="outlined"
+            required
+            class="mb-4"
+          ></v-text-field>
           
-          <div class="mb-4">
-            <label class="flex items-start">
-              <input 
-                type="checkbox" 
-                v-model="subscribeConsent"
-                class="mt-1 h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary" 
-                required
-              />
-              <span class="ml-2 text-sm text-gray-600">
+          <v-checkbox
+            v-model="subscribeConsent"
+            required
+            class="mb-4"
+          >
+            <template #label>
+              <span class="text-sm text-gray-600">
                 Kişisel verilerimin işlenmesine ve tarafıma elektronik ileti gönderilmesine izin veriyorum.
               </span>
-            </label>
-          </div>
-          
-          <div class="flex justify-end">
-            <button 
-              type="button" 
-              class="mr-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
-              @click="showSubscribeModal = false"
-            >
-              İptal
-            </button>
-            <button 
-              type="submit" 
-              class="px-4 py-2 text-sm font-medium text-white bg-secondary hover:bg-secondary/80 rounded-md transition-colors"
-            >
-              Abone Ol
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+            </template>
+          </v-checkbox>
+        </v-form>
+      </v-card-text>
+      
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn 
+          @click="showSubscribeModal = false"
+          variant="outlined"
+          color="grey"
+        >
+          İptal
+        </v-btn>
+        <v-btn 
+          @click="subscribeNewsletter"
+          color="secondary"
+          variant="flat"
+        >
+          Abone Ol
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -500,34 +491,14 @@ export default {
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '');
     },
-    // getMenuIcon(title) {
-    //   switch (title) {
-    //     case "Haberler":
-    //       return "📰";
-    //     case "Kara":
-    //       return "🚗";
-    //     case "Deniz":
-    //       return "⛵";
-    //     case "Hava":
-    //       return "✈️";
-    //     case "Teknoloji":
-    //       return "⚙️";
-    //     case "Projeler":
-    //       return "🚀";
-    //     case "Analiz":
-    //       return "🔍";
-    //     case "Galeri":
-    //       return "🖼️";
-    //     case "Savunma Ligleri":
-    //       return "🏆";
-    //     case "Hakkımızda":
-    //       return "👥";
-    //     case "Dil Seçimi":
-    //       return "🌐";
-    //     default:
-    //       return "";
-    //   }
-    // }
+    subscribeNewsletter() {
+      // Gerçek uygulamada burada API çağrısı yapılır
+      alert(`${this.subscribeEmail} adresi savunma bültenine başarıyla abone oldu!`);
+      this.subscribeEmail = '';
+      this.subscribeConsent = false;
+      this.showSubscribeModal = false;
+    },
+
   }
 }
 </script>

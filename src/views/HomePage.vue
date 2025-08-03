@@ -2,41 +2,44 @@
   <div class="space-y-8">
     <!-- Featured Slider -->
     <section class="featured-slider">
-      <div class="relative rounded-xl overflow-hidden shadow-md">
+      <v-card class="overflow-hidden" elevation="4" rounded="xl">
         <div class="swiper-container" ref="featuredSwiper">
           <div class="swiper-wrapper">
             <div v-for="news in featuredNews" :key="news.id" class="swiper-slide">
               <div class="relative aspect-w-16 aspect-h-9 md:aspect-h-7">
-                <img 
+                <v-img 
                   :src="news.image" 
                   :alt="news.title"
-                  class="w-full h-full object-cover"
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-                  <BaseBadge 
-                    v-if="news.category" 
-                    variant="primary" 
-                    size="sm" 
-                    rounded="md"
-                    class="mb-2"
-                  >
-                    {{ news.category.name }}
-                  </BaseBadge>
-                  <h2 class="text-xl md:text-2xl font-bold text-white mb-2">
-                    {{ news.title }}
-                  </h2>
-                  <p class="text-sm text-white/80 mb-3 line-clamp-2">
-                    {{ news.excerpt }}
-                  </p>
-                  <div class="flex items-center text-white/70 text-xs">
-                    <span>{{ formatDate(news.date) }}</span>
+                  height="400"
+                  cover
+                  class="w-full h-full"
+                >
+                  <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent"></div>
+                  <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6">
+                    <v-chip 
+                      v-if="news.category" 
+                      color="primary" 
+                      size="small"
+                      class="mb-3"
+                    >
+                      {{ news.category.name }}
+                    </v-chip>
+                    <h2 class="text-xl md:text-2xl font-bold text-white mb-2">
+                      {{ news.title }}
+                    </h2>
+                    <p class="text-sm text-white/80 mb-3 line-clamp-2">
+                      {{ news.excerpt }}
+                    </p>
+                    <div class="flex items-center text-white/70 text-xs">
+                      <v-icon size="small" class="mr-1">mdi-clock-outline</v-icon>
+                      <span>{{ formatDate(news.date) }}</span>
+                    </div>
                   </div>
-                </div>
-                <router-link 
-                  :to="{ name: 'article', params: { slug: news.id } }"
-                  class="absolute inset-0 z-10"
-                ></router-link>
+                  <router-link 
+                    :to="{ name: 'article', params: { slug: news.id } }"
+                    class="absolute inset-0 z-10"
+                  ></router-link>
+                </v-img>
               </div>
             </div>
           </div>
@@ -44,55 +47,69 @@
           <div class="swiper-button-prev"></div>
           <div class="swiper-button-next"></div>
         </div>
-      </div>
+      </v-card>
     </section>
     
     <!-- Banner Ad - Leaderboard (728x90) -->
     <section class="mb-8">
-      <div class="w-full overflow-hidden rounded-lg">
-        <a href="#" target="_blank" class="block">
-          <div class="bg-gray-100 w-full h-[90px] flex items-center justify-center border border-gray-200 rounded-lg overflow-hidden">
-            <div class="flex items-center justify-between w-full px-8">
-              <div class="flex items-center">
-                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4">
-                  T
-                </div>
-                <div>
-                  <div class="text-xl font-bold text-blue-800">TUSAŞ</div>
-                  <div class="text-sm text-blue-600">Türk Havacılık ve Uzay Sanayii</div>
+      <v-card class="overflow-hidden" elevation="2" rounded="lg">
+        <a href="#" target="_blank" class="block text-decoration-none">
+          <v-card-text class="pa-6">
+            <div class="d-flex align-center justify-space-between">
+              <div class="d-flex align-center">
+                <v-avatar size="64" color="blue">
+                  <span class="text-h4 font-weight-bold">T</span>
+                </v-avatar>
+                <div class="ml-4">
+                  <div class="text-h6 font-weight-bold text-blue">TUSAŞ</div>
+                  <div class="text-body-2 text-blue-darken-1">Türk Havacılık ve Uzay Sanayii</div>
                 </div>
               </div>
-              <div class="bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium">
+              <v-btn 
+                color="blue" 
+                variant="flat"
+                rounded="lg"
+                size="small"
+              >
                 Daha Fazla Bilgi
-              </div>
+              </v-btn>
             </div>
-          </div>
+          </v-card-text>
         </a>
-        <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
-      </div>
+        <div class="text-caption text-medium-emphasis text-right pa-2">Reklam</div>
+      </v-card>
     </section>
     
     <!-- Latest News -->
     <section>
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-bold text-light">Son Haberler</h2>
-        <BaseButton 
-          variant="link" 
-          size="sm"
-          class="text-primary"
+      <div class="d-flex align-center justify-space-between mb-6">
+        <h2 class="text-h4 font-weight-bold text-dark">Son Haberler</h2>
+        <v-btn 
+          variant="text" 
+          color="primary"
+          append-icon="mdi-arrow-right"
         >
           Tümünü Gör
-        </BaseButton>
+        </v-btn>
       </div>
       
-      <div class="card-grid">
-        <NewsCard 
+      <v-row>
+        <v-col 
           v-for="news in latestNews.slice(0, 6)" 
-          :key="news.id" 
-          :news="news"
-          show-excerpt
-        />
-      </div>
+          :key="news.id"
+          cols="12" 
+          sm="6" 
+          lg="4"
+          class="d-flex"
+        >
+          <NewsCard 
+            :news="news"
+            show-excerpt
+            show-read-more
+            class="w-100"
+          />
+        </v-col>
+      </v-row>
     </section>
     
     <!-- Banner Ad - Medium Rectangle (300x250) -->
@@ -385,15 +402,11 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 
-import BaseButton from '@/components/ui/BaseButton.vue'
-import BaseBadge from '@/components/ui/BaseBadge.vue'
 import NewsCard from '@/components/news/NewsCard.vue'
 
 export default {
   name: 'HomePage',
   components: {
-    BaseButton,
-    BaseBadge,
     NewsCard
   },
   setup() {

@@ -1,143 +1,238 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6 text-center">Savunma Güç Ligleri</h1>
-    <p class="text-gray-600 mb-8 text-center max-w-3xl mx-auto">
-      Dünya genelindeki ülkelerin savunma güçlerinin karşılaştırmalı sıralaması. Bu veriler, ülkelerin askeri kapasitelerini, teknolojik altyapılarını ve savunma sanayii gelişmişliklerini yansıtmaktadır.
-    </p>
+  <v-container fluid class="py-8">
+    <!-- Header Section -->
+    <div class="text-center mb-12">
+      <h1 class="text-h3 font-weight-bold mb-4 text-dark">Savunma Güç Ligleri</h1>
+      <p class="text-body-1 text-medium-emphasis mx-auto" style="max-width: 600px;">
+        Dünya genelindeki ülkelerin savunma güçlerinin karşılaştırmalı sıralaması. Bu veriler, ülkelerin askeri kapasitelerini, teknolojik altyapılarını ve savunma sanayii gelişmişliklerini yansıtmaktadır.
+      </p>
+    </div>
 
-    <!-- Sekme Butonları -->
-    <div class="tabs flex flex-wrap justify-center gap-3 mb-8">
-      <button 
-        v-for="(tab, index) in tabs" 
-        :key="index"
-        class="tab-button" 
-        :class="[activeTab === tab.id ? 'active bg-primary text-white' : 'bg-gray-200 text-gray-800', 
-                'px-6 py-3 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out hover:bg-gray-300 shadow-md transform hover:-translate-y-1']"
-        @click="setActiveTab(tab.id)"
+    <!-- Tab Navigation -->
+    <v-card class="mb-8" elevation="2" rounded="xl">
+      <v-tabs 
+        v-model="activeTab" 
+        color="primary" 
+        center-active
+        show-arrows
+        class="px-4"
       >
-        <span class="mr-2">{{ tab.icon }}</span>{{ tab.name }}
-      </button>
-    </div>
+        <v-tab 
+          v-for="tab in tabs" 
+          :key="tab.id"
+          :value="tab.id"
+          class="text-none font-weight-medium"
+        >
+          <v-icon start size="small">{{ tab.icon }}</v-icon>
+          {{ tab.name }}
+        </v-tab>
+      </v-tabs>
+    </v-card>
 
-    <!-- Sekme İçerikleri -->
-    <div 
-      v-for="tab in tabs" 
-      :key="tab.id"
-      :id="tab.id" 
-      class="tab-content p-6 bg-gray-50 rounded-lg shadow-inner animate-fade-in"
-      :class="{ 'hidden': activeTab !== tab.id }"
-    >
-      <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-2 border-gray-200 pb-3">
-        {{ tab.icon }} {{ tab.name }}
-      </h2>
-      <div class="overflow-x-auto">
-        <table class="min-w-full bg-white rounded-lg shadow-md overflow-hidden">
-          <thead class="bg-dark text-light">
-            <tr>
-              <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Sıra</th>
-              <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Ülke</th>
-              <th class="py-3 px-4 text-center text-sm font-medium uppercase tracking-wider">Bayrak</th>
-              <th class="py-3 px-4 text-right text-sm font-medium uppercase tracking-wider">Puan</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            <tr v-for="(country, index) in tab.countries" :key="country.name" :class="index % 2 === 0 ? 'bg-white text-gray-800' : 'bg-gray-50 text-gray-800'">
-              <td class="py-3 px-4 text-left">{{ index + 1 }}</td>
-              <td class="py-3 px-4 text-left font-medium">{{ country.name }}</td>
-              <td class="py-3 px-4 text-center">{{ country.flag }}</td>
-              <td class="py-3 px-4 text-right font-bold">{{ country.score }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <canvas :id="`${tab.id}-chart`" class="mt-8 w-full h-80 bg-white rounded-lg shadow-lg p-4"></canvas>
-    </div>
+    <!-- Tab Content Windows -->
+    <v-window v-model="activeTab" class="mt-4">
+      <v-window-item 
+        v-for="tab in tabs" 
+        :key="tab.id"
+        :value="tab.id"
+      >
+        <v-card elevation="3" rounded="xl" class="overflow-hidden">
+          <!-- Tab Header -->
+          <v-card-title class="d-flex align-center pa-6 bg-gradient">
+            <v-icon class="me-3" size="large">{{ tab.icon }}</v-icon>
+            <span class="text-h4 font-weight-bold">{{ tab.name }}</span>
+          </v-card-title>
+          
+          <!-- Rankings Table -->
+          <v-card-text class="pa-6">
+            <v-data-table
+              :headers="tableHeaders"
+              :items="tab.countries"
+              :items-per-page="10"
+              class="elevation-1 rounded-lg"
+              item-value="name"
+            >
+              <template v-slot:[`item.rank`]="{ index }">
+                <v-chip
+                  :color="getRankColor(index + 1)"
+                  size="small"
+                  class="font-weight-bold"
+                >
+                  {{ index + 1 }}
+                </v-chip>
+              </template>
+              
+              <template v-slot:[`item.flag`]="{ item }">
+                <span class="text-h6">{{ item.flag }}</span>
+              </template>
+              
+              <template v-slot:[`item.name`]="{ item }">
+                <div class="font-weight-medium">{{ item.name }}</div>
+              </template>
+              
+              <template v-slot:[`item.score`]="{ item }">
+                <div class="d-flex align-center">
+                  <v-progress-linear
+                    :model-value="(item.score / 100) * 100"
+                    :color="getScoreColor(item.score)"
+                    height="8"
+                    rounded
+                    class="me-3"
+                    style="min-width: 100px;"
+                  ></v-progress-linear>
+                  <span class="font-weight-bold">{{ item.score }}</span>
+                </div>
+              </template>
+            </v-data-table>
+          </v-card-text>
+          
+          <!-- Chart Section -->
+          <v-card-text class="pt-0">
+            <v-card class="pa-4" elevation="1" rounded="lg">
+              <h3 class="text-h6 mb-4 font-weight-bold text-center">{{ tab.name }} Güç Dağılımı</h3>
+              <canvas :id="`${tab.id}-chart`" class="chart-canvas"></canvas>
+            </v-card>
+          </v-card-text>
+        </v-card>
+      </v-window-item>
+    </v-window>
 
     <!-- Etkinlik Geri Sayım ve Sponsor Alanı -->
-    <div class="mt-12 grid md:grid-cols-2 gap-4 lg:gap-8">
+    <v-row class="mt-12">
       <!-- Etkinlik Geri Sayım -->
-      <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
-        <div class="bg-gradient-to-r from-primary to-primary-dark p-3 text-white">
-          <h3 class="text-lg font-bold">Yaklaşan Savunma Fuarı</h3>
-        </div>
-        <div class="p-4">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-            <div class="mb-3 sm:mb-0">
-              <h4 class="font-bold text-lg text-gray-800">IDEF 2024</h4>
-              <div class="flex items-center mt-1 text-gray-600 text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span>İstanbul, Türkiye</span>
+      <v-col cols="12" md="6">
+        <v-card elevation="8" rounded="xl" class="overflow-hidden">
+          <v-card-title class="pa-4 bg-gradient text-white">
+            <v-icon class="me-2">mdi-calendar-star</v-icon>
+            Yaklaşan Savunma Fuarı
+          </v-card-title>
+          
+          <v-card-text class="pa-6">
+            <div class="d-flex flex-column flex-sm-row justify-space-between align-start align-sm-center mb-4">
+              <div class="mb-3 mb-sm-0">
+                <h4 class="text-h6 font-weight-bold text-grey-darken-3">IDEF 2024</h4>
+                <div class="d-flex align-center mt-1 text-medium-emphasis text-body-2">
+                  <v-icon size="small" class="me-1">mdi-map-marker</v-icon>
+                  <span>İstanbul, Türkiye</span>
+                </div>
+                <div class="d-flex align-center mt-1 text-medium-emphasis text-body-2">
+                  <v-icon size="small" class="me-1">mdi-calendar</v-icon>
+                  <span>25-28 Aralık 2024</span>
+                </div>
               </div>
-              <div class="flex items-center mt-1 text-gray-600 text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span>25-28 Aralık 2024</span>
+              
+              <div class="d-flex flex-wrap ga-2 w-100 w-sm-auto justify-start justify-sm-end">
+                <v-card 
+                  class="text-center countdown-card"
+                  color="grey-darken-3"
+                  dark
+                  width="60"
+                  elevation="2"
+                  rounded="lg"
+                >
+                  <v-card-text class="pa-2">
+                    <div class="text-h6 font-weight-bold">{{ countdown.days }}</div>
+                    <div class="text-caption text-uppercase">Gün</div>
+                  </v-card-text>
+                </v-card>
+                
+                <v-card 
+                  class="text-center countdown-card"
+                  color="grey-darken-3"
+                  dark
+                  width="60"
+                  elevation="2"
+                  rounded="lg"
+                >
+                  <v-card-text class="pa-2">
+                    <div class="text-h6 font-weight-bold">{{ countdown.hours }}</div>
+                    <div class="text-caption text-uppercase">Saat</div>
+                  </v-card-text>
+                </v-card>
+                
+                <v-card 
+                  class="text-center countdown-card"
+                  color="grey-darken-3"
+                  dark
+                  width="60"
+                  elevation="2"
+                  rounded="lg"
+                >
+                  <v-card-text class="pa-2">
+                    <div class="text-h6 font-weight-bold">{{ countdown.minutes }}</div>
+                    <div class="text-caption text-uppercase">Dk</div>
+                  </v-card-text>
+                </v-card>
               </div>
             </div>
-            <div class="flex flex-wrap gap-2 w-full sm:w-auto justify-start sm:justify-end">
-              <div class="bg-gradient-to-b from-dark to-dark-700 text-light px-2 py-1 rounded-lg text-center w-16 shadow-md">
-                <span class="block text-lg font-bold">{{ countdown.days }}</span>
-                <span class="text-xs uppercase tracking-wider">Gün</span>
+            
+            <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-2">
+              <div class="text-body-2 text-medium-emphasis mb-2 mb-sm-0">
+                <v-chip size="small" color="grey-lighten-2" class="me-1">Savunma</v-chip>
+                <v-chip size="small" color="grey-lighten-2">Teknoloji</v-chip>
               </div>
-              <div class="bg-gradient-to-b from-dark to-dark-700 text-light px-2 py-1 rounded-lg text-center w-16 shadow-md">
-                <span class="block text-lg font-bold">{{ countdown.hours }}</span>
-                <span class="text-xs uppercase tracking-wider">Saat</span>
-              </div>
-              <div class="bg-gradient-to-b from-dark to-dark-700 text-light px-2 py-1 rounded-lg text-center w-16 shadow-md">
-                <span class="block text-lg font-bold">{{ countdown.minutes }}</span>
-                <span class="text-xs uppercase tracking-wider">Dk</span>
-              </div>
+              <v-btn
+                :to="{ path: '/etkinlikler' }"
+                color="secondary"
+                variant="flat"
+                size="small"
+                append-icon="mdi-arrow-right"
+                rounded="lg"
+                class="w-100 w-sm-auto"
+              >
+                Tüm Etkinlikler
+              </v-btn>
             </div>
-          </div>
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-            <div class="text-sm text-gray-500 mb-2 sm:mb-0">
-              <span class="inline-block px-2 py-1 bg-gray-100 rounded-full mr-1">Savunma</span>
-              <span class="inline-block px-2 py-1 bg-gray-100 rounded-full">Teknoloji</span>
-            </div>
-            <router-link to="/etkinlikler" class="inline-flex items-center px-3 py-1 bg-secondary text-white rounded-lg hover:bg-secondary-dark transition-colors shadow-md text-sm w-full sm:w-auto justify-center">
-              <span>Tüm Etkinlikler</span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </router-link>
-          </div>
-        </div>
-      </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
       
       <!-- Sponsor Alanı -->
-      <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
-        <div class="bg-gradient-to-r from-dark to-dark-700 p-3 text-white">
-          <h3 class="text-lg font-bold">Sponsorlar</h3>
-        </div>
-        <div class="p-4">
-          <div class="grid grid-cols-3 gap-2 mb-4">
-            <div class="bg-gray-50 p-2 rounded-lg flex items-center justify-center h-16 sm:h-20 border border-gray-200 hover:border-primary transition-colors shadow-sm hover:shadow-md">
-              <img src="@/assets/logo.png" alt="Sponsor 1" class="max-h-12 max-w-full" />
+      <v-col cols="12" md="6">
+        <v-card elevation="8" rounded="xl" class="overflow-hidden">
+          <v-card-title class="pa-4 bg-gradient text-white">
+            <v-icon class="me-2">mdi-handshake</v-icon>
+            Sponsorlar
+          </v-card-title>
+          
+          <v-card-text class="pa-6">
+            <v-row class="mb-4">
+              <v-col cols="4" v-for="n in 3" :key="n">
+                <v-card 
+                  class="d-flex align-center justify-center sponsor-card"
+                  color="grey-lighten-4"
+                  height="80"
+                  elevation="1"
+                  rounded="lg"
+                  hover
+                >
+                  <v-img 
+                    src="@/assets/logo.png" 
+                    :alt="`Sponsor ${n}`"
+                    max-height="48"
+                    contain
+                  ></v-img>
+                </v-card>
+              </v-col>
+            </v-row>
+            
+            <div class="d-flex flex-column flex-sm-row justify-space-between align-start align-sm-center ga-2">
+              <span class="text-caption text-medium-emphasis">Sponsorlarımıza teşekkür ederiz</span>
+              <v-btn
+                :to="{ path: '/sponsorlar' }"
+                variant="text"
+                color="primary"
+                size="small"
+                append-icon="mdi-chevron-right"
+              >
+                Tüm Sponsorlar
+              </v-btn>
             </div>
-            <div class="bg-gray-50 p-2 rounded-lg flex items-center justify-center h-16 sm:h-20 border border-gray-200 hover:border-primary transition-colors shadow-sm hover:shadow-md">
-              <img src="@/assets/logo.png" alt="Sponsor 2" class="max-h-12 max-w-full" />
-            </div>
-            <div class="bg-gray-50 p-2 rounded-lg flex items-center justify-center h-16 sm:h-20 border border-gray-200 hover:border-primary transition-colors shadow-sm hover:shadow-md">
-              <img src="@/assets/logo.png" alt="Sponsor 3" class="max-h-12 max-w-full" />
-            </div>
-          </div>
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-            <span class="text-xs text-gray-500">Sponsorlarımıza teşekkür ederiz</span>
-            <router-link to="/sponsorlar" class="text-primary hover:text-primary-dark transition-colors font-medium flex items-center text-sm">
-              <span>Tüm Sponsorlar</span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -405,11 +500,63 @@ export default {
         .replace(/[\u0300-\u036f]/g, '');
     };
 
+    // Data table headers
+    const tableHeaders = [
+      {
+        title: 'Sıra',
+        align: 'center',
+        sortable: false,
+        key: 'rank',
+        width: '80px'
+      },
+      {
+        title: 'Bayrak',
+        align: 'center',
+        sortable: false,
+        key: 'flag',
+        width: '60px'
+      },
+      {
+        title: 'Ülke',
+        align: 'start',
+        sortable: true,
+        key: 'name'
+      },
+      {
+        title: 'Puan',
+        align: 'center',
+        sortable: true,
+        key: 'score',
+        width: '200px'
+      }
+    ];
+
+    // Get rank color based on position
+    const getRankColor = (rank) => {
+      if (rank === 1) return 'warning'; // Gold
+      if (rank === 2) return 'grey-lighten-1'; // Silver
+      if (rank === 3) return 'brown'; // Bronze
+      if (rank <= 5) return 'primary';
+      if (rank <= 10) return 'secondary';
+      return 'grey';
+    };
+
+    // Get score color based on value
+    const getScoreColor = (score) => {
+      if (score >= 90) return 'success';
+      if (score >= 80) return 'primary';
+      if (score >= 70) return 'warning';
+      return 'error';
+    };
+
     return {
       activeTab,
       tabs,
       countdown,
-      setActiveTab
+      setActiveTab,
+      tableHeaders,
+      getRankColor,
+      getScoreColor
     };
   }
 }
@@ -425,68 +572,74 @@ export default {
   to { opacity: 1; }
 }
 
-.tab-button.active {
-  position: relative;
-}
-
-.tab-button.active::after {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 8px solid var(--color-primary);
-}
-
-/* Modern kart stilleri */
-.bg-white {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.bg-white:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-.bg-gradient-to-r {
+/* Background gradient for tab headers and event cards */
+.bg-gradient {
+  background: linear-gradient(135deg, rgb(var(--v-theme-primary)) 0%, rgb(var(--v-theme-primary)) 100%);
   background-size: 200% auto;
   transition: background-position 0.5s ease;
 }
 
-.bg-gradient-to-r:hover {
+.bg-gradient:hover {
   background-position: right center;
 }
 
-.bg-gray-50:hover {
-  transform: scale(1.05);
-  transition: transform 0.3s ease;
+/* Chart canvas styling */
+.chart-canvas {
+  width: 100% !important;
+  height: 300px !important;
 }
 
-/* Geri sayım animasyonu */
+/* Countdown card animations */
+.countdown-card {
+  animation: pulse 2s infinite;
+}
+
+.countdown-card:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.countdown-card:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.countdown-card:nth-child(3) {
+  animation-delay: 1s;
+}
+
 @keyframes pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.05); }
   100% { transform: scale(1); }
 }
 
-.bg-gradient-to-b {
-  animation: pulse 2s infinite;
-  animation-delay: calc(var(--animation-delay, 0) * 0.5s);
+/* Sponsor card hover effects */
+.sponsor-card {
+  transition: all 0.3s ease;
 }
 
-.bg-gradient-to-b:nth-child(1) {
-  --animation-delay: 0;
+.sponsor-card:hover {
+  transform: scale(1.05);
+  border-color: rgb(var(--v-theme-primary));
 }
 
-.bg-gradient-to-b:nth-child(2) {
-  --animation-delay: 1;
+/* Data table responsive styling */
+:deep(.v-data-table) {
+  border-radius: 12px;
 }
 
-.bg-gradient-to-b:nth-child(3) {
-  --animation-delay: 2;
+:deep(.v-data-table-header__content) {
+  font-weight: 600;
+}
+
+/* Progress bar styling in table */
+:deep(.v-progress-linear) {
+  border-radius: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .chart-canvas {
+    height: 250px !important;
+  }
 }
 </style> 

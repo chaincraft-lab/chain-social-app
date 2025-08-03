@@ -1,29 +1,29 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-light-50">
+  <div>
     <!-- Navbar -->
     <Navbar />
     
     <!-- Main Content -->
-    <main class="flex-grow py-6">
-      <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <v-main>
+      <v-container fluid class="py-6">
+        <v-row>
           <!-- Left Sidebar - Hidden on Mobile -->
-          <div class="hidden lg:block lg:col-span-3">
+          <v-col cols="12" lg="3" class="d-none d-lg-block">
             <Sidebar position="left" :showAds="false" :showNewsletter="false" />
-          </div>
+          </v-col>
           
           <!-- Main Content -->
-          <div class="lg:col-span-6">
+          <v-col cols="12" lg="6">
             <router-view />
-          </div>
+          </v-col>
           
           <!-- Right Sidebar - Hidden on Mobile -->
-          <div class="hidden lg:block lg:col-span-3">
+          <v-col cols="12" lg="3" class="d-none d-lg-block">
             <Sidebar position="right" :showCategories="false" />
-          </div>
-        </div>
-      </div>
-    </main>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
     
     <!-- Footer -->
     <Footer />
