@@ -13,8 +13,8 @@
         <!-- Navigation -->
         <nav class="hidden md:flex space-x-4">
           <router-link 
-            v-for="category in categories.slice(0, 5)" 
-            :key="category.id" 
+            v-for="category in (categories || []).slice(0, 5)" 
+            :key="category?.id || Math.random()" 
             :to="{ name: 'category', params: { slug: category.slug }}"
             class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-dark"
           >
@@ -49,8 +49,8 @@
       <!-- Mobile Menu -->
       <div v-if="isMobileMenuOpen" class="md:hidden py-2">
         <router-link 
-          v-for="category in categories" 
-          :key="category.id" 
+          v-for="category in (categories || [])" 
+          :key="category?.id || Math.random()" 
           :to="{ name: 'category', params: { slug: category.slug }}"
           class="block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-dark"
           @click="isMobileMenuOpen = false"
@@ -72,7 +72,7 @@ export default {
     const store = useStore()
     const isMobileMenuOpen = ref(false)
     
-    const categories = computed(() => store.state.categories)
+    const categories = computed(() => store.state.categories.categories || [])
     
     const toggleMobileMenu = () => {
       isMobileMenuOpen.value = !isMobileMenuOpen.value

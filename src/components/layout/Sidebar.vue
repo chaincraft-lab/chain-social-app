@@ -7,7 +7,7 @@
       </div>
       <div class="p-3">
         <ul class="divide-y divide-light-200">
-          <li v-for="category in categories" :key="category.id">
+          <li v-for="category in (categories || [])" :key="category?.id || Math.random()">
             <router-link 
               :to="{ name: 'category', params: { slug: category.slug } }"
               class="block px-2 py-2.5 text-dark hover:text-primary transition-colors"
@@ -27,7 +27,7 @@
       </div>
       <div class="p-3">
         <ul class="divide-y divide-light-200">
-          <li v-for="(news, index) in popularNews" :key="news.id" class="py-3">
+          <li v-for="(news, index) in (popularNews || [])" :key="news?.id || Math.random()" class="py-3">
             <router-link 
               :to="{ name: 'article', params: { slug: news.id } }"
               class="flex items-start gap-3 group"
@@ -196,7 +196,9 @@ export default {
     }
   },
   computed: {
-    ...mapState(['categories', 'popularNews', 'advertisements'])
+    ...mapState('categories', ['categories']),
+    ...mapState('news', ['popularNews']),
+    ...mapState('advertisements', ['advertisements'])
   },
   methods: {
     formatDate(dateString) {

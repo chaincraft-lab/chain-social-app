@@ -5,8 +5,8 @@
     
     <!-- Main Content -->
     <v-main>
-      <v-container fluid class="py-6">
-        <v-row>
+      <div class="container mx-auto">
+        <v-row class="py-6">
           <!-- Left Sidebar - Hidden on Mobile -->
           <v-col cols="12" lg="3" class="d-none d-lg-block">
             <Sidebar position="left" :showAds="false" :showNewsletter="false" />
@@ -22,7 +22,7 @@
             <Sidebar position="right" :showCategories="false" />
           </v-col>
         </v-row>
-      </v-container>
+      </div>
     </v-main>
     
     <!-- Footer -->
