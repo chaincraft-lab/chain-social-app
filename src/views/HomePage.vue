@@ -47,10 +47,35 @@
       </div>
     </section>
     
+    <!-- Banner Ad - Leaderboard (728x90) -->
+    <section class="mb-8">
+      <div class="w-full overflow-hidden rounded-lg">
+        <a href="#" target="_blank" class="block">
+          <div class="bg-gray-100 w-full h-[90px] flex items-center justify-center border border-gray-200 rounded-lg overflow-hidden">
+            <div class="flex items-center justify-between w-full px-8">
+              <div class="flex items-center">
+                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4">
+                  T
+                </div>
+                <div>
+                  <div class="text-xl font-bold text-blue-800">TUSAŞ</div>
+                  <div class="text-sm text-blue-600">Türk Havacılık ve Uzay Sanayii</div>
+                </div>
+              </div>
+              <div class="bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium">
+                Daha Fazla Bilgi
+              </div>
+            </div>
+          </div>
+        </a>
+        <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
+      </div>
+    </section>
+    
     <!-- Latest News -->
     <section>
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-bold text-dark">Son Haberler</h2>
+        <h2 class="text-xl font-bold text-light">Son Haberler</h2>
         <BaseButton 
           variant="link" 
           size="sm"
@@ -70,11 +95,48 @@
       </div>
     </section>
     
+    <!-- Banner Ad - Medium Rectangle (300x250) -->
+    <section class="my-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="w-full overflow-hidden rounded-lg">
+          <a href="#" target="_blank" class="block">
+            <div class="bg-red-50 w-full h-[250px] flex flex-col items-center justify-center border border-red-100 rounded-lg overflow-hidden">
+              <div class="w-24 h-24 bg-red-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mb-4">
+                R
+              </div>
+              <div class="text-xl font-bold text-red-800 mb-2">ROKETSAN</div>
+              <div class="text-sm text-red-600 mb-4">Füze ve Roket Sistemleri</div>
+              <div class="bg-red-600 text-white py-2 px-6 rounded-full text-sm font-medium">
+                Keşfet
+              </div>
+            </div>
+          </a>
+          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
+        </div>
+        
+        <div class="w-full overflow-hidden rounded-lg">
+          <a href="#" target="_blank" class="block">
+            <div class="bg-green-50 w-full h-[250px] flex flex-col items-center justify-center border border-green-100 rounded-lg overflow-hidden">
+              <div class="w-24 h-24 bg-green-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mb-4">
+                H
+              </div>
+              <div class="text-xl font-bold text-green-800 mb-2">HAVELSAN</div>
+              <div class="text-sm text-green-600 mb-4">Yazılım ve Bilişim</div>
+              <div class="bg-green-600 text-white py-2 px-6 rounded-full text-sm font-medium">
+                Detaylı Bilgi
+              </div>
+            </div>
+          </a>
+          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
+        </div>
+      </div>
+    </section>
+    
     <!-- Defense Categories Grid -->
     <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div class="md:col-span-1">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-bold text-dark">Kara</h2>
+          <h2 class="text-xl font-bold text-light">Kara</h2>
           <router-link 
             :to="{ name: 'category', params: { slug: 'kara' } }"
             class="text-sm text-primary hover:text-secondary transition-colors"
@@ -93,17 +155,17 @@
           
           <div v-for="news in getCategoryNewsBySlug('kara').slice(1, 3)" 
                :key="news.id" 
-               class="flex items-center space-x-3 py-2 border-b border-light-200 last:border-0">
+               class="flex items-center space-x-3 py-2 border-b border-dark-700 last:border-0">
             <div class="flex-shrink-0 w-20 h-20">
               <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
             </div>
             <div>
-              <h3 class="font-medium text-sm line-clamp-2">
-                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-primary">
+              <h3 class="font-medium text-sm line-clamp-2 text-light">
+                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-secondary">
                   {{ news.title }}
                 </router-link>
               </h3>
-              <div class="text-xs text-dark/60 mt-1">{{ formatDate(news.date) }}</div>
+              <div class="text-xs text-light/60 mt-1">{{ formatDate(news.date) }}</div>
             </div>
           </div>
         </div>
@@ -111,7 +173,7 @@
       
       <div class="md:col-span-1">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-bold text-dark">Hava</h2>
+          <h2 class="text-xl font-bold text-light">Hava</h2>
           <router-link 
             :to="{ name: 'category', params: { slug: 'hava' } }"
             class="text-sm text-primary hover:text-secondary transition-colors"
@@ -130,17 +192,17 @@
           
           <div v-for="news in getCategoryNewsBySlug('hava').slice(1, 3)" 
                :key="news.id" 
-               class="flex items-center space-x-3 py-2 border-b border-light-200 last:border-0">
+               class="flex items-center space-x-3 py-2 border-b border-dark-700 last:border-0">
             <div class="flex-shrink-0 w-20 h-20">
               <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
             </div>
             <div>
-              <h3 class="font-medium text-sm line-clamp-2">
-                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-primary">
+              <h3 class="font-medium text-sm line-clamp-2 text-light">
+                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-secondary">
                   {{ news.title }}
                 </router-link>
               </h3>
-              <div class="text-xs text-dark/60 mt-1">{{ formatDate(news.date) }}</div>
+              <div class="text-xs text-light/60 mt-1">{{ formatDate(news.date) }}</div>
             </div>
           </div>
         </div>
@@ -148,7 +210,7 @@
       
       <div class="md:col-span-1">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-bold text-dark">Deniz</h2>
+          <h2 class="text-xl font-bold text-light">Deniz</h2>
           <router-link 
             :to="{ name: 'category', params: { slug: 'deniz' } }"
             class="text-sm text-primary hover:text-secondary transition-colors"
@@ -167,17 +229,17 @@
           
           <div v-for="news in getCategoryNewsBySlug('deniz').slice(1, 3)" 
                :key="news.id" 
-               class="flex items-center space-x-3 py-2 border-b border-light-200 last:border-0">
+               class="flex items-center space-x-3 py-2 border-b border-dark-700 last:border-0">
             <div class="flex-shrink-0 w-20 h-20">
               <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
             </div>
             <div>
-              <h3 class="font-medium text-sm line-clamp-2">
-                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-primary">
+              <h3 class="font-medium text-sm line-clamp-2 text-light">
+                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-secondary">
                   {{ news.title }}
                 </router-link>
               </h3>
-              <div class="text-xs text-dark/60 mt-1">{{ formatDate(news.date) }}</div>
+              <div class="text-xs text-light/60 mt-1">{{ formatDate(news.date) }}</div>
             </div>
           </div>
         </div>
@@ -189,7 +251,7 @@
       <!-- Technology Section -->
       <section>
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-bold text-dark">Teknoloji</h2>
+          <h2 class="text-xl font-bold text-light">Teknoloji</h2>
           <router-link 
             :to="{ name: 'category', params: { slug: 'teknoloji' } }"
             class="text-sm text-primary hover:text-secondary transition-colors"
@@ -213,12 +275,12 @@
               <div class="w-full aspect-w-16 aspect-h-9">
                 <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
               </div>
-              <h3 class="font-medium text-sm">
-                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-primary">
+              <h3 class="font-medium text-sm text-light">
+                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-secondary">
                   {{ news.title }}
                 </router-link>
               </h3>
-              <div class="text-xs text-dark/60">{{ formatDate(news.date) }}</div>
+              <div class="text-xs text-light/60">{{ formatDate(news.date) }}</div>
             </div>
           </div>
         </div>
@@ -227,7 +289,7 @@
       <!-- Projects Section -->
       <section>
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-bold text-dark">Projeler</h2>
+          <h2 class="text-xl font-bold text-light">Projeler</h2>
           <router-link 
             :to="{ name: 'category', params: { slug: 'projeler' } }"
             class="text-sm text-primary hover:text-secondary transition-colors"
@@ -251,17 +313,42 @@
               <div class="w-full aspect-w-16 aspect-h-9">
                 <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
               </div>
-              <h3 class="font-medium text-sm">
-                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-primary">
+              <h3 class="font-medium text-sm text-light">
+                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-secondary">
                   {{ news.title }}
                 </router-link>
               </h3>
-              <div class="text-xs text-dark/60">{{ formatDate(news.date) }}</div>
+              <div class="text-xs text-light/60">{{ formatDate(news.date) }}</div>
             </div>
           </div>
         </div>
       </section>
     </div>
+    
+    <!-- Banner Ad - Wide Skyscraper (160x600) -->
+    <section class="my-8">
+      <div class="w-full overflow-hidden rounded-lg">
+        <a href="#" target="_blank" class="block">
+          <div class="bg-gray-50 w-full h-[120px] md:h-[90px] flex items-center justify-center border border-gray-200 rounded-lg overflow-hidden">
+            <div class="flex flex-col md:flex-row items-center justify-between w-full px-4 md:px-8">
+              <div class="flex items-center mb-3 md:mb-0">
+                <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white text-xl font-bold mr-4">
+                  M
+                </div>
+                <div>
+                  <div class="text-lg font-bold text-primary">MKE</div>
+                  <div class="text-xs text-primary/70">Makina ve Kimya Endüstrisi</div>
+                </div>
+              </div>
+              <div class="bg-primary text-white py-1.5 px-4 rounded-lg text-sm font-medium">
+                Ziyaret Et
+              </div>
+            </div>
+          </div>
+        </a>
+        <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
+      </div>
+    </section>
     
     <!-- International News -->
     <section>

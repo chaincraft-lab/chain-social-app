@@ -60,17 +60,17 @@ export default {
   computed: {
     variantClasses() {
       const variants = {
-        primary: 'bg-primary hover:bg-primary/90 text-white focus:ring-primary/50',
-        secondary: 'bg-secondary hover:bg-secondary/90 text-white focus:ring-secondary/50',
-        success: 'bg-green-500 hover:bg-green-600 text-white focus:ring-green-500/50',
-        danger: 'bg-red-500 hover:bg-red-600 text-white focus:ring-red-500/50',
-        warning: 'bg-yellow-500 hover:bg-yellow-600 text-white focus:ring-yellow-500/50',
-        info: 'bg-blue-500 hover:bg-blue-600 text-white focus:ring-blue-500/50',
+        primary: 'bg-primary hover:bg-primary/90 text-light focus:ring-primary/50',
+        secondary: 'bg-secondary hover:bg-secondary/90 text-dark focus:ring-secondary/50',
+        success: 'bg-green-500 hover:bg-green-600 text-light focus:ring-green-500/50',
+        danger: 'bg-red-500 hover:bg-red-600 text-light focus:ring-red-500/50',
+        warning: 'bg-yellow-500 hover:bg-yellow-600 text-light focus:ring-yellow-500/50',
+        info: 'bg-blue-500 hover:bg-blue-600 text-light focus:ring-blue-500/50',
         light: 'bg-light hover:bg-light/80 text-dark focus:ring-light/50',
-        dark: 'bg-dark hover:bg-dark/90 text-white focus:ring-dark/50',
+        dark: 'bg-dark hover:bg-dark/90 text-light focus:ring-dark/50',
         link: 'bg-transparent text-primary hover:underline focus:ring-primary/50',
-        'outline-primary': 'bg-transparent border border-primary text-primary hover:bg-primary hover:text-white focus:ring-primary/50',
-        'outline-secondary': 'bg-transparent border border-secondary text-secondary hover:bg-secondary hover:text-white focus:ring-secondary/50'
+        'outline-primary': 'bg-transparent border border-primary text-primary hover:bg-primary hover:text-light focus:ring-primary/50',
+        'outline-secondary': 'bg-transparent border border-secondary text-secondary hover:bg-secondary hover:text-dark focus:ring-secondary/50'
       }
       
       return variants[this.variant] || variants.primary

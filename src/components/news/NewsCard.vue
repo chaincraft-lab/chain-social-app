@@ -39,16 +39,16 @@
       </div>
       
       <router-link :to="{ name: 'article', params: { slug: news.id } }" class="block mb-2">
-        <h3 :class="['font-bold hover:text-primary transition-colors', titleClass]">
+        <h3 :class="['font-bold text-light hover:text-secondary transition-colors', titleClass]">
           {{ news.title }}
         </h3>
       </router-link>
       
-      <p v-if="showExcerpt" :class="['text-dark/80', excerptClass]">
+      <p v-if="showExcerpt" :class="['text-light/80', excerptClass]">
         {{ truncateText(news.excerpt, excerptLength) }}
       </p>
       
-      <div class="mt-auto pt-3 flex items-center justify-between text-xs text-dark/60">
+      <div class="mt-auto pt-3 flex items-center justify-between text-xs text-light/60">
         <div>
           {{ formatDate(news.date) }}
         </div>

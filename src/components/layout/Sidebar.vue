@@ -60,14 +60,40 @@
         <h3 class="text-lg font-semibold text-dark">Sponsorlu</h3>
       </div>
       <div class="p-3">
-        <div v-for="ad in advertisements" :key="ad.id" class="mb-3 last:mb-0">
-          <a :href="ad.url" target="_blank" class="block">
+        <!-- First Ad -->
+        <div class="mb-4">
+          <a href="#" target="_blank" class="block">
             <img 
-              :src="ad.image" 
-              :alt="ad.title"
+              src="@/assets/reklam/reklam_1.jpeg" 
+              alt="Savunma Sanayii Reklamı"
               class="w-full rounded"
             />
           </a>
+          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
+        </div>
+        
+        <!-- Second Ad -->
+        <div class="mb-4">
+          <a href="#" target="_blank" class="block">
+            <img 
+              src="@/assets/reklam/reklam_2.jpg" 
+              alt="Savunma Sanayii Reklamı"
+              class="w-full rounded"
+            />
+          </a>
+          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
+        </div>
+        
+        <!-- Third Ad - Only visible on larger screens -->
+        <div class="mb-4">
+          <a href="#" target="_blank" class="block">
+            <img 
+              src="@/assets/reklam/reklam_3.jpg" 
+              alt="Savunma Sanayii Reklamı"
+              class="w-full rounded"
+            />
+          </a>
+          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
         </div>
       </div>
     </div>

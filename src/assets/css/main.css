@@ -6,16 +6,16 @@
 
 @layer base {
   html {
-    @apply text-dark antialiased;
+    @apply text-light antialiased;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
   
   body {
-    @apply font-body bg-light-50 min-h-screen;
+    @apply font-body bg-dark min-h-screen;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display font-semibold;
+    @apply font-display font-semibold text-light;
   }
   
   h1 {
@@ -35,7 +35,7 @@
   }
   
   a {
-    @apply transition-colors duration-200;
+    @apply transition-colors duration-200 text-light hover:text-secondary;
   }
 }
 
@@ -49,7 +49,7 @@
   }
   
   .section-title {
-    @apply text-2xl md:text-3xl font-display font-semibold mb-6 pb-2 border-b border-light-400;
+    @apply text-2xl md:text-3xl font-display font-semibold mb-6 pb-2 border-b border-altmenu-400;
   }
   
   .card-grid {
@@ -65,11 +65,11 @@
   }
   
   .form-label {
-    @apply block mb-1 text-sm font-medium;
+    @apply block mb-1 text-sm font-medium text-light;
   }
   
   .form-control {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary;
+    @apply w-full px-3 py-2 border border-altmenu-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary bg-altmenu text-light;
   }
 }
 
@@ -109,14 +109,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: theme('colors.light.100');
+  background: theme('colors.altmenu.DEFAULT');
 }
 
 ::-webkit-scrollbar-thumb {
-  background: theme('colors.primary.300');
+  background: theme('colors.primary.DEFAULT');
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: theme('colors.primary.400');
+  background: theme('colors.secondary.DEFAULT');
 } 

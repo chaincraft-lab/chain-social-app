@@ -10,7 +10,7 @@
           {{ formatDate(article?.date) || '5 Tem 2025' }}
         </span>
       </div>
-      <h1 class="text-3xl md:text-4xl font-bold mb-4">
+      <h1 class="text-3xl md:text-4xl font-bold mb-4 text-dark">
         {{ article?.title || 'Haber Başlığı' }}
       </h1>
       <p class="text-lg text-dark/80 mb-6">
@@ -27,7 +27,7 @@
           >
         </div>
         <div>
-          <div class="font-medium">{{ article?.author?.name || 'Yazar Adı' }}</div>
+          <div class="font-medium text-dark">{{ article?.author?.name || 'Yazar Adı' }}</div>
           <div class="text-sm text-dark/60">{{ article?.author?.title || 'Editör' }}</div>
         </div>
       </div>
@@ -43,28 +43,48 @@
     </div>
     
     <!-- Article Content -->
-    <div class="prose max-w-none mb-8">
+    <div class="prose max-w-none mb-8 text-dark">
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.
       </p>
       <p>
         Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.
       </p>
-      <h2>Alt Başlık</h2>
+      
+      <!-- In-Article Banner Ad (300x250) -->
+      <div class="my-6 mx-auto max-w-sm">
+        <div class="w-full overflow-hidden rounded-lg">
+          <a href="#" target="_blank" class="block">
+            <div class="bg-blue-50 w-full h-[250px] flex flex-col items-center justify-center border border-blue-100 rounded-lg overflow-hidden">
+              <div class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mb-4">
+                A
+              </div>
+              <div class="text-xl font-bold text-blue-800 mb-2">ASELSAN</div>
+              <div class="text-sm text-blue-600 mb-4">Milli Teknoloji, Güçlü Savunma</div>
+              <div class="bg-blue-600 text-white py-2 px-6 rounded-full text-sm font-medium">
+                Keşfet
+              </div>
+            </div>
+          </a>
+          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
+        </div>
+      </div>
+      
+      <h2 class="text-dark">Alt Başlık</h2>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.
       </p>
-      <blockquote>
+      <blockquote class="border-l-4 border-primary pl-4 italic text-dark/80">
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl."
       </blockquote>
       <p>
         Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.
       </p>
-      <h2>Diğer Alt Başlık</h2>
+      <h2 class="text-dark">Diğer Alt Başlık</h2>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.
       </p>
-      <ul>
+      <ul class="text-dark">
         <li>Liste öğesi 1</li>
         <li>Liste öğesi 2</li>
         <li>Liste öğesi 3</li>
@@ -74,14 +94,39 @@
       </p>
     </div>
     
+    <!-- Banner Ad - Leaderboard (728x90) -->
+    <div class="mb-8">
+      <div class="w-full overflow-hidden rounded-lg">
+        <a href="#" target="_blank" class="block">
+          <div class="bg-gray-50 w-full h-[90px] flex items-center justify-center border border-gray-200 rounded-lg overflow-hidden">
+            <div class="flex items-center justify-between w-full px-8">
+              <div class="flex items-center">
+                <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4">
+                  R
+                </div>
+                <div>
+                  <div class="text-xl font-bold text-primary">ROKETSAN</div>
+                  <div class="text-sm text-primary/70">Füze ve Roket Sistemleri</div>
+                </div>
+              </div>
+              <div class="bg-primary text-white py-2 px-4 rounded-lg text-sm font-medium">
+                Daha Fazla Bilgi
+              </div>
+            </div>
+          </div>
+        </a>
+        <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
+      </div>
+    </div>
+    
     <!-- Tags -->
     <div class="mb-8">
-      <div class="text-sm font-medium mb-2">Etiketler:</div>
+      <div class="text-sm font-medium mb-2 text-dark">Etiketler:</div>
       <div class="flex flex-wrap gap-2">
         <span 
           v-for="(tag, index) in article?.tags || ['Etiket 1', 'Etiket 2', 'Etiket 3']" 
           :key="index"
-          class="bg-light px-3 py-1 rounded-full text-sm"
+          class="bg-light px-3 py-1 rounded-full text-sm text-dark border border-gray-300 shadow-sm"
         >
           {{ tag }}
         </span>
@@ -90,7 +135,7 @@
     
     <!-- Share -->
     <div class="mb-8">
-      <div class="text-sm font-medium mb-2">Paylaş:</div>
+      <div class="text-sm font-medium mb-2 text-dark">Paylaş:</div>
       <div class="flex space-x-3">
         <a href="#" class="text-dark hover:text-primary">
           <span class="sr-only">Facebook</span>
@@ -121,9 +166,9 @@
     
     <!-- Related News -->
     <div class="mb-8">
-      <h3 class="text-xl font-bold mb-4">İlgili Haberler</h3>
+      <h3 class="text-xl font-bold mb-4 text-dark">İlgili Haberler</h3>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div v-for="index in 3" :key="index" class="card">
+        <div v-for="index in 3" :key="index" class="bg-white rounded-lg shadow-md p-4">
           <div class="aspect-[16/9] bg-gray-200 rounded-lg overflow-hidden mb-3">
             <img 
               :src="`https://picsum.photos/id/${index + 80}/400/225`" 
@@ -131,7 +176,7 @@
               class="w-full h-full object-cover"
             >
           </div>
-          <h4 class="news-title text-base">
+          <h4 class="text-base font-bold mb-2 text-dark">
             İlgili Haber {{ index }}
           </h4>
           <div class="text-xs text-dark/60">
@@ -141,13 +186,50 @@
       </div>
     </div>
     
+    <!-- Banner Ad - Medium Rectangle (300x250) Grid -->
+    <div class="mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="w-full overflow-hidden rounded-lg">
+          <a href="#" target="_blank" class="block">
+            <div class="bg-yellow-50 w-full h-[250px] flex flex-col items-center justify-center border border-yellow-100 rounded-lg overflow-hidden">
+              <div class="w-24 h-24 bg-yellow-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mb-4">
+                T
+              </div>
+              <div class="text-xl font-bold text-yellow-800 mb-2">TUSAŞ</div>
+              <div class="text-sm text-yellow-600 mb-4">Türk Havacılık ve Uzay Sanayii</div>
+              <div class="bg-yellow-600 text-white py-2 px-6 rounded-full text-sm font-medium">
+                Ziyaret Et
+              </div>
+            </div>
+          </a>
+          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
+        </div>
+        
+        <div class="w-full overflow-hidden rounded-lg">
+          <a href="#" target="_blank" class="block">
+            <div class="bg-purple-50 w-full h-[250px] flex flex-col items-center justify-center border border-purple-100 rounded-lg overflow-hidden">
+              <div class="w-24 h-24 bg-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mb-4">
+                H
+              </div>
+              <div class="text-xl font-bold text-purple-800 mb-2">HAVELSAN</div>
+              <div class="text-sm text-purple-600 mb-4">Yazılım ve Bilişim</div>
+              <div class="bg-purple-600 text-white py-2 px-6 rounded-full text-sm font-medium">
+                İncele
+              </div>
+            </div>
+          </a>
+          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
+        </div>
+      </div>
+    </div>
+    
     <!-- Comments -->
     <div>
-      <h3 class="text-xl font-bold mb-4">Yorumlar (5)</h3>
+      <h3 class="text-xl font-bold mb-4 text-dark">Yorumlar (5)</h3>
       
       <!-- Comment Form -->
       <div class="bg-light rounded-lg p-4 mb-6">
-        <h4 class="text-lg font-medium mb-3">Yorum Yap</h4>
+        <h4 class="text-lg font-medium mb-3 text-dark">Yorum Yap</h4>
         <form @submit.prevent="submitComment">
           <div class="mb-4">
             <textarea 
@@ -193,10 +275,10 @@
             </div>
             <div class="flex-1">
               <div class="flex items-center justify-between mb-1">
-                <div class="font-medium">Yorum Yapan {{ index }}</div>
+                <div class="font-medium text-dark">Yorum Yapan {{ index }}</div>
                 <div class="text-xs text-dark/60">{{ formatDate(new Date(Date.now() - index * 86400000)) }}</div>
               </div>
-              <p class="text-sm">
+              <p class="text-sm text-dark/80">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.
               </p>
             </div>
@@ -248,10 +330,15 @@ export default {
     
     const submitComment = () => {
       // This would be an API call in a real app
-      alert('Yorumunuz gönderildi ve onay bekliyor!')
+      console.log('Submitting comment:', { text: commentText.value, name: commentName.value, email: commentEmail.value })
+      
+      // Clear form
       commentText.value = ''
       commentName.value = ''
       commentEmail.value = ''
+      
+      // Show success message
+      alert('Yorumunuz başarıyla gönderildi!')
     }
     
     onMounted(() => {
