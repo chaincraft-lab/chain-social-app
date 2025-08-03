@@ -1,7 +1,7 @@
 <template>
   <aside class="w-full">
     <!-- Categories -->
-    <div v-if="showCategories" class="bg-white rounded-lg shadow-sm mb-6">
+    <!-- <div v-if="showCategories" class="bg-white rounded-lg shadow-sm mb-6">
       <div class="border-b border-light-200 px-5 py-3">
         <h3 class="text-lg font-semibold text-dark">Kategoriler</h3>
       </div>
@@ -18,7 +18,12 @@
           </li>
         </ul>
       </div>
-    </div>
+    </div> -->
+
+    <VuetifyCategories
+      v-if="showCategories"
+      :categories="categories"
+    />
 
     <!-- Popular News -->
     <div v-if="showPopular" class="bg-white rounded-lg shadow-sm mb-6">
@@ -161,9 +166,13 @@
 
 <script>
 import { mapState } from "vuex";
+import VuetifyCategories from "../ui/VuetifyCategories.vue";
 
 export default {
   name: "SiteSidebar",
+  components: {
+    VuetifyCategories,
+  },
   props: {
     showCategories: {
       type: Boolean,

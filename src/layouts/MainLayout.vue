@@ -2,51 +2,61 @@
   <div>
     <!-- Navbar -->
     <Navbar />
-    
+
     <!-- Main Content -->
     <v-main>
       <div class="container mx-auto">
         <v-row class="py-6">
           <!-- Left Sidebar - Hidden on Mobile -->
           <v-col cols="12" lg="3" class="d-none d-lg-block">
-            <Sidebar position="left" :showAds="false" :showNewsletter="false" />
+            <Sidebar
+              position="left"
+              :showPopular="false"
+              :showAds="false"
+              :showNewsletter="false"
+            />
           </v-col>
-          
+
           <!-- Main Content -->
           <v-col cols="12" lg="6">
             <router-view />
           </v-col>
-          
+
           <!-- Right Sidebar - Hidden on Mobile -->
           <v-col cols="12" lg="3" class="d-none d-lg-block">
-            <Sidebar position="right" :showCategories="false" />
+            <Sidebar
+              position="right"
+              :showCategories="false"
+              :showTags="false"
+              :showNewsletter="false"
+            />
           </v-col>
         </v-row>
       </div>
     </v-main>
-    
+
     <!-- Footer -->
     <Footer />
   </div>
 </template>
 
 <script>
-import Navbar from '@/components/layout/Navbar.vue'
-import Sidebar from '@/components/layout/Sidebar.vue'
-import Footer from '@/components/layout/Footer.vue'
+import Navbar from "@/components/layout/Navbar.vue";
+import Sidebar from "@/components/layout/Sidebar.vue";
+import Footer from "@/components/layout/Footer.vue";
 
 export default {
-  name: 'MainLayout',
+  name: "MainLayout",
   components: {
     Navbar,
     Sidebar,
-    Footer
+    Footer,
   },
   mounted() {
     // Fetch initial data when layout is mounted
-    this.$store.dispatch('fetchInitialData')
-  }
-}
+    this.$store.dispatch("fetchInitialData");
+  },
+};
 </script>
 
 <style scoped>
