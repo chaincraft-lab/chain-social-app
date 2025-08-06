@@ -67,9 +67,11 @@ export default {
     const store = useStore()
     const route = useRoute()
     
-    const categories = computed(() => store.state.categories)
+    const categories = computed(() => store.state.categories.categories || [])
     const currentCategory = computed(() => {
-      return categories.value.find(c => c.slug === route.params.slug) || null
+      const cats = categories.value
+      if (!Array.isArray(cats)) return null
+      return cats.find(c => c && c.slug === route.params.slug) || null
     })
     
     const categoryNews = ref([])

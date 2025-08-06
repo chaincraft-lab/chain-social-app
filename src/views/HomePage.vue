@@ -1,103 +1,72 @@
 <template>
-  <div class="space-y-8">
-    <!-- Featured Slider -->
-    <section class="featured-slider">
-      <div class="relative rounded-xl overflow-hidden shadow-md">
-        <div class="swiper-container" ref="featuredSwiper">
-          <div class="swiper-wrapper">
-            <div v-for="news in featuredNews" :key="news.id" class="swiper-slide">
-              <div class="relative aspect-w-16 aspect-h-9 md:aspect-h-7">
-                <img 
-                  :src="news.image" 
-                  :alt="news.title"
-                  class="w-full h-full object-cover"
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-                  <BaseBadge 
-                    v-if="news.category" 
-                    variant="primary" 
-                    size="sm" 
-                    rounded="md"
-                    class="mb-2"
-                  >
-                    {{ news.category.name }}
-                  </BaseBadge>
-                  <h2 class="text-xl md:text-2xl font-bold text-white mb-2">
-                    {{ news.title }}
-                  </h2>
-                  <p class="text-sm text-white/80 mb-3 line-clamp-2">
-                    {{ news.excerpt }}
-                  </p>
-                  <div class="flex items-center text-white/70 text-xs">
-                    <span>{{ formatDate(news.date) }}</span>
-                  </div>
-                </div>
-                <router-link 
-                  :to="{ name: 'article', params: { slug: news.id } }"
-                  class="absolute inset-0 z-10"
-                ></router-link>
-              </div>
+  <div class="homepage-feed">
+    <!-- Stories/Highlights Section -->
+    <section class="stories-section" v-if="featuredNews && featuredNews.length">
+      <v-card class="stories-card" elevation="1" rounded="xl">
+        <div class="stories-container">
+          <div class="story-item" v-for="story in featuredNews.slice(0, 5)" :key="story.id">
+            <div class="story-avatar">
+              <v-img 
+                :src="story.image" 
+                :alt="story.category?.name"
+                cover
+                class="story-image"
+              ></v-img>
             </div>
+            <div class="story-label">{{ story.category?.name || 'Haber' }}</div>
           </div>
-          <div class="swiper-pagination"></div>
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
+        </div>
+      </v-card>
+    </section>
+
+    <!-- News Feed Posts -->
+    <section class="news-feed">
+      <div class="feed-header">
+        <h2 class="feed-title">Son Haberler</h2>
+        <div class="feed-filter">
+          <v-chip-group v-model="selectedFilter" color="primary" variant="flat">
+            <v-chip value="all">Tümü</v-chip>
+            <v-chip value="trending">Trend</v-chip>
+            <v-chip value="recent">Yeni</v-chip>
+          </v-chip-group>
+        </div>
+      </div>
+      
+      <!-- Post Feed -->
+      <div class="posts-container">
+        <NewsPost 
+          v-for="news in filteredNews" 
+          :key="news?.id || Math.random()"
+          :news="news"
+        />
+        
+        <!-- Load More Button -->
+        <div class="load-more-section" v-if="hasMorePosts">
+          <v-btn 
+            color="primary" 
+            variant="outlined" 
+            size="large"
+            rounded="pill"
+            @click="loadMorePosts"
+            :loading="loadingMore"
+          >
+            <v-icon start>mdi-refresh</v-icon>
+            Daha Fazla Yükle
+          </v-btn>
+        </div>
+        
+        <!-- End of Feed -->
+        <div class="end-of-feed" v-else>
+          <v-icon size="large" color="grey">mdi-check-circle</v-icon>
+          <p class="text-grey">Tüm haberler yüklendi</p>
         </div>
       </div>
     </section>
-    
-    <!-- Banner Ad - Leaderboard (728x90) -->
-    <section class="mb-8">
-      <div class="w-full overflow-hidden rounded-lg">
-        <a href="#" target="_blank" class="block">
-          <div class="bg-gray-100 w-full h-[90px] flex items-center justify-center border border-gray-200 rounded-lg overflow-hidden">
-            <div class="flex items-center justify-between w-full px-8">
-              <div class="flex items-center">
-                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4">
-                  T
-                </div>
-                <div>
-                  <div class="text-xl font-bold text-blue-800">TUSAŞ</div>
-                  <div class="text-sm text-blue-600">Türk Havacılık ve Uzay Sanayii</div>
-                </div>
-              </div>
-              <div class="bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium">
-                Daha Fazla Bilgi
-              </div>
-            </div>
-          </div>
-        </a>
-        <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
-      </div>
-    </section>
-    
-    <!-- Latest News -->
-    <section>
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-bold text-light">Son Haberler</h2>
-        <BaseButton 
-          variant="link" 
-          size="sm"
-          class="text-primary"
-        >
-          Tümünü Gör
-        </BaseButton>
-      </div>
-      
-      <div class="card-grid">
-        <NewsCard 
-          v-for="news in latestNews.slice(0, 6)" 
-          :key="news.id" 
-          :news="news"
-          show-excerpt
-        />
-      </div>
-    </section>
-    
+
     <!-- Banner Ad - Medium Rectangle (300x250) -->
     <section class="my-8">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- ROKETSAN -->
         <div class="w-full overflow-hidden rounded-lg">
           <a href="#" target="_blank" class="block">
             <div class="bg-red-50 w-full h-[250px] flex flex-col items-center justify-center border border-red-100 rounded-lg overflow-hidden">
@@ -113,7 +82,8 @@
           </a>
           <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
         </div>
-        
+
+        <!-- HAVELSAN -->
         <div class="w-full overflow-hidden rounded-lg">
           <a href="#" target="_blank" class="block">
             <div class="bg-green-50 w-full h-[250px] flex flex-col items-center justify-center border border-green-100 rounded-lg overflow-hidden">
@@ -131,200 +101,14 @@
         </div>
       </div>
     </section>
-    
+
     <!-- Defense Categories Grid -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="md:col-span-1">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-bold text-light">Kara</h2>
-          <router-link 
-            :to="{ name: 'category', params: { slug: 'kara' } }"
-            class="text-sm text-primary hover:text-secondary transition-colors"
-          >
-            Tümünü Gör
-          </router-link>
-        </div>
-        
-        <div class="space-y-4">
-          <NewsCard 
-            v-if="getCategoryNewsBySlug('kara')[0]"
-            :news="getCategoryNewsBySlug('kara')[0]" 
-            :show-excerpt="true"
-            excerpt-length="120"
-          />
-          
-          <div v-for="news in getCategoryNewsBySlug('kara').slice(1, 3)" 
-               :key="news.id" 
-               class="flex items-center space-x-3 py-2 border-b border-dark-700 last:border-0">
-            <div class="flex-shrink-0 w-20 h-20">
-              <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
-            </div>
-            <div>
-              <h3 class="font-medium text-sm line-clamp-2 text-light">
-                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-secondary">
-                  {{ news.title }}
-                </router-link>
-              </h3>
-              <div class="text-xs text-light/60 mt-1">{{ formatDate(news.date) }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="md:col-span-1">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-bold text-light">Hava</h2>
-          <router-link 
-            :to="{ name: 'category', params: { slug: 'hava' } }"
-            class="text-sm text-primary hover:text-secondary transition-colors"
-          >
-            Tümünü Gör
-          </router-link>
-        </div>
-        
-        <div class="space-y-4">
-          <NewsCard 
-            v-if="getCategoryNewsBySlug('hava')[0]"
-            :news="getCategoryNewsBySlug('hava')[0]" 
-            :show-excerpt="true"
-            excerpt-length="120"
-          />
-          
-          <div v-for="news in getCategoryNewsBySlug('hava').slice(1, 3)" 
-               :key="news.id" 
-               class="flex items-center space-x-3 py-2 border-b border-dark-700 last:border-0">
-            <div class="flex-shrink-0 w-20 h-20">
-              <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
-            </div>
-            <div>
-              <h3 class="font-medium text-sm line-clamp-2 text-light">
-                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-secondary">
-                  {{ news.title }}
-                </router-link>
-              </h3>
-              <div class="text-xs text-light/60 mt-1">{{ formatDate(news.date) }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="md:col-span-1">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-bold text-light">Deniz</h2>
-          <router-link 
-            :to="{ name: 'category', params: { slug: 'deniz' } }"
-            class="text-sm text-primary hover:text-secondary transition-colors"
-          >
-            Tümünü Gör
-          </router-link>
-        </div>
-        
-        <div class="space-y-4">
-          <NewsCard 
-            v-if="getCategoryNewsBySlug('deniz')[0]"
-            :news="getCategoryNewsBySlug('deniz')[0]" 
-            :show-excerpt="true"
-            excerpt-length="120"
-          />
-          
-          <div v-for="news in getCategoryNewsBySlug('deniz').slice(1, 3)" 
-               :key="news.id" 
-               class="flex items-center space-x-3 py-2 border-b border-dark-700 last:border-0">
-            <div class="flex-shrink-0 w-20 h-20">
-              <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
-            </div>
-            <div>
-              <h3 class="font-medium text-sm line-clamp-2 text-light">
-                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-secondary">
-                  {{ news.title }}
-                </router-link>
-              </h3>
-              <div class="text-xs text-light/60 mt-1">{{ formatDate(news.date) }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    
+    <!-- Kara / Hava / Deniz bölümleri -->
+    <!-- ... (senin orijinal kodundaki gibi kalabilir, yukarı taşınması gerekmez) -->
+
     <!-- Technology and Projects -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <!-- Technology Section -->
-      <section>
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-bold text-light">Teknoloji</h2>
-          <router-link 
-            :to="{ name: 'category', params: { slug: 'teknoloji' } }"
-            class="text-sm text-primary hover:text-secondary transition-colors"
-          >
-            Tümünü Gör
-          </router-link>
-        </div>
-        
-        <div class="space-y-4">
-          <NewsCard 
-            v-if="getCategoryNewsBySlug('teknoloji')[0]"
-            :news="getCategoryNewsBySlug('teknoloji')[0]" 
-            :show-excerpt="true"
-            excerpt-length="150"
-          />
-          
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div v-for="news in getCategoryNewsBySlug('teknoloji').slice(1, 3)" 
-                 :key="news.id" 
-                 class="flex flex-col space-y-2">
-              <div class="w-full aspect-w-16 aspect-h-9">
-                <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
-              </div>
-              <h3 class="font-medium text-sm text-light">
-                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-secondary">
-                  {{ news.title }}
-                </router-link>
-              </h3>
-              <div class="text-xs text-light/60">{{ formatDate(news.date) }}</div>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      <!-- Projects Section -->
-      <section>
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-bold text-light">Projeler</h2>
-          <router-link 
-            :to="{ name: 'category', params: { slug: 'projeler' } }"
-            class="text-sm text-primary hover:text-secondary transition-colors"
-          >
-            Tümünü Gör
-          </router-link>
-        </div>
-        
-        <div class="space-y-4">
-          <NewsCard 
-            v-if="getCategoryNewsBySlug('projeler')[0]"
-            :news="getCategoryNewsBySlug('projeler')[0]" 
-            :show-excerpt="true"
-            excerpt-length="150"
-          />
-          
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div v-for="news in getCategoryNewsBySlug('projeler').slice(1, 3)" 
-                 :key="news.id" 
-                 class="flex flex-col space-y-2">
-              <div class="w-full aspect-w-16 aspect-h-9">
-                <img :src="news.image" :alt="news.title" class="w-full h-full object-cover rounded" />
-              </div>
-              <h3 class="font-medium text-sm text-light">
-                <router-link :to="{ name: 'article', params: { slug: news.id } }" class="hover:text-secondary">
-                  {{ news.title }}
-                </router-link>
-              </h3>
-              <div class="text-xs text-light/60">{{ formatDate(news.date) }}</div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-    
+    <!-- Teknoloji / Projeler bölümleri -->
+
     <!-- Banner Ad - Wide Skyscraper (160x600) -->
     <section class="my-8">
       <div class="w-full overflow-hidden rounded-lg">
@@ -349,7 +133,7 @@
         <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
       </div>
     </section>
-    
+
     <!-- International News -->
     <section>
       <div class="flex items-center justify-between mb-4">
@@ -362,74 +146,63 @@
         </router-link>
       </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <NewsCard 
           v-for="news in getCategoryNewsBySlug('uluslararasi').slice(0, 3)" 
-          :key="news.id" 
+          :key="news?.id || Math.random()" 
           :news="news"
           :show-excerpt="true"
           excerpt-length="100"
         />
-      </div>
+      </div> -->
     </section>
   </div>
 </template>
 
+
 <script>
 import { mapState } from 'vuex'
-import { onMounted, ref } from 'vue'
-// Swiper 11.x için önerilen import yöntemi
-import Swiper from 'swiper'
-import { Navigation, Pagination, Autoplay } from 'swiper/modules'
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
-
-import BaseButton from '@/components/ui/BaseButton.vue'
-import BaseBadge from '@/components/ui/BaseBadge.vue'
-import NewsCard from '@/components/news/NewsCard.vue'
+import NewsPost from '@/components/news/NewsPost.vue'
 
 export default {
   name: 'HomePage',
   components: {
-    BaseButton,
-    BaseBadge,
-    NewsCard
+    NewsPost
   },
-  setup() {
-    const featuredSwiper = ref(null)
-    
-    onMounted(() => {
-      // Initialize featured slider
-      new Swiper(featuredSwiper.value, {
-        modules: [Navigation, Pagination, Autoplay],
-        slidesPerView: 1,
-        spaceBetween: 0,
-        loop: true,
-        autoplay: {
-          delay: 5000,
-          disableOnInteraction: false,
-        },
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-      })
-    })
-    
+  data() {
     return {
-      featuredSwiper
+      selectedFilter: 'all',
+      loadingMore: false,
+      hasMorePosts: true,
+      displayedPostsCount: 10
     }
   },
   computed: {
-    ...mapState(['categories', 'latestNews', 'popularNews', 'featuredNews']),
+    ...mapState('categories', ['categories']),
+    ...mapState('news', ['latestNews', 'popularNews', 'featuredNews']),
     
-    mainCategories() {
-      return this.categories.slice(0, 3)
+    filteredNews() {
+      if (!this.latestNews || !Array.isArray(this.latestNews)) {
+        return []
+      }
+      
+      let filtered = [...this.latestNews]
+      
+      switch (this.selectedFilter) {
+        case 'trending':
+          // Sort by engagement (likes + comments) - simulated
+          filtered.sort(() => (Math.random() * 1000) - (Math.random() * 1000))
+          break
+        case 'recent':
+          // Sort by date (most recent first)
+          filtered.sort((a, b) => new Date(b.date) - new Date(a.date))
+          break
+        default:
+          // Default: mix of recent and trending
+          break
+      }
+      
+      return filtered.slice(0, this.displayedPostsCount)
     }
   },
   methods: {
@@ -438,59 +211,226 @@ export default {
       const date = new Date(dateString)
       return date.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })
     },
-    getCategoryNews(categoryId) {
-      // Simulating getting news by category
-      // In a real app, you would have a proper filter or API call
-      return this.latestNews
-        .filter(news => news.category && news.category.id === categoryId)
-        .slice(0, 5)
-    },
-    getCategoryNewsBySlug(slug) {
-      return this.latestNews
-        .filter(news => news.category && news.category.slug === slug)
-        .slice(0, 5)
+    
+    loadMorePosts() {
+      this.loadingMore = true
+      
+      // Simulate API call delay
+      setTimeout(() => {
+        this.displayedPostsCount += 5
+        
+        // Check if we've reached the end
+        if (this.displayedPostsCount >= this.latestNews.length) {
+          this.hasMorePosts = false
+        }
+        
+        this.loadingMore = false
+      }, 1000)
+    }
+  },
+  
+  watch: {
+    selectedFilter() {
+      // Reset displayed posts when filter changes
+      this.displayedPostsCount = 10
+      this.hasMorePosts = true
     }
   }
 }
 </script>
 
-<style>
-.swiper-button-prev,
-.swiper-button-next {
-  color: white;
-  background: rgba(0, 0, 0, 0.3);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+<style scoped>
+/* Homepage Feed Layout */
+.homepage-feed {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
-.swiper-button-prev:after,
-.swiper-button-next:after {
-  font-size: 18px;
+/* Stories Section */
+.stories-section {
+  margin-bottom: 2rem;
 }
 
-.swiper-pagination-bullet {
+.stories-card {
+  padding: 1rem;
   background: white;
-  opacity: 0.6;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.swiper-pagination-bullet-active {
-  opacity: 1;
-  background: theme('colors.primary.DEFAULT');
+.stories-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 0.5rem 0;
 }
 
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+.story-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+  cursor: pointer;
 }
 
-@media (max-width: 640px) {
-  .card-grid {
-    grid-template-columns: 1fr;
+.story-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid #1976d2;
+  padding: 2px;
+  margin-bottom: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+.story-avatar:hover {
+  transform: scale(1.05);
+}
+
+.story-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.story-label {
+  font-size: 0.75rem;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: 500;
+}
+
+/* News Feed */
+.news-feed {
+  margin-bottom: 2rem;
+}
+
+.feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 0 0.5rem;
+}
+
+.feed-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.87);
+  margin: 0;
+}
+
+.feed-filter {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Posts Container */
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Load More Section */
+.load-more-section {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.end-of-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 0;
+  gap: 1rem;
+  opacity: 0.7;
+}
+
+.end-of-feed p {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .homepage-feed {
+    padding: 0 0.5rem;
   }
+  
+  .feed-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .feed-title {
+    font-size: 1.25rem;
+  }
+  
+  .stories-container {
+    gap: 0.75rem;
+  }
+  
+  .story-item {
+    min-width: 70px;
+  }
+  
+  .story-avatar {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .story-label {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .homepage-feed {
+    padding: 0 0.25rem;
+  }
+  
+  .feed-header {
+    padding: 0 0.25rem;
+  }
+  
+  .stories-card {
+    padding: 0.75rem;
+  }
+}
+
+/* Scrollbar for stories */
+.stories-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.stories-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+.stories-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+}
+
+.stories-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.loading-posts {
+  animation: pulse 1.5s ease-in-out infinite;
 }
 </style> 

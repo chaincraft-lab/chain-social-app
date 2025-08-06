@@ -37,7 +37,7 @@
         <div>
           <h3 class="text-xl font-semibold mb-4">Kategoriler</h3>
           <ul class="space-y-2">
-            <li v-for="category in categories.slice(0, 6)" :key="category.id">
+            <li v-for="category in (categories || []).slice(0, 6)" :key="category?.id || Math.random()">
               <router-link 
                 :to="{ name: 'category', params: { slug: category.slug } }"
                 class="text-light-200 hover:text-primary transition-colors"
@@ -130,7 +130,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['categories'])
+    ...mapState('categories', ['categories'])
   },
   methods: {
     subscribeNewsletter() {

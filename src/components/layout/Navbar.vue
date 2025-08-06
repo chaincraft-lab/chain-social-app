@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-dark text-light shadow-sm">
+  <nav class="bg-dark text-light shadow-sm relative" style="z-index: 9998;">
     <div class="container mx-auto">
       <!-- Top Bar -->
       <div class="flex items-center justify-between py-3 border-b border-dark-700">
@@ -25,28 +25,58 @@
           </div>
           
           <!-- Abone Ol Butonu -->
-          <button 
+          <v-btn 
             @click="showSubscribeModal = true"
-            class="hidden md:flex items-center space-x-1 bg-secondary hover:bg-secondary/80 text-white py-2 px-4 rounded-full text-sm font-medium transition-colors"
+            color="secondary"
+            variant="flat"
+            rounded="pill"
+            size="small"
+            class="hidden md:flex text-none mr-2"
+            prepend-icon="mdi-bell"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-            </svg>
-            <span>Abone Ol</span>
-          </button>
+            Abone Ol
+          </v-btn>
+          
+          <!-- Dil Seçimi Butonu -->
+          <div class="relative hidden md:block">
+            <v-btn
+              @click="toggleLanguageDropdown"
+              variant="text"
+              color="white"
+              size="small"
+              rounded="pill"
+              icon="mdi-web"
+              class="language-btn"
+            ></v-btn>
+            
+            <!-- Dil Dropdown -->
+            <div 
+              v-if="showLanguageDropdown"
+              class="absolute right-0 top-full mt-2 w-40 bg-white text-dark shadow-lg rounded-md py-2 z-50 dropdown-shadow"
+              @mouseleave="hideLanguageDropdown"
+            >
+              <button
+                v-for="language in languages"
+                :key="language.code"
+                @click="selectLanguage(language)"
+                class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors flex items-center"
+                :class="{ 'bg-primary/10 text-primary': currentLanguage === language.name }"
+              >
+                <span class="mr-2">{{ language.flag }}</span>
+                <span>{{ language.name }}</span>
+                <v-icon v-if="currentLanguage === language.name" class="ml-auto" size="small">mdi-check</v-icon>
+              </button>
+            </div>
+          </div>
           
           <!-- Mobile Menu Button -->
-          <button 
+          <!-- <v-btn 
             @click="isMobileMenuOpen = !isMobileMenuOpen" 
-            class="p-2 text-light md:hidden focus:outline-none"
-          >
-            <svg v-if="!isMobileMenuOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+            :icon="isMobileMenuOpen ? 'mdi-close' : 'mdi-menu'"
+            variant="text"
+            color="white"
+            class="md:hidden"
+          ></v-btn> -->
           
           <!-- Social Icons -->
           <div class="hidden md:flex items-center space-x-3">
@@ -75,38 +105,95 @@
         <div class="hidden md:flex items-center justify-between py-3">
           <ul class="flex items-center space-x-6">
             <li v-for="(menuItem, index) in menu" :key="index" class="relative group">
-              <router-link 
-                :to="menuItem.title === 'Savunma Ligleri' ? { name: 'defense-leagues' } : { name: 'category', params: { slug: slugify(menuItem.title) } }"
-                class="text-light hover:text-secondary font-medium flex items-center"
-                @click="toggleDropdown(index)"
+              <!-- Menu Item with Hover -->
+              <div 
+                class="text-light hover:text-secondary font-medium flex items-center cursor-pointer menu-item-hover"
+                @mouseenter="showDropdown(index)"
+                @mouseleave="hideDropdown(index)"
               >
-                {{ menuItem.title }}
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <span>{{ menuItem.title }}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transition-transform" 
+                     :class="{ 'rotate-180': activeDropdown === index }"
+                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
-              </router-link>
-              
-              <!-- Dropdown Menu -->
-              <div 
-                v-show="activeDropdown === index" 
-                class="absolute left-0 mt-2 w-56 bg-altmenu text-light shadow-lg rounded-md py-2 z-50"
-              >
-                <router-link 
-                  v-for="(subtitle, subIndex) in menuItem.subtitles" 
-                  :key="subIndex" 
-                  :to="menuItem.title === 'Savunma Ligleri' ? 
-                    { name: 'defense-leagues-category', params: { category: slugify(subtitle) } } : 
-                    { name: 'category', params: { slug: slugify(subtitle) } }"
-                  class="block px-4 py-2 text-sm text-light hover:bg-altmenu-700 hover:text-secondary"
+                
+                <!-- Regular Dropdown Menu -->
+                <div 
+                  v-if="!menuItem.hasNestedDropdown && activeDropdown === index"
+                  class="absolute left-0 top-full mt-2 w-56 bg-altmenu text-light rounded-md py-2 dropdown-shadow"
+                  style="z-index: 9999;"
+                  @mouseenter="showDropdown(index)"
+                  @mouseleave="hideDropdown(index)"
                 >
-                  {{ subtitle }}
-                </router-link>
+                  <router-link 
+                    v-for="(subtitle, subIndex) in menuItem.subtitles" 
+                    :key="subIndex" 
+                    :to="menuItem.title === 'Savunma Ligleri' ? 
+                      { name: 'defense-leagues-category', params: { category: slugify(subtitle) } } : 
+                      { name: 'category', params: { slug: slugify(subtitle) } }"
+                    class="block px-4 py-2 text-sm text-light hover:bg-altmenu-700 hover:text-secondary transition-colors"
+                  >
+                    {{ subtitle }}
+                  </router-link>
+                </div>
+                
+                <!-- Nested Dropdown Menu for Defense Forces -->
+                <div 
+                  v-if="menuItem.hasNestedDropdown && activeDropdown === index"
+                  class="absolute left-0 top-full mt-2 w-72 bg-altmenu text-light rounded-md py-2 dropdown-shadow"
+                  style="z-index: 9999;"
+                  @mouseenter="showDropdown(index)"
+                  @mouseleave="hideDropdown(index)"
+                >
+                  <div 
+                    v-for="(nestedCategory, nestedIndex) in menuItem.nestedCategories" 
+                    :key="nestedIndex"
+                    class="relative group/nested"
+                    @mouseenter="showNestedDropdown(nestedIndex)"
+                    @mouseleave="hideNestedDropdown(nestedIndex)"
+                  >
+                    <div class="flex items-center justify-between px-4 py-2 text-sm text-light hover:bg-altmenu-700 hover:text-secondary cursor-pointer transition-colors">
+                      <div class="flex items-center">
+                        <v-icon :icon="nestedCategory.icon" size="small" class="mr-2"></v-icon>
+                        <span>{{ nestedCategory.title }}</span>
+                      </div>
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                    
+                    <!-- Sub-sub Dropdown -->
+                    <div 
+                      v-if="activeNestedDropdown === nestedIndex"
+                      class="absolute left-full top-0 ml-1 w-56 bg-altmenu-700 text-light rounded-md py-2 nested-dropdown-shadow"
+                      style="z-index: 10000;"
+                      @mouseenter="showNestedDropdown(nestedIndex)"
+                      @mouseleave="hideNestedDropdown(nestedIndex)"
+                    >
+                      <router-link 
+                        v-for="(subtitle, subIndex) in nestedCategory.subtitles" 
+                        :key="subIndex" 
+                        :to="{ name: 'category', params: { slug: slugify(subtitle) } }"
+                        class="block px-4 py-2 text-sm text-light hover:bg-altmenu-600 hover:text-secondary transition-colors"
+                      >
+                        {{ subtitle }}
+                      </router-link>
+                    </div>
+                  </div>
+                </div>
               </div>
             </li>
           </ul>
           
           <div class="flex items-center">
-            <span class="text-sm font-medium text-light/90">{{ currentDate }}</span>
+            <div class="date-container rounded-lg px-3 py-2 flex items-center space-x-2 cursor-pointer">
+              <v-icon size="small" color="primary">mdi-calendar-today</v-icon>
+              <div class="flex flex-col">
+                <span class="text-xs font-medium text-primary">{{ currentDay }}</span>
+                <span class="text-xs text-light/80">{{ currentDateFormatted }}</span>
+              </div>
+            </div>
           </div>
         </div>
         
@@ -147,14 +234,26 @@
               </div>
               
               <!-- Mobil Abone Ol Butonu -->
-              <button 
+              <v-btn 
                 @click="showSubscribeModal = true"
-                class="flex items-center bg-secondary hover:bg-secondary/80 text-white py-2 px-3 rounded-full text-sm font-medium transition-colors"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-              </button>
+                color="secondary"
+                variant="flat"
+                rounded="pill"
+                size="small"
+                icon="mdi-bell"
+                class="flex-shrink-0 mr-2"
+              ></v-btn>
+              
+              <!-- Mobil Dil Seçimi Butonu -->
+              <v-btn
+                @click="toggleLanguageDropdown"
+                variant="outlined"
+                color="white"
+                size="small"
+                rounded="pill"
+                icon="mdi-web"
+                class="flex-shrink-0"
+              ></v-btn>
             </div>
           </div>
           
@@ -225,17 +324,10 @@
                 </a>
               </div>
             </div>
-            <div class="grid grid-cols-2 gap-2">
-              <router-link to="/iletisim" class="bg-primary text-white py-2 px-4 rounded-lg text-center text-sm font-medium hover:bg-primary-dark transition-colors" @click="isMobileMenuOpen = false">
+            <div class="flex justify-center">
+              <router-link to="/iletisim" class="bg-primary text-white py-2 px-6 rounded-lg text-center text-sm font-medium hover:bg-primary-dark transition-colors" @click="isMobileMenuOpen = false">
                 İletişim
               </router-link>
-              <button 
-                @click="toggleLanguage" 
-                class="bg-secondary text-white py-2 px-4 rounded-lg text-center text-sm font-medium hover:bg-secondary-dark transition-colors flex items-center justify-center"
-              >
-                <span class="mr-1">🌐</span>
-                <span>{{ currentLanguage }}</span>
-              </button>
             </div>
           </div>
         </div>
@@ -244,83 +336,76 @@
   </nav>
   
   <!-- Abonelik Modal -->
-  <div v-if="showSubscribeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-    <!-- Backdrop -->
-    <div class="absolute inset-0 bg-dark/80" @click="showSubscribeModal = false"></div>
-    
-    <!-- Modal Content -->
-    <div class="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-auto overflow-hidden">
+  <v-dialog v-model="showSubscribeModal" max-width="500px">
+    <v-card>
       <!-- Modal Header -->
-      <div class="bg-secondary text-white p-4">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-semibold">Savunma Bültenine Abone Ol</h3>
-          <button 
-            @click="showSubscribeModal = false" 
-            class="text-white hover:text-light/80 focus:outline-none"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      </div>
+      <v-card-title class="bg-secondary text-white">
+        <span class="text-lg font-semibold">Savunma Bültenine Abone Ol</span>
+        <v-spacer></v-spacer>
+        <v-btn 
+          @click="showSubscribeModal = false" 
+          icon="mdi-close"
+          variant="text"
+          color="white"
+          size="small"
+        ></v-btn>
+      </v-card-title>
       
       <!-- Modal Body -->
-      <div class="p-6">
+      <v-card-text class="pt-6">
         <p class="text-gray-700 mb-4">
           Savunma sanayii ile ilgili en güncel haberleri, analizleri ve etkinlikleri içeren haftalık bültenimize abone olun.
         </p>
         
-        <form @submit.prevent="subscribeNewsletter">
-          <div class="mb-4">
-            <label for="subscribe-email" class="block text-sm font-medium text-gray-700 mb-1">E-posta Adresiniz</label>
-            <input 
-              type="email" 
-              id="subscribe-email"
-              v-model="subscribeEmail"
-              placeholder="ornek@mail.com" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-              required
-            />
-          </div>
+        <v-form @submit.prevent="subscribeNewsletter">
+          <v-text-field
+            v-model="subscribeEmail"
+            label="E-posta Adresiniz"
+            placeholder="ornek@mail.com"
+            type="email"
+            variant="outlined"
+            required
+            class="mb-4"
+          ></v-text-field>
           
-          <div class="mb-4">
-            <label class="flex items-start">
-              <input 
-                type="checkbox" 
-                v-model="subscribeConsent"
-                class="mt-1 h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary" 
-                required
-              />
-              <span class="ml-2 text-sm text-gray-600">
+          <v-checkbox
+            v-model="subscribeConsent"
+            required
+            class="mb-4"
+          >
+            <template #label>
+              <span class="text-sm text-gray-600">
                 Kişisel verilerimin işlenmesine ve tarafıma elektronik ileti gönderilmesine izin veriyorum.
               </span>
-            </label>
-          </div>
-          
-          <div class="flex justify-end">
-            <button 
-              type="button" 
-              class="mr-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
-              @click="showSubscribeModal = false"
-            >
-              İptal
-            </button>
-            <button 
-              type="submit" 
-              class="px-4 py-2 text-sm font-medium text-white bg-secondary hover:bg-secondary/80 rounded-md transition-colors"
-            >
-              Abone Ol
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+            </template>
+          </v-checkbox>
+        </v-form>
+      </v-card-text>
+      
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn 
+          @click="showSubscribeModal = false"
+          variant="outlined"
+          color="grey"
+        >
+          İptal
+        </v-btn>
+        <v-btn 
+          @click="subscribeNewsletter"
+          color="secondary"
+          variant="flat"
+        >
+          Abone Ol
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import { MENU_ITEMS, LANGUAGE_OPTIONS } from '@/constants'
 
 export default {
   name: 'SiteNavbar',
@@ -328,120 +413,25 @@ export default {
     return {
       isMobileMenuOpen: false,
       currentDate: '',
+      currentDay: '',
+      currentDateFormatted: '',
       activeDropdown: null,
+      activeNestedDropdown: null,
       mobileActiveSubmenu: null,
       currentLanguage: 'Türkçe',
       showSubscribeModal: false,
+      showLanguageDropdown: false,
       subscribeEmail: '',
       subscribeConsent: false,
-      menu: [
-        { 
-          title: "Haberler", 
-          subtitles: [
-            "Gündem", 
-            "Uluslararası", 
-            "Uzay", 
-            "Siber"
-          ] 
-        },
-        { 
-          title: "Kara", 
-          subtitles: [
-            "Tank", 
-            "Zırhlı Araçlar", 
-            "Topçu Sistemleri", 
-            "Füze Sistemleri", 
-            "Hafif Silahlar", 
-            "Kara Savunma Sistemleri"
-          ] 
-        },
-        { 
-          title: "Deniz", 
-          subtitles: [
-            "Fırkateyn", 
-            "Denizaltı", 
-            "Korvet", 
-            "Amfibi Gemiler", 
-            "Hücumbot", 
-            "Deniz Savunma Sistemleri"
-          ] 
-        },
-        { 
-          title: "Hava", 
-          subtitles: [
-            "Savaş Uçakları", 
-            "Helikopterler", 
-            "İHA/SİHA", 
-            "Nakliye Uçakları", 
-            "Hava Savunma Sistemleri", 
-            "Aviyonik Sistemler"
-          ] 
-        },
-        { 
-          title: "Teknoloji", 
-          subtitles: [
-            "Yeni Gelişmeler", 
-            "Yapay Zeka", 
-            "Elektronik Harp", 
-            "İncelemeler"
-          ] 
-        },
-        { 
-          title: "Projeler", 
-          subtitles: [
-            "Milli Projeler", 
-            "İhaleler", 
-            "Firma Ortaklıkları", 
-            "Ar-Ge Çalışmaları"
-          ] 
-        },
-        { 
-          title: "Analiz", 
-          subtitles: [
-            "Stratejik Yorum", 
-            "Uzman Görüşü", 
-            "Röportajlar", 
-            "Sektör Analizi"
-          ] 
-        },
-        { 
-          title: "Galeri", 
-          subtitles: [
-            "Fotoğraf", 
-            "Video", 
-            "3D ve Animasyonlar"
-          ] 
-        },
-        { 
-          title: "Savunma Ligleri", 
-          subtitles: [
-            "Kara Güvenlik Ligi", 
-            "Hava Güvenlik Ligi", 
-            "Deniz Güvenlik Ligi", 
-            "Siber Güvenlik Ligi",
-            "Uzay Güvenlik Ligi"
-          ] 
-        },
-        { 
-          title: "Hakkımızda", 
-          subtitles: [
-            "Ekibimiz", 
-            "İletişim", 
-            "Reklam"
-          ] 
-        },
-        { 
-          title: "Dil Seçimi", 
-          subtitles: [
-            "Türkçe", 
-            "English"
-          ] 
-        }
-      ]
+      menu: MENU_ITEMS,
+      languages: LANGUAGE_OPTIONS,
+      dropdownTimeout: null,
+      nestedDropdownTimeout: null,
+      languageDropdownTimeout: null
     }
   },
   computed: {
-    ...mapState(['categories'])
+    ...mapState('categories', ['categories'])
   },
   mounted() {
     this.updateCurrentDate()
@@ -463,15 +453,35 @@ export default {
   methods: {
     updateCurrentDate() {
       const now = new Date()
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-      this.currentDate = now.toLocaleDateString('tr-TR', options)
+      const dayOptions = { weekday: 'long' }
+      const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' }
+      
+      this.currentDay = now.toLocaleDateString('tr-TR', dayOptions)
+      this.currentDateFormatted = now.toLocaleDateString('tr-TR', dateOptions)
+      this.currentDate = now.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
     },
-    toggleDropdown(index) {
-      if (this.activeDropdown === index) {
-        this.activeDropdown = null
-      } else {
-        this.activeDropdown = index
-      }
+    showDropdown(index) {
+      clearTimeout(this.dropdownTimeout)
+      this.activeDropdown = index
+    },
+    hideDropdown(index) {
+      this.dropdownTimeout = setTimeout(() => {
+        if (this.activeDropdown === index) {
+          this.activeDropdown = null
+          this.activeNestedDropdown = null
+        }
+      }, 150)
+    },
+    showNestedDropdown(index) {
+      clearTimeout(this.nestedDropdownTimeout)
+      this.activeNestedDropdown = index
+    },
+    hideNestedDropdown(index) {
+      this.nestedDropdownTimeout = setTimeout(() => {
+        if (this.activeNestedDropdown === index) {
+          this.activeNestedDropdown = null
+        }
+      }, 150)
     },
     toggleMobileSubmenu(index) {
       if (this.mobileActiveSubmenu === index) {
@@ -483,10 +493,23 @@ export default {
     closeDropdownOnClickOutside(event) {
       if (!event.target.closest('.group')) {
         this.activeDropdown = null
+        this.activeNestedDropdown = null
       }
     },
-    toggleLanguage() {
-      this.currentLanguage = this.currentLanguage === 'Türkçe' ? 'English' : 'Türkçe'
+    toggleLanguageDropdown() {
+      this.showLanguageDropdown = !this.showLanguageDropdown
+    },
+    hideLanguageDropdown() {
+      this.languageDropdownTimeout = setTimeout(() => {
+        this.showLanguageDropdown = false
+      }, 150)
+    },
+    selectLanguage(language) {
+      this.currentLanguage = language.name
+      this.showLanguageDropdown = false
+      clearTimeout(this.languageDropdownTimeout)
+      // Here you would typically handle language change logic
+      console.log('Language changed to:', language.name)
     },
     slugify(text) {
       return text
@@ -500,34 +523,14 @@ export default {
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '');
     },
-    // getMenuIcon(title) {
-    //   switch (title) {
-    //     case "Haberler":
-    //       return "📰";
-    //     case "Kara":
-    //       return "🚗";
-    //     case "Deniz":
-    //       return "⛵";
-    //     case "Hava":
-    //       return "✈️";
-    //     case "Teknoloji":
-    //       return "⚙️";
-    //     case "Projeler":
-    //       return "🚀";
-    //     case "Analiz":
-    //       return "🔍";
-    //     case "Galeri":
-    //       return "🖼️";
-    //     case "Savunma Ligleri":
-    //       return "🏆";
-    //     case "Hakkımızda":
-    //       return "👥";
-    //     case "Dil Seçimi":
-    //       return "🌐";
-    //     default:
-    //       return "";
-    //   }
-    // }
+    subscribeNewsletter() {
+      // Gerçek uygulamada burada API çağrısı yapılır
+      alert(`${this.subscribeEmail} adresi savunma bültenine başarıyla abone oldu!`);
+      this.subscribeEmail = '';
+      this.subscribeConsent = false;
+      this.showSubscribeModal = false;
+    },
+
   }
 }
 </script>
@@ -612,5 +615,91 @@ export default {
 .overflow-y-auto::-webkit-scrollbar-thumb {
   background-color: var(--color-primary);
   border-radius: 10px;
+}
+
+/* Dropdown Animations */
+.dropdown-enter-active, .dropdown-leave-active {
+  transition: all 0.2s ease-out;
+}
+
+.dropdown-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* Nested Dropdown Animations */
+.nested-dropdown-enter-active, .nested-dropdown-leave-active {
+  transition: all 0.15s ease-out;
+}
+
+.nested-dropdown-enter-from {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.nested-dropdown-leave-to {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+/* Hover Effects */
+.menu-item-hover {
+  transition: all 0.2s ease-in-out;
+}
+
+.menu-item-hover:hover {
+  transform: translateY(-1px);
+}
+
+/* Dropdown Shadows */
+.dropdown-shadow {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nested-dropdown-shadow {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12), 0 3px 5px rgba(0, 0, 0, 0.08);
+}
+
+/* Z-index Classes */
+.dropdown-menu {
+  z-index: 9999 !important;
+}
+
+.nested-dropdown-menu {
+  z-index: 10000 !important;
+}
+
+.navbar-container {
+  z-index: 9998 !important;
+}
+
+/* Language Button */
+.language-btn {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.language-btn:hover {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Date Display */
+.date-container {
+  background: linear-gradient(135deg, rgba(25, 118, 210, 0.1), rgba(25, 118, 210, 0.05));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(25, 118, 210, 0.2);
+  transition: all 0.3s ease;
+}
+
+.date-container:hover {
+  background: linear-gradient(135deg, rgba(25, 118, 210, 0.15), rgba(25, 118, 210, 0.08));
+  border-color: rgba(25, 118, 210, 0.3);
+  transform: translateY(-1px);
 }
 </style> 
