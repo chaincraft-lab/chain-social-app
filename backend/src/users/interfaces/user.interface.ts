@@ -1,26 +1,25 @@
-import { Address } from "@prisma/client";
-import { JsonValue } from "@prisma/client/runtime/library";
-
 export interface IUser {
   id: number;
   uuid: string;
   name: string;
-  surname: string;
   email: string;
-  username: string;
+  avatar?: string;
+  bio?: string;
+  role: string;
   createdAt: Date;
-  isDeleted: boolean;
-  isBlocked: boolean;
+  isActive: boolean;
 }
 
-export interface IUpdateUserDetailsDto {
-  userDetails: IUserDetails;
-  address: Address;
+export interface ICreateUserDto {
+  name: string;
+  email: string;
+  password: string;
+  avatar?: string;
+  bio?: string;
 }
 
-interface IUserDetails {
-  age: number;
-  physicalInfo: JsonValue;
-  about: string;
+export interface IUpdateUserDto {
+  name?: string;
+  avatar?: string;
+  bio?: string;
 }
-

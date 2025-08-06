@@ -3,7 +3,7 @@ version: '3.8'
 services:
   app:
     build: .
-    container_name: soccer-ball-backend
+    container_name: haber-sitesi-backend
     ports:
       - '3000:3000'
     env_file:
@@ -19,9 +19,9 @@ services:
     image: postgres:13
     container_name: postgres_db
     environment:
-      POSTGRES_DB: soccerballdb
-      POSTGRES_USER: soccerballdb
-      POSTGRES_PASSWORD: soccerballpass
+      POSTGRES_DB: habersitesidb
+      POSTGRES_USER: habersitesi
+      POSTGRES_PASSWORD: habersitesipass
     ports:
       - '5432:5432'
     volumes:

@@ -1,8 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// Haber Sitesi için Prisma Veritabanı Şeması
+// Geliştirme notları: Frontend analizi temelinde oluşturulmuştur
 
 generator client {
   provider = "prisma-client-js"
@@ -13,115 +10,249 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
-  id          Int          @id @default(autoincrement())
-  uuid        String       @unique @default(uuid())
-  username    String       @unique
-  email       String       @unique
-  name        String
-  surname     String
-  password    String
-  userDetails UserDetails?
-
-  profileType   ProfileType? @relation("ProfileTypeUsers", fields: [profileTypeId], references: [id])
-  profileTypeId Int?
-
-  deletedDate DateTime? @db.Timestamptz
-  isDeleted   Boolean   @default(false)
-  blockedDate DateTime? @db.Timestamptz
-  isBlocked   Boolean   @default(false)
-  lastLogin   DateTime? @db.Timestamptz
-  createdAt   DateTime  @default(now()) @db.Timestamptz
-
-  captainOf    Team?                @relation("TeamCaptain")
-  playerTeam   Team?                @relation("TeamPlayer", fields: [playerTeamId], references: [id])
-  playerTeamId Int?
-  positions    Position[]           @default([])
-  dominantFoot EnumUserDominantFoot @default(BOTH)
-  coachedTeam  Team?                @relation("TeamCoach")
+// Kullanıcı Modeli
+model User {
+  id        Int      @id @default(autoincrement())
+  uuid      String   @unique @default(uuid())
+  name      String
+  email     String   @unique
+  password  String?
+  avatar    String?
+  bio       String?
+  role      UserRole @default(USER)
+  
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  
+  // İlişkiler
+  articles  Article[]
+  comments  Comment[]
+  likes     Like[]
+  bookmarks Bookmark[]
+  
+  @@map("users")
 }
 
-model ProfileType {
-  id    Int     @id @default(autoincrement())
-  type  String  @unique // (PLAYER, REFEREE, OBSERVER etc..)
-  users Users[] @relation("ProfileTypeUsers")
+// Kategori Modeli
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  color       String?  // Renk kodu (ör: #FF5722)
+  icon        String?  // Icon adı (ör: mdi-airplane)
+  
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // İlişkiler
+  articles    Article[]
+  galleryItems GalleryItem[]
+  
+  @@map("categories")
 }
 
-model Team {
-  id              Int      @id @default(autoincrement())
-  name            String
-  teamDescription String?
-  emblem          String?
-  createdAt       DateTime @default(now()) @db.Timestamptz
-  stadium         String?
-
-  formation Formation
-  captain   Users     @relation("TeamCaptain", fields: [captainId], references: [id])
-  captainId Int       @unique
-  coach     Users?    @relation("TeamCoach", fields: [coachId], references: [id])
-  coachId   Int?      @unique
-  players   Users[]   @relation("TeamPlayer")
+// Etiket Modeli
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  slug      String   @unique
+  
+  createdAt DateTime @default(now())
+  
+  // İlişkiler - Many-to-Many
+  articles  ArticleTag[]
+  
+  @@map("tags")
 }
 
-model UserDetails {
-  id           Int      @id @default(autoincrement())
-  age          Int?
-  physicalInfo Json? // tstore weight, height
-  accountPhoto String?
-  about        String?
-  address      Address?
-
-  user   Users  @relation(fields: [userId], references: [uuid], onDelete: Cascade)
-  userId String @unique
+// Makale/Haber Modeli
+model Article {
+  id          Int         @id @default(autoincrement())
+  title       String
+  slug        String      @unique
+  excerpt     String      // Özet
+  content     String      // Ana içerik
+  image       String?     // Ana görsel URL
+  
+  // Durum bilgileri
+  status      ArticleStatus @default(DRAFT)
+  isFeatured  Boolean       @default(false)
+  isBreaking  Boolean       @default(false)
+  
+  // Metrikler
+  views       Int           @default(0)
+  likes       Int           @default(0)
+  
+  // Tarih bilgileri
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  // İlişkiler
+  author      User          @relation(fields: [authorId], references: [id])
+  authorId    Int
+  
+  category    Category      @relation(fields: [categoryId], references: [id])
+  categoryId  Int
+  
+  tags        ArticleTag[]
+  comments    Comment[]
+  articleLikes Like[]
+  bookmarks   Bookmark[]
+  gallery     GalleryItem[]
+  
+  @@map("articles")
 }
 
-model Address {
-  id         Int     @id @default(autoincrement())
-  country    String
-  city       String
-  street     String?
-  state      String?
-  postalCode String?
-
-  userDetails   UserDetails @relation(fields: [userDetailsId], references: [id])
-  userDetailsId Int         @unique
+// Makale-Etiket İlişki Tablosu (Many-to-Many)
+model ArticleTag {
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId     Int
+  
+  @@id([articleId, tagId])
+  @@map("article_tags")
 }
 
-model Match {
-  id       Int         @id @default(autoincrement())
-  dateTime DateTime
-  field    String
-  status   MatchStatus @default(SCHEDULED)
+// Yorum Modeli
+model Comment {
+  id        Int           @id @default(autoincrement())
+  content   String
+  status    CommentStatus @default(PENDING)
+  
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  
+  // İlişkiler
+  user      User          @relation(fields: [userId], references: [id])
+  userId    Int
+  
+  article   Article       @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int
+  
+  // Alt yorumlar için self-reference
+  parent    Comment?      @relation("CommentReplies", fields: [parentId], references: [id])
+  parentId  Int?
+  replies   Comment[]     @relation("CommentReplies")
+  
+  @@map("comments")
 }
 
-enum Formation {
-  FOUR_TWO
-  THREE_THREE
-  THREE_TWO_ONE
+// Beğeni Modeli
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  
+  // İlişkiler
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int
+  
+  @@unique([userId, articleId])
+  @@map("likes")
 }
 
-enum EnumUserDominantFoot {
-  LEFT
-  RIGHT
-  BOTH
+// Bookmark/Kaydetme Modeli
+model Bookmark {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  
+  // İlişkiler
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId Int
+  
+  @@unique([userId, articleId])
+  @@map("bookmarks")
 }
 
-enum MatchStatus {
-  SCHEDULED
-  IN_PROGRESS
-  COMPLETED
-  CANCELLED
+// Reklam Modeli
+model Advertisement {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  image       String   // Reklam görseli URL
+  url         String   // Yönlendirilecek URL
+  position    AdPosition
+  
+  // Durum ve tarih bilgileri
+  isActive    Boolean  @default(true)
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Metrikler
+  views       Int      @default(0)
+  clicks      Int      @default(0)
+  
+  @@map("advertisements")
 }
 
-enum Position {
-  GOALKEEPER
-  DEFENDER
-  RIGHT_BACK
-  LEFT_BACK
-  RIGHT_WING
-  LEFT_WING
-  OFFENSIVE_MIDFIELDER
-  DEFENSIVE_MIDFIELDER
-  FORWARD
-  ALL
+// Galeri Öğesi Modeli
+model GalleryItem {
+  id          Int         @id @default(autoincrement())
+  title       String
+  description String?
+  url         String      // Resim/Video URL
+  type        MediaType
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // İlişkiler
+  article     Article?    @relation(fields: [articleId], references: [id])
+  articleId   Int?
+  
+  category    Category?   @relation(fields: [categoryId], references: [id])
+  categoryId  Int?
+  
+  @@map("gallery_items")
+}
+
+// Enum Tanımlamaları
+enum UserRole {
+  USER
+  AUTHOR
+  EDITOR
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  DELETED
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SPAM
+}
+
+enum AdPosition {
+  SIDEBAR
+  BANNER_TOP
+  BANNER_MIDDLE
+  BANNER_BOTTOM
+  INLINE
+  POPUP
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  ANIMATION
+  DOCUMENT
 }

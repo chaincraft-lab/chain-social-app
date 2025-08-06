@@ -1,6 +1,6 @@
 ## Description
 
-Soccer Ball
+Haber Sitesi Backend API - NestJS tabanlı haber yönetim sistemi
 
 ## Installation and running the app with docker
 
@@ -16,7 +16,7 @@ $ docker-compose up -d
 
 ```bash
 # build
-$ docker exec -ti --imageName sh
+$ docker exec -ti haber-sitesi-backend sh
 
 # create schema
 $ npx prisma generate

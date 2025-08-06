@@ -1,7 +1,7 @@
 {
-  "name": "soccerball-backend",
+  "name": "haber-sitesi-backend",
   "version": "0.0.1",
-  "description": "",
+  "description": "Haber Sitesi Backend API - NestJS",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
