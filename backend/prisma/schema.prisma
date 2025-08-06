@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id          Int          @id @default(autoincrement())
+  uuid        String       @unique @default(uuid())
+  username    String       @unique
+  email       String       @unique
+  name        String
+  surname     String
+  password    String
+  userDetails UserDetails?
+
+  profileType   ProfileType? @relation("ProfileTypeUsers", fields: [profileTypeId], references: [id])
+  profileTypeId Int?
+
+  deletedDate DateTime? @db.Timestamptz
+  isDeleted   Boolean   @default(false)
+  blockedDate DateTime? @db.Timestamptz
+  isBlocked   Boolean   @default(false)
+  lastLogin   DateTime? @db.Timestamptz
+  createdAt   DateTime  @default(now()) @db.Timestamptz
+
+  captainOf    Team?                @relation("TeamCaptain")
+  playerTeam   Team?                @relation("TeamPlayer", fields: [playerTeamId], references: [id])
+  playerTeamId Int?
+  positions    Position[]           @default([])
+  dominantFoot EnumUserDominantFoot @default(BOTH)
+  coachedTeam  Team?                @relation("TeamCoach")
+}
+
+model ProfileType {
+  id    Int     @id @default(autoincrement())
+  type  String  @unique // (PLAYER, REFEREE, OBSERVER etc..)
+  users Users[] @relation("ProfileTypeUsers")
+}
+
+model Team {
+  id              Int      @id @default(autoincrement())
+  name            String
+  teamDescription String?
+  emblem          String?
+  createdAt       DateTime @default(now()) @db.Timestamptz
+  stadium         String?
+
+  formation Formation
+  captain   Users     @relation("TeamCaptain", fields: [captainId], references: [id])
+  captainId Int       @unique
+  coach     Users?    @relation("TeamCoach", fields: [coachId], references: [id])
+  coachId   Int?      @unique
+  players   Users[]   @relation("TeamPlayer")
+}
+
+model UserDetails {
+  id           Int      @id @default(autoincrement())
+  age          Int?
+  physicalInfo Json? // tstore weight, height
+  accountPhoto String?
+  about        String?
+  address      Address?
+
+  user   Users  @relation(fields: [userId], references: [uuid], onDelete: Cascade)
+  userId String @unique
+}
+
+model Address {
+  id         Int     @id @default(autoincrement())
+  country    String
+  city       String
+  street     String?
+  state      String?
+  postalCode String?
+
+  userDetails   UserDetails @relation(fields: [userDetailsId], references: [id])
+  userDetailsId Int         @unique
+}
+
+model Match {
+  id       Int         @id @default(autoincrement())
+  dateTime DateTime
+  field    String
+  status   MatchStatus @default(SCHEDULED)
+}
+
+enum Formation {
+  FOUR_TWO
+  THREE_THREE
+  THREE_TWO_ONE
+}
+
+enum EnumUserDominantFoot {
+  LEFT
+  RIGHT
+  BOTH
+}
+
+enum MatchStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum Position {
+  GOALKEEPER
+  DEFENDER
+  RIGHT_BACK
+  LEFT_BACK
+  RIGHT_WING
+  LEFT_WING
+  OFFENSIVE_MIDFIELDER
+  DEFENSIVE_MIDFIELDER
+  FORWARD
+  ALL
+}
