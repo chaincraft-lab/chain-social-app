@@ -14,14 +14,14 @@ export class AuthService {
     private userService: UsersService,
     private jwtService: JwtService,
   ) {}
-  async register(registerDto: Partial<Prisma.UsersCreateInput>): Promise<object> {
+  async register(registerDto: Partial<Prisma.UserCreateInput>): Promise<object> {
     const user = await this.userService.findOneByEmail(registerDto.email);
     if (user) {
       throw new HttpException('User already exists!', 409);
     }
     const hashedPassword = await hashPasswordFunc(registerDto.password);
     try {
-      await this.prisma.users.create({
+      await this.prisma.user.create({
         data: {
           email: registerDto.email,
           password: hashedPassword,
@@ -62,7 +62,7 @@ export class AuthService {
     const getUser = await this.userService.findOneById(userInfo.uuid)
 
 
-    await this.prisma.users.update({
+    await this.prisma.user.update({
       where: {
         id: userInfo.id
       },
