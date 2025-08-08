@@ -16,7 +16,7 @@
       </div>
 
       <!-- Post Image -->
-      <div class="post-image-container">
+      <div class="post-image-container" @click="goToArticle" style="cursor: pointer;">
         <v-img 
           :src="news.image" 
           :alt="news.title"
@@ -62,11 +62,11 @@
 
       <!-- Post Content -->
       <div class="post-content">
-        <div class="post-title">
+        <div class="post-title" @click="goToArticle" style="cursor: pointer;">
           <strong>{{ news.author?.name || 'editör' }}</strong>
           {{ news.title }}
         </div>
-        <div class="post-excerpt" v-if="news.excerpt">
+        <div class="post-excerpt" v-if="news.excerpt" @click="goToArticle" style="cursor: pointer;">
           {{ news.excerpt }}
         </div>
         
@@ -220,6 +220,12 @@ export default {
         this.commentsCount++
         this.newComment = ''
       }
+    },
+    goToArticle() {
+      this.$router.push({
+        name: 'article',
+        params: { slug: this.news.id || this.news.slug }
+      })
     }
   }
 }

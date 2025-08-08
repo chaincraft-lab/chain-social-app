@@ -126,16 +126,15 @@
                   @mouseenter="showDropdown(index)"
                   @mouseleave="hideDropdown(index)"
                 >
-                  <router-link 
+                  <a 
                     v-for="(subtitle, subIndex) in menuItem.subtitles" 
                     :key="subIndex" 
-                    :to="menuItem.title === 'Savunma Ligleri' ? 
-                      { name: 'defense-leagues-category', params: { category: slugify(subtitle) } } : 
-                      { name: 'category', params: { slug: slugify(subtitle) } }"
+                    href="#"
+                    @click.prevent="handleMenuClick(subtitle)"
                     class="block px-4 py-2 text-sm text-light hover:bg-altmenu-700 hover:text-secondary transition-colors"
                   >
                     {{ subtitle }}
-                  </router-link>
+                  </a>
                 </div>
                 
                 <!-- Nested Dropdown Menu for Defense Forces -->
@@ -171,14 +170,15 @@
                       @mouseenter="showNestedDropdown(nestedIndex)"
                       @mouseleave="hideNestedDropdown(nestedIndex)"
                     >
-                      <router-link 
+                      <a 
                         v-for="(subtitle, subIndex) in nestedCategory.subtitles" 
                         :key="subIndex" 
-                        :to="{ name: 'category', params: { slug: slugify(subtitle) } }"
+                        href="#"
+                        @click.prevent="handleMenuClick(subtitle)"
                         class="block px-4 py-2 text-sm text-light hover:bg-altmenu-600 hover:text-secondary transition-colors"
                       >
                         {{ subtitle }}
-                      </router-link>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -284,17 +284,15 @@
                     :style="{ maxHeight: mobileActiveSubmenu === index ? `${menuItem.subtitles.length * 40 + 16}px` : '0px' }"
                   >
                     <div class="grid grid-cols-2 gap-1 p-2">
-                      <router-link 
+                      <a 
                         v-for="(subtitle, subIndex) in menuItem.subtitles" 
                         :key="subIndex" 
-                        :to="menuItem.title === 'Savunma Ligleri' ? 
-                          { name: 'defense-leagues-category', params: { category: slugify(subtitle) } } : 
-                          { name: 'category', params: { slug: slugify(subtitle) } }"
+                        href="#"
+                        @click.prevent="handleMobileMenuClick(subtitle)"
                         class="block text-sm text-light/90 hover:text-secondary py-2 px-3 rounded-md hover:bg-dark-600"
-                        @click="isMobileMenuOpen = false"
                       >
                         {{ subtitle }}
-                      </router-link>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -530,7 +528,16 @@ export default {
       this.subscribeConsent = false;
       this.showSubscribeModal = false;
     },
-
+    handleMenuClick(menuTitle) {
+      // Üst menü linklerine tıklandığında - şimdilik hiçbir şey yapmıyor
+      console.log('Menü tıklandı:', menuTitle);
+      // Gelecekte buraya özel sayfa routing'i eklenebilir
+    },
+    handleMobileMenuClick(menuTitle) {
+      // Mobil menü linklerine tıklandığında
+      this.isMobileMenuOpen = false;
+      this.handleMenuClick(menuTitle);
+    }
   }
 }
 </script>

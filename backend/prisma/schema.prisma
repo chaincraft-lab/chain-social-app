@@ -45,8 +45,8 @@ model Category {
   name        String   @unique
   slug        String   @unique
   description String?
-  color       String?  // Renk kodu (ör: #FF5722)
-  icon        String?  // Icon adı (ör: mdi-airplane)
+  color       String?
+  icon        String?
   
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())

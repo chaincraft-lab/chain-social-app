@@ -13,12 +13,10 @@
         <!-- Navigation -->
         <nav class="hidden md:flex space-x-4">
           <router-link 
-            v-for="category in (categories || []).slice(0, 5)" 
-            :key="category?.id || Math.random()" 
-            :to="{ name: 'category', params: { slug: category.slug }}"
+            to="/"
             class="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary-dark"
           >
-            {{ category.name }}
+            Ana Sayfa
           </router-link>
         </nav>
         
@@ -49,13 +47,11 @@
       <!-- Mobile Menu -->
       <div v-if="isMobileMenuOpen" class="md:hidden py-2">
         <router-link 
-          v-for="category in (categories || [])" 
-          :key="category?.id || Math.random()" 
-          :to="{ name: 'category', params: { slug: category.slug }}"
+          to="/"
           class="block px-3 py-2 rounded-md text-base font-medium hover:bg-primary-dark"
           @click="isMobileMenuOpen = false"
         >
-          {{ category.name }}
+          Ana Sayfa
         </router-link>
       </div>
     </div>
@@ -63,23 +59,18 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
-import { useStore } from 'vuex'
+import { ref } from 'vue'
 
 export default {
   name: 'TopBar',
   setup() {
-    const store = useStore()
     const isMobileMenuOpen = ref(false)
-    
-    const categories = computed(() => store.state.categories.categories || [])
     
     const toggleMobileMenu = () => {
       isMobileMenuOpen.value = !isMobileMenuOpen.value
     }
     
     return {
-      categories,
       isMobileMenuOpen,
       toggleMobileMenu
     }
