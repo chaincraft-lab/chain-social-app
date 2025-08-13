@@ -24,6 +24,7 @@
 </template>
 
 <script setup>
+/* eslint-disable no-undef */
 defineProps({
   showCategories: {
     type: Boolean,
@@ -34,4 +35,5 @@ defineProps({
     default: () => []
   }
 });
+/* eslint-enable no-undef */
 </script>
