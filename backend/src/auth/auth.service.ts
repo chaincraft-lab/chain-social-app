@@ -1,9 +1,9 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'prisma/prisma.service';
-import { UsersService } from 'src/users/users.service';
+import { PrismaService } from '../common/prisma/prisma.service';
+import { UsersService } from '../users/users.service';
 import { hashPasswordFunc, isPasswordMatch } from './common/auth.common';
-import { IUser } from 'src/users/interfaces/user.interface';
+import { IUser } from '../users/interfaces/user.interface';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 
