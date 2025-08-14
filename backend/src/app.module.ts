@@ -9,6 +9,10 @@ import { ArticlesModule } from './articles/articles.module';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { CommentsModule } from './comments/comments.module';
+import { LikesModule } from './likes/likes.module';
+import { BookmarksModule } from './bookmarks/bookmarks.module';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
   imports: [
@@ -17,6 +21,10 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
     UsersModule,
     CategoriesModule,
     ArticlesModule,
+    CommentsModule,
+    LikesModule,
+    BookmarksModule,
+    TagsModule,
   ],
   controllers: [AppController],
   providers: [
