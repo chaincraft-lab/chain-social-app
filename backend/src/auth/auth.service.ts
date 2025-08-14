@@ -13,7 +13,7 @@ export class AuthService {
     private prisma: PrismaService,
     private userService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
   async register(registerDto: Partial<Prisma.UserCreateInput>): Promise<object> {
     const user = await this.userService.findOneByEmail(registerDto.email);
     if (user) {
@@ -50,7 +50,7 @@ export class AuthService {
       const isMatch = await isPasswordMatch(password, userPass.password);
       if (isMatch) {
         const user = await this.userService.findOneByEmail(email)
-        const {...userData } = user;
+        const { ...userData } = user;
         return userData;
       }
     }
@@ -58,9 +58,15 @@ export class AuthService {
   }
 
   async login(user: LoginDto, userInfo: IUser) {
-    const payload = { email: user.email, sub: userInfo.uuid };
-    const getUser = await this.userService.findOneById(userInfo.uuid)
-
+    const payload = {
+      id: userInfo.id,
+      uuid: userInfo.uuid,
+      email: user.email,
+      name: userInfo.name,
+      surname: userInfo.surname,
+      username: userInfo.username,
+      role: userInfo.role
+    };
 
     await this.prisma.user.update({
       where: {
@@ -72,16 +78,17 @@ export class AuthService {
     })
 
     const userResponse = {
-      id : getUser.id,
-      uuid : getUser.uuid,
-      email : getUser.email,
-      name : getUser.name,
-      surname : getUser.surname,
-      username : getUser.username,
+      id: userInfo.id,
+      uuid: userInfo.uuid,
+      email: userInfo.email,
+      name: userInfo.name,
+      surname: userInfo.surname,
+      username: userInfo.username,
+      role: userInfo.role,
     }
 
     return {
-      ...userResponse, 
+      ...userResponse,
       access_token: this.jwtService.sign(payload),
     };
   }

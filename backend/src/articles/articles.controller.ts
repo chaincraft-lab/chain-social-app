@@ -32,8 +32,12 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { UserRole } from '@prisma/client';
 
 interface CurrentUserType {
-  id: number;
+  userId: number;  // Internal ID from JWT
+  uuid: string;    // UUID from JWT  
   email: string;
+  name: string;
+  surname: string;
+  username: string;
   role: UserRole;
 }
 
@@ -64,7 +68,8 @@ export class ArticlesController {
     @Body() createArticleDto: CreateArticleDto,
     @CurrentUser() user: CurrentUserType,
   ): Promise<ArticleResponseDto> {
-    return this.articlesService.create(createArticleDto, user.id);
+    console.log('Creating article with data:', createArticleDto, 'by user:', user);
+    return this.articlesService.create(createArticleDto, user.userId);
   }
 
   @Get()
@@ -200,7 +205,7 @@ export class ArticlesController {
     @Body() updateArticleDto: UpdateArticleDto,
     @CurrentUser() user: CurrentUserType,
   ): Promise<ArticleResponseDto> {
-    return this.articlesService.update(id, updateArticleDto, user.id, user.role);
+    return this.articlesService.update(id, updateArticleDto, user.userId, user.role);
   }
 
   @Delete(':id')
@@ -221,7 +226,7 @@ export class ArticlesController {
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: CurrentUserType,
   ): Promise<{ message: string }> {
-    await this.articlesService.remove(id, user.id, user.role);
+    await this.articlesService.remove(id, user.userId, user.role);
     return { message: 'Makale başarıyla silindi' };
   }
 

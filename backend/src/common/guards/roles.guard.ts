@@ -20,7 +20,6 @@ export class RolesGuard implements CanActivate {
     if (!user) {
       throw new ForbiddenException('Kullanıcı kimlik doğrulaması gerekli');
     }
-
     const hasRole = requiredRoles.some(role => user.role === role);
     
     if (!hasRole) {
