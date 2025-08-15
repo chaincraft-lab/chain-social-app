@@ -1,92 +1,124 @@
-# Haber Sitesi (News Website)
+# News Site Project
 
-Modern, responsive news website built with Vue.js and Tailwind CSS.
+Modern news website with NestJS backend, Vue.js frontend and Next.js admin dashboard.
 
-## Features
-
-- Modern component-based architecture using Vue 3
-- Responsive design that works on all devices
-- Custom UI components (buttons, cards, badges, inputs)
-- News display with categories and featured articles
-- Layout components (navbar, footer, sidebar)
-- Mock API services for development
-- Vuex store for state management
-- Vue Router for navigation
+![version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![license](https://img.shields.io/badge/license-MIT-blue.svg)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)
 
 ## Project Structure
 
-- `/src/components/ui`: Reusable UI components
-- `/src/components/news`: News-specific components
-- `/src/components/layout`: Layout components
-- `/src/views`: Page components
-- `/src/layouts`: Layout templates
-- `/src/api`: API services and mock data
-- `/src/assets`: Static assets and CSS
+```
+news-site/
+├── backend/           # NestJS REST API
+├── frontend/          # Vue.js News Site  
+├── admin-dashboard/   # Next.js Admin Panel
+├── scripts/           # Docker helper scripts
+└── docker-compose.yml # Docker configuration
+```
 
-## Design System
+## Quick Start
 
-- **Color Palette**: #459c98 (teal), #f28f80 (coral), #ffffff (white), #2e3d3c (dark green), #d9e3e2 (light gray-green)
-- **Typography**: Inter, Poppins, Merriweather
-- **Custom Tailwind configuration** with extended theme
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v14 or later)
-- Yarn or npm
-
-### Installation
+### Development Environment
 
 ```bash
-# Clone the repository
-git clone <repository-url>
+# Start all services
+docker compose -f docker-compose.dev.yml up --build
 
-# Navigate to project directory
-cd haber-sitesi
+# Or use helper script
+./scripts/docker-dev.sh
+```
 
-# Install dependencies
-yarn install
-# or
+### Production Environment
+
+```bash
+# Start production services
+docker compose up --build -d
+
+# Or use helper script
+./scripts/docker-prod.sh
+```
+
+## Services & Ports
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Frontend** | http://localhost:8080 | Vue.js news website |
+| **Admin Dashboard** | http://localhost:3000 | Next.js admin panel |
+| **Backend API** | http://localhost:8020 | NestJS REST API |
+| **Database** | localhost:5001 | PostgreSQL database |
+| **API Docs** | http://localhost:8020/api | Swagger documentation |
+
+## Technologies
+
+- **Backend**: NestJS + PostgreSQL + Prisma
+- **Frontend**: Vue.js 3 + Vuetify
+- **Admin**: Next.js 12 + Material-UI
+- **Database**: PostgreSQL
+- **Auth**: JWT
+- **Container**: Docker
+
+## Docker Commands
+
+```bash
+# Start development environment
+docker compose -f docker-compose.dev.yml up --build
+
+# Start production environment  
+docker compose up --build -d
+
+# View logs
+docker compose logs -f [service_name]
+
+# Check status
+docker compose ps
+
+# Stop all services
+docker compose down
+```
+
+## Manual Development
+
+### Backend
+```bash
+cd backend
 npm install
+npm run start:dev
+# Runs on http://localhost:8020
 ```
 
-### Development
-
+### Frontend
 ```bash
-# Start development server
-yarn serve
-# or
-npm run serve
+cd frontend  
+npm install
+npm run dev
+# Runs on http://localhost:8080
 ```
 
-### Building for Production
-
+### Admin Dashboard
 ```bash
-# Build for production
-yarn build
-# or
-npm run build
+cd admin-dashboard
+npm install
+npm run dev  
+# Runs on http://localhost:3000
 ```
 
-### Linting
+## Environment Variables
 
-```bash
-# Lint and fix files
-yarn lint
-# or
-npm run lint
+### Backend (.env)
+```env
+DATABASE_URL="postgresql://postgres:habersitesipass@localhost:5432/habersitesidb"
+JWT_SECRET="your-jwt-secret"
+JWT_EXPIRES_IN="7d"
 ```
 
-## Future Enhancements
+### Admin Dashboard (.env.local)
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8020
+NEXT_PUBLIC_API_VERSION=v1
+```
 
-- Admin panel for content management
-- User authentication and subscription features
-- Banner ad management system
-- Analytics integration
-- Enhanced SEO features
-- Comments and social sharing functionality
+---
 
-## License
-
-This project is licensed under the MIT License.
+**Developer**: ozknsmz  
+**Version**: 1.0.0

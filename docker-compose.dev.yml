@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: haber-sitesi-frontend-dev
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+
+  admin-dashboard:
+    build:
+      context: ./admin-dashboard
+      dockerfile: Dockerfile.dev
+    container_name: haber-sitesi-admin-dev
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./admin-dashboard:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:8020
+      - NEXT_PUBLIC_API_VERSION=v1
+      - NEXT_PUBLIC_APP_NAME=Haber Sitesi Admin
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: haber-sitesi-backend-dev
+    ports:
+      - '8020:3000'
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - db
+    command: npm run start:dev
+
+  db:
+    image: postgres:13
+    container_name: postgres_db_dev
+    environment:
+      POSTGRES_DB: habersitesidb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: habersitesipass
+    ports:
+      - '5001:5432'
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+
+volumes:
+  postgres_data_dev:
