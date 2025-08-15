@@ -23,8 +23,11 @@ services:
     container_name: haber-sitesi-admin
     ports:
       - '3000:3000'
+    volumes:
+      - ./admin-dashboard:/app
+      - /app/node_modules
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - NEXT_PUBLIC_API_URL=http://backend:3000
       - NEXT_PUBLIC_API_VERSION=v1
       - NEXT_PUBLIC_APP_NAME=Haber Sitesi Admin

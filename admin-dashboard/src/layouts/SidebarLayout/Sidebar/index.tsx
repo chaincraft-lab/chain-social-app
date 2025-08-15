@@ -88,7 +88,7 @@ function Sidebar() {
             size="small"
             fullWidth
           >
-            Upgrade to PRO
+            CONTACT
           </Button>
         </Box>
       </SidebarWrapper>
