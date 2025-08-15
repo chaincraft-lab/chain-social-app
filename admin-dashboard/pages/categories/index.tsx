@@ -47,7 +47,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { useCategoryStore } from 'src/stores/categoryStore';
-import { CategoryResponse } from 'src/services/api';
+import { CategoryResponse } from 'src/services';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
 import CategoryModal from 'src/components/CategoryModal';

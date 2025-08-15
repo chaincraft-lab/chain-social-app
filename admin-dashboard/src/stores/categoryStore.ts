@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import apiService, { CategoryResponse, CreateCategoryRequest, UpdateCategoryRequest, PaginatedResponse } from '../services/api';
+import { categoryService, CategoryResponse, CreateCategoryRequest, UpdateCategoryRequest, PaginatedResponse } from '../services';
 
 // Store state interface'i
 interface CategoryState {
@@ -64,7 +64,7 @@ export const useCategoryStore = create<CategoryState>()(
       fetchCategories: async (page = 1, limit = 10) => {
         set({ loading: true, error: null });
         try {
-          const response: any = await apiService.getCategories(page, limit);
+          const response: any = await categoryService.getCategories(page, limit);
           
           // Backend'den gelen format: { data: { data: [...], page, limit, total, totalPages } }
           const categories = response.data?.data || [];
@@ -91,7 +91,7 @@ export const useCategoryStore = create<CategoryState>()(
       fetchActiveCategories: async () => {
         set({ loading: true, error: null });
         try {
-          const categories = await apiService.getActiveCategories();
+          const categories = await categoryService.getActiveCategories();
           set({
             activeCategories: categories,
             loading: false,
@@ -107,7 +107,7 @@ export const useCategoryStore = create<CategoryState>()(
       fetchCategoryById: async (id: number) => {
         set({ loading: true, error: null });
         try {
-          const category = await apiService.getCategoryById(id);
+          const category = await categoryService.getCategoryById(id);
           set({
             selectedCategory: category,
             loading: false,
@@ -123,7 +123,7 @@ export const useCategoryStore = create<CategoryState>()(
       createCategory: async (data: CreateCategoryRequest) => {
         set({ loadingCreate: true, error: null });
         try {
-          const newCategory = await apiService.createCategory(data);
+          const newCategory = await categoryService.createCategory(data);
           
           // Kategoriler listesini güncelle
           const { categories } = get();
@@ -153,7 +153,7 @@ export const useCategoryStore = create<CategoryState>()(
       updateCategory: async (id: number, data: UpdateCategoryRequest) => {
         set({ loadingUpdate: true, error: null });
         try {
-          const updatedCategory = await apiService.updateCategory(id, data);
+          const updatedCategory = await categoryService.updateCategory(id, data);
           
           // Kategoriler listesini güncelle
           const { categories } = get();
@@ -195,7 +195,7 @@ export const useCategoryStore = create<CategoryState>()(
       deleteCategory: async (id: number) => {
         set({ loadingDelete: true, error: null });
         try {
-          await apiService.deleteCategory(id);
+          await categoryService.deleteCategory(id);
           
           // Kategorileri listelerden kaldır
           const { categories, activeCategories } = get();
@@ -219,7 +219,7 @@ export const useCategoryStore = create<CategoryState>()(
       toggleCategoryActive: async (id: number) => {
         set({ loadingUpdate: true, error: null });
         try {
-          const updatedCategory = await apiService.toggleCategoryActive(id);
+          const updatedCategory = await categoryService.toggleCategoryActive(id);
           
           // Kategoriler listesini güncelle
           const { categories } = get();

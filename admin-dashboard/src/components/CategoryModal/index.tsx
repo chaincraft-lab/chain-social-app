@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { HexColorPicker } from 'react-colorful';
 import { useCategoryStore } from 'src/stores/categoryStore';
-import { CreateCategoryRequest, UpdateCategoryRequest, CategoryResponse } from 'src/services/api';
+import { CreateCategoryRequest, UpdateCategoryRequest, CategoryResponse } from 'src/services';
 
 interface CategoryModalProps {
   open: boolean;
