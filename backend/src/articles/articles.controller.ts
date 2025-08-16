@@ -101,6 +101,41 @@ export class ArticlesController {
     return this.articlesService.findAll(filterDto);
   }
 
+  @Get('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.EDITOR)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ 
+    summary: 'Admin için tüm makaleleri listele',
+    description: 'Admin paneli için tüm makaleleri (aktif/pasif) filtreli ve sayfalı olarak listeler.'
+  })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Makaleler başarıyla listelendi',
+    type: 'PaginatedResponse<ArticleResponseDto>'
+  })
+  @ApiResponse({ status: 401, description: 'Yetkilendirme gerekli' })
+  @ApiResponse({ status: 403, description: 'Yetkisiz erişim' })
+  @ApiQuery({ name: 'page', required: false, description: 'Sayfa numarası' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Sayfa başına öğe sayısı' })
+  @ApiQuery({ name: 'categoryId', required: false, description: 'Kategori ID' })
+  @ApiQuery({ name: 'categorySlug', required: false, description: 'Kategori slug' })
+  @ApiQuery({ name: 'tagIds', required: false, description: 'Etiket ID listesi (virgülle ayrılmış)' })
+  @ApiQuery({ name: 'authorId', required: false, description: 'Yazar ID' })
+  @ApiQuery({ name: 'search', required: false, description: 'Arama terimi' })
+  @ApiQuery({ name: 'isFeatured', required: false, description: 'Öne çıkan makaleler' })
+  @ApiQuery({ name: 'isBreaking', required: false, description: 'Son dakika haberleri' })
+  @ApiQuery({ name: 'status', required: false, description: 'Makale durumu (PUBLISHED, DRAFT)' })
+  @ApiQuery({ name: 'sortBy', required: false, description: 'Sıralama alanı' })
+  @ApiQuery({ name: 'sortOrder', required: false, description: 'Sıralama yönü' })
+  @ApiQuery({ name: 'startDate', required: false, description: 'Başlangıç tarihi' })
+  @ApiQuery({ name: 'endDate', required: false, description: 'Bitiş tarihi' })
+  async findAllForAdmin(
+    @Query() filterDto: ArticleFilterDto,
+  ): Promise<PaginatedResponse<ArticleResponseDto>> {
+    return this.articlesService.findAllForAdmin(filterDto);
+  }
+
   @Get('featured')
   @ApiOperation({ 
     summary: 'Öne çıkan makaleleri getir',

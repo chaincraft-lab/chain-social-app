@@ -34,6 +34,28 @@ class ArticleService extends ApiService {
     return this.get(`/articles?${params.toString()}`);
   }
 
+  // Admin için tüm makaleleri getir (aktif + pasif)
+  async getArticlesForAdmin(
+    page: number = 1,
+    limit: number = 10,
+    filters?: ArticleFilters
+  ): Promise<PaginatedResponse<ArticleResponse>> {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          params.append(key, value.toString());
+        }
+      });
+    }
+
+    return this.get(`/articles/admin?${params.toString()}`);
+  }
+
   // Öne çıkan makaleleri getir
   async getFeaturedArticles(
     page: number = 1,
