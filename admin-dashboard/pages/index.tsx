@@ -63,7 +63,7 @@ function Dashboard() {
           docs="https://example.com"
         />
       </PageTitleWrapper>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Grid container spacing={3}>
           {/* Stats Cards */}
           <Grid item xs={12} sm={6} md={3}>

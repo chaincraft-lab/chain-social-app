@@ -187,7 +187,7 @@ function CategoriesPage() {
           docs="https://example.com"
         />
       </PageTitleWrapper>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={3}>
           <Grid item xs={12}>
             {error && (
@@ -255,16 +255,16 @@ function CategoriesPage() {
                 ) : (
                   <>
                     <TableContainer component={Paper}>
-                      <Table>
+                      <Table sx={{ minWidth: 900 }}>
                         <TableHead>
                           <TableRow>
-                            <TableCell>Kategori Adı</TableCell>
-                            <TableCell>Slug</TableCell>
-                            <TableCell>Açıklama</TableCell>
-                            <TableCell>Durum</TableCell>
-                            <TableCell>Makale Sayısı</TableCell>
-                            <TableCell>Oluşturulma Tarihi</TableCell>
-                            <TableCell align="right">İşlemler</TableCell>
+                            <TableCell sx={{ width: '20%' }}>Kategori Adı</TableCell>
+                            <TableCell sx={{ width: '15%' }}>Slug</TableCell>
+                            <TableCell sx={{ width: '25%' }}>Açıklama</TableCell>
+                            <TableCell sx={{ width: '10%' }}>Durum</TableCell>
+                            <TableCell sx={{ width: '10%' }}>Makale Sayısı</TableCell>
+                            <TableCell sx={{ width: '12%' }}>Oluşturulma Tarihi</TableCell>
+                            <TableCell align="right" sx={{ width: '8%' }}>İşlemler</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>

@@ -97,8 +97,8 @@ export class ApiService {
     return response.data;
   }
 
-  protected async post<T>(url: string, data?: any): Promise<T> {
-    const response = await this.axiosInstance.post(url, data);
+  protected async post<T>(url: string, data?: any, config?: any): Promise<T> {
+    const response = await this.axiosInstance.post(url, data, config);
     return response.data;
   }
 
@@ -107,8 +107,8 @@ export class ApiService {
     return response.data;
   }
 
-  protected async patch<T>(url: string, data?: any): Promise<T> {
-    const response = await this.axiosInstance.patch(url, data);
+  protected async patch<T>(url: string, data?: any, config?: any): Promise<T> {
+    const response = await this.axiosInstance.patch(url, data, config);
     return response.data;
   }
 

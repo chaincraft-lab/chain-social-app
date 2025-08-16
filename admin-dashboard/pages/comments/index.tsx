@@ -155,7 +155,7 @@ function CommentsPage() {
           docs="https://example.com"
         />
       </PageTitleWrapper>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={3}>
           <Grid item xs={12}>
             <Card>
@@ -180,16 +180,16 @@ function CommentsPage() {
                   />
                 </Box>
                 <TableContainer component={Paper}>
-                  <Table>
+                  <Table sx={{ minWidth: 900 }}>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Yazar</TableCell>
-                        <TableCell>Yorum</TableCell>
-                        <TableCell>Makale</TableCell>
-                        <TableCell>Durum</TableCell>
-                        <TableCell>Tip</TableCell>
-                        <TableCell>Tarih</TableCell>
-                        <TableCell align="right">İşlemler</TableCell>
+                        <TableCell sx={{ width: '12%' }}>Yazar</TableCell>
+                        <TableCell sx={{ width: '30%' }}>Yorum</TableCell>
+                        <TableCell sx={{ width: '20%' }}>Makale</TableCell>
+                        <TableCell sx={{ width: '10%' }}>Durum</TableCell>
+                        <TableCell sx={{ width: '8%' }}>Tip</TableCell>
+                        <TableCell sx={{ width: '12%' }}>Tarih</TableCell>
+                        <TableCell align="right" sx={{ width: '8%' }}>İşlemler</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
