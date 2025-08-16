@@ -153,7 +153,11 @@ export class TagsService {
                 status: true,
                 category: {
                   select: {
+                    id: true,
                     name: true,
+                    slug: true,
+                    color: true,
+                    icon: true,
                   }
                 },
                 author: {
@@ -185,7 +189,7 @@ export class TagsService {
         excerpt: articleTag.article.excerpt,
         image: articleTag.article.image,
         publishedAt: articleTag.article.publishedAt,
-        categoryName: articleTag.article.category.name,
+        category: articleTag.article.category,
         authorName: `${articleTag.article.author.name} ${articleTag.article.author.surname}`,
       }));
 

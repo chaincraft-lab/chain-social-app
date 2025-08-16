@@ -8,8 +8,8 @@
             <span class="text-white font-weight-bold">{{ getAuthorInitials() }}</span>
           </v-avatar>
           <div class="author-details">
-            <div class="author-name">{{ news.author?.name || 'Editör' }}</div>
-            <div class="post-time">{{ formatDate(news.date) }}</div>
+            <div class="author-name">{{ getAuthorName() }}</div>
+            <div class="post-time">{{ formatDate(news.publishedAt || news.createdAt || news.date) }}</div>
           </div>
         </div>
         <v-btn icon="mdi-dots-vertical" variant="text" size="small"></v-btn>
@@ -18,7 +18,7 @@
       <!-- Post Image -->
       <div class="post-image-container" @click="goToArticle" style="cursor: pointer;">
         <v-img 
-          :src="news.image" 
+          :src="news.imageUrl || news.image" 
           :alt="news.title"
           height="400"
           cover
@@ -63,7 +63,7 @@
       <!-- Post Content -->
       <div class="post-content">
         <div class="post-title" @click="goToArticle" style="cursor: pointer;">
-          <strong>{{ news.author?.name || 'editör' }}</strong>
+          <strong>{{ getAuthorName() }}</strong>
           {{ news.title }}
         </div>
         <div class="post-excerpt" v-if="news.excerpt" @click="goToArticle" style="cursor: pointer;">
@@ -72,13 +72,14 @@
         
         <!-- Tags -->
         <div class="post-tags" v-if="news.tags && news.tags.length">
-          <span 
+          <router-link
             v-for="tag in news.tags.slice(0, 3)" 
-            :key="tag" 
+            :key="tag.id || tag" 
+            :to="{ name: 'tag', params: { slug: tag.slug || tag } }"
             class="tag"
           >
-            #{{ tag }}
-          </span>
+            #{{ tag.name || tag }}
+          </router-link>
         </div>
       </div>
 
@@ -153,8 +154,18 @@ export default {
     }
   },
   methods: {
+    getAuthorName() {
+      if (this.news.author?.name) {
+        return this.news.author.name
+      }
+      if (this.news.author?.firstName && this.news.author?.lastName) {
+        return `${this.news.author.firstName} ${this.news.author.lastName}`
+      }
+      return 'Editör'
+    },
+    
     getAuthorInitials() {
-      const name = this.news.author?.name || 'Editör'
+      const name = this.getAuthorName()
       return name.split(' ').map(n => n.charAt(0)).join('').toUpperCase()
     },
     formatDate(dateString) {
@@ -224,7 +235,7 @@ export default {
     goToArticle() {
       this.$router.push({
         name: 'article',
-        params: { slug: this.news.id || this.news.slug }
+        params: { slug: this.news.slug || this.news.id }
       })
     }
   }
@@ -345,10 +356,13 @@ export default {
   color: #1976d2;
   font-size: 0.8rem;
   cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 .tag:hover {
   text-decoration: underline;
+  color: #0d47a1;
 }
 
 /* Comments */

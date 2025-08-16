@@ -112,20 +112,38 @@
     </div>
 
     <!-- Tags -->
-    <div v-if="showTags" class="bg-white rounded-lg shadow-sm mb-6">
-      <div class="border-b border-light-200 px-5 py-3">
-        <h3 class="text-lg font-semibold text-dark">Etiketler</h3>
+    <div v-if="showTags" class="modern-tags-card">
+      <div class="tags-header">
+        <div class="tags-header-content">
+          <v-icon class="mr-2" color="purple" size="small">mdi-tag-multiple</v-icon>
+          <h3 class="tags-title">Popüler Etiketler</h3>
+        </div>
+        <div class="tags-decoration"></div>
       </div>
-      <div class="p-4">
-        <div class="flex flex-wrap gap-2">
-          <a
-            v-for="tag in tags"
+      <div class="tags-content">
+        <!-- Loading State -->
+        <div v-if="isTagsLoading" class="tags-loading">
+          <div v-for="i in 6" :key="i" class="tag-skeleton" :style="{ width: Math.random() * 60 + 80 + 'px' }"></div>
+        </div>
+        
+        <!-- Tags List -->
+        <div v-else-if="tags.length > 0" class="tags-grid">
+          <router-link
+            v-for="(tag, index) in tags"
             :key="tag.id"
-            href="#"
-            class="px-3 py-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-full text-sm transition-colors"
+            :to="{ name: 'tag', params: { slug: tag.slug } }"
+            class="modern-tag-chip"
+            :style="{ animationDelay: index * 100 + 'ms' }"
           >
+            <v-icon size="x-small" class="mr-1">mdi-tag</v-icon>
             {{ tag.name }}
-          </a>
+          </router-link>
+        </div>
+        
+        <!-- Empty State -->
+        <div v-else class="tags-empty-state">
+          <v-icon size="large" color="grey-lighten-2">mdi-tag-off</v-icon>
+          <p class="empty-text">Henüz etiket bulunmuyor</p>
         </div>
       </div>
     </div>
@@ -203,22 +221,28 @@ export default {
   data() {
     return {
       email: "",
-      tags: [
-        { id: 1, name: "Politika" },
-        { id: 2, name: "Ekonomi" },
-        { id: 3, name: "Spor" },
-        { id: 4, name: "Teknoloji" },
-        { id: 5, name: "Sağlık" },
-        { id: 6, name: "Eğitim" },
-        { id: 7, name: "Dünya" },
-        { id: 8, name: "Yaşam" },
-      ],
     };
   },
   computed: {
     ...mapState("categories", ["categories"]),
     ...mapState("news", ["popularNews"]),
+    ...mapState("tags", ["popularTags"]),
     ...mapState("advertisements", ["advertisements"]),
+    
+    tags() {
+      return this.popularTags || []
+    },
+    
+    isTagsLoading() {
+      return this.$store.getters['tags/isLoading']('popular')
+    }
+  },
+  
+  mounted() {
+    // Sidebar mount olduğunda popüler tag'leri çek
+    if (this.showTags && (!this.popularTags || this.popularTags.length === 0)) {
+      this.$store.dispatch('tags/fetchPopularTags', 10)
+    }
   },
   methods: {
     formatDate(dateString) {
@@ -236,4 +260,163 @@ export default {
     },
   },
 };
-</script> 
+</script>
+
+<style scoped>
+/* Modern Tags Card */
+.modern-tags-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(156, 39, 176, 0.1);
+}
+
+.tags-header {
+  position: relative;
+  background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+  padding: 1rem 1.25rem;
+}
+
+.tags-header-content {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.tags-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.tags-decoration {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="tagPattern" width="15" height="15" patternUnits="userSpaceOnUse"><circle cx="7.5" cy="7.5" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23tagPattern)"/></svg>');
+  opacity: 0.3;
+}
+
+.tags-content {
+  padding: 1.25rem;
+}
+
+/* Loading State */
+.tags-loading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.tag-skeleton {
+  height: 32px;
+  background: linear-gradient(
+    90deg,
+    #f3e5f5 25%,
+    #e1bee7 50%,
+    #f3e5f5 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 16px;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Tags Grid */
+.tags-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.modern-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #f3e5f5 0%, #e8eaf6 100%);
+  color: #673ab7;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid rgba(156, 39, 176, 0.2);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+.modern-tag-chip:hover {
+  background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+}
+
+.modern-tag-chip:active {
+  transform: translateY(-1px);
+}
+
+/* Empty State */
+.tags-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.empty-text {
+  margin: 0.75rem 0 0 0;
+  font-size: 0.875rem;
+  color: #9e9e9e;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modern-tags-card {
+    margin-bottom: 1rem;
+  }
+  
+  .tags-header {
+    padding: 0.875rem 1rem;
+  }
+  
+  .tags-content {
+    padding: 1rem;
+  }
+  
+  .tags-grid {
+    gap: 0.5rem;
+  }
+  
+  .modern-tag-chip {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+</style> 

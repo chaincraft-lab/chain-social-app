@@ -1,4 +1,4 @@
-import { newsService } from '@/api'
+import { articleService } from '@/services'
 
 const state = () => ({
   latestNews: [],
@@ -9,7 +9,12 @@ const state = () => ({
     latest: false,
     popular: false,
     featured: false,
-    category: false
+    category: false,
+    detail: false,
+    related: false,
+    search: false,
+    breaking: false,
+    tag: false
   },
   error: null
 })
@@ -43,11 +48,13 @@ const actions = {
     commit('SET_LOADING', { type: 'latest', status: true })
     commit('CLEAR_ERROR')
     try {
-      const response = await newsService.getLatestNews(limit)
-      commit('SET_LATEST_NEWS', response.data)
+      const response = await articleService.getLatestArticles(limit)
+      // Backend response'unu handle et
+      const articles = response.data?.data || response.data || response
+      commit('SET_LATEST_NEWS', articles)
     } catch (error) {
       console.error('Error fetching latest news:', error)
-      commit('SET_ERROR', error.message)
+      commit('SET_ERROR', error.response?.data?.message || error.message)
     } finally {
       commit('SET_LOADING', { type: 'latest', status: false })
     }
@@ -57,11 +64,13 @@ const actions = {
     commit('SET_LOADING', { type: 'popular', status: true })
     commit('CLEAR_ERROR')
     try {
-      const response = await newsService.getPopularNews(limit)
-      commit('SET_POPULAR_NEWS', response.data)
+      const response = await articleService.getPopularArticles(limit)
+      // Backend response'unu handle et
+      const articles = response.data?.data || response.data || response
+      commit('SET_POPULAR_NEWS', articles)
     } catch (error) {
       console.error('Error fetching popular news:', error)
-      commit('SET_ERROR', error.message)
+      commit('SET_ERROR', error.response?.data?.message || error.message)
     } finally {
       commit('SET_LOADING', { type: 'popular', status: false })
     }
@@ -71,75 +80,111 @@ const actions = {
     commit('SET_LOADING', { type: 'featured', status: true })
     commit('CLEAR_ERROR')
     try {
-      const response = await newsService.getFeaturedNews(limit)
-      commit('SET_FEATURED_NEWS', response.data)
+      const response = await articleService.getFeaturedArticles(limit)
+      // Backend response'unu handle et
+      const articles = response.data?.data || response.data || response
+      commit('SET_FEATURED_NEWS', articles)
     } catch (error) {
       console.error('Error fetching featured news:', error)
-      commit('SET_ERROR', error.message)
+      commit('SET_ERROR', error.response?.data?.message || error.message)
     } finally {
       commit('SET_LOADING', { type: 'featured', status: false })
     }
   },
 
-  async fetchCategoryNews({ commit, state }, { categorySlug, limit = 12 }) {
+  async fetchCategoryNews({ commit }, { categorySlug, limit = 12 }) {
     commit('SET_LOADING', { type: 'category', status: true })
     commit('CLEAR_ERROR')
     try {
-      // For now, we'll filter from existing latestNews
-      // In a real app, this would be an API call
-      const allNews = state.latestNews || []
-      const categoryNews = allNews.filter(news => 
-        news.category && news.category.slug === categorySlug
-      ).slice(0, limit)
-      
-      // If no news found in latestNews, generate mock data
-      if (categoryNews.length === 0) {
-        const categoryTitles = {
-          'kara': ['Tank Modernizasyonu Projesi', 'Yeni Zırhlı Araç Tasarımı', 'Kara Kuvvetleri Tatbikatı'],
-          'hava': ['F-35 Projesinde Son Durum', 'Yerli Savaş Uçağı Gelişmeleri', 'Hava Savunma Sistemi'],
-          'deniz': ['Milli Denizaltı Projesi', 'Gemi İnşa Sanayii', 'Deniz Kuvvetleri Modernizasyonu'],
-          'teknoloji': ['Yapay Zeka Uygulamaları', 'Siber Güvenlik İnovasyonları', 'Drone Teknolojileri'],
-          'siber': ['Siber Saldırı Korunması', 'Kripto Güvenlik Sistemleri', 'Bilgi Güvenliği Protokolleri'],
-          'uzay': ['Uydu Teknolojisi Gelişmeleri', 'Uzay Programı İlerlemesi', 'Roket Sistemi Testleri']
-        }
-        
-        const baseTitles = categoryTitles[categorySlug] || [`${categorySlug} Haberi`]
-        const mockNews = Array(limit).fill().map((_, i) => {
-          const titleTemplate = baseTitles[i % baseTitles.length]
-          const randomDate = new Date()
-          randomDate.setHours(randomDate.getHours() - Math.floor(Math.random() * 168)) // Random time within last week
-          
-          return {
-            id: `category-${categorySlug}-${i + 100}`,
-            title: `${titleTemplate} ${i > baseTitles.length - 1 ? Math.floor(i / baseTitles.length) + 1 : ''}`.trim(),
-            excerpt: 'Son gelişmeler kapsamında önemli adımlar atılıyor. Detaylı bilgi ve analizler için haberin devamını okuyabilirsiniz.',
-            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-            image: `https://picsum.photos/id/${i + 150}/400/400`,
-            date: randomDate.toISOString(),
-            category: {
-              id: categorySlug,
-              slug: categorySlug,
-              name: categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1)
-            },
-            author: {
-              name: ['Ahmet Editör', 'Ayşe Yazarı', 'Mehmet Muhabir', 'Fatma Analiz'][i % 4],
-              avatar: `https://picsum.photos/id/${i + 300}/40/40`
-            },
-            readTime: Math.floor(Math.random() * 8) + 3,
-            likes: Math.floor(Math.random() * 500) + 50,
-            comments: Math.floor(Math.random() * 50) + 5,
-            tags: [`${categorySlug}`, 'savunma', 'teknoloji'].slice(0, Math.floor(Math.random() * 3) + 1)
-          }
-        })
-        commit('SET_CATEGORY_NEWS', { categorySlug, news: mockNews })
-      } else {
-        commit('SET_CATEGORY_NEWS', { categorySlug, news: categoryNews })
-      }
+      const response = await articleService.getArticlesByCategory(categorySlug, { limit })
+      // Backend response'unu handle et
+      const articles = response.data?.data || response.data || response
+      commit('SET_CATEGORY_NEWS', { categorySlug, news: articles })
     } catch (error) {
       console.error('Error fetching category news:', error)
-      commit('SET_ERROR', error.message)
+      commit('SET_ERROR', error.response?.data?.message || error.message)
     } finally {
       commit('SET_LOADING', { type: 'category', status: false })
+    }
+  },
+
+  // Yeni action'lar ekleyelim
+  async fetchBreakingNews({ commit }, limit = 3) {
+    commit('SET_LOADING', { type: 'breaking', status: true })
+    commit('CLEAR_ERROR')
+    try {
+      const response = await articleService.getBreakingArticles(limit)
+      const articles = response.data?.data || response.data || response
+      commit('SET_FEATURED_NEWS', articles) // Breaking news için aynı state kullanabiliriz
+    } catch (error) {
+      console.error('Error fetching breaking news:', error)
+      commit('SET_ERROR', error.response?.data?.message || error.message)
+    } finally {
+      commit('SET_LOADING', { type: 'breaking', status: false })
+    }
+  },
+
+  async searchNews({ commit }, { query, filters = {} }) {
+    commit('SET_LOADING', { type: 'search', status: true })
+    commit('CLEAR_ERROR')
+    try {
+      const response = await articleService.searchArticles(query, filters)
+      const articles = response.data?.data || response.data || response
+      return articles
+    } catch (error) {
+      console.error('Error searching news:', error)
+      commit('SET_ERROR', error.response?.data?.message || error.message)
+      return []
+    } finally {
+      commit('SET_LOADING', { type: 'search', status: false })
+    }
+  },
+
+  async fetchArticleBySlug({ commit }, slug) {
+    commit('SET_LOADING', { type: 'detail', status: true })
+    commit('CLEAR_ERROR')
+    try {
+      const response = await articleService.getArticleBySlug(slug)
+      const article = response.data || response
+      return article
+    } catch (error) {
+      console.error('Error fetching article:', error)
+      commit('SET_ERROR', error.response?.data?.message || error.message)
+      throw error
+    } finally {
+      commit('SET_LOADING', { type: 'detail', status: false })
+    }
+  },
+
+  async fetchRelatedArticles({ commit }, articleId) {
+    commit('SET_LOADING', { type: 'related', status: true })
+    commit('CLEAR_ERROR')
+    try {
+      const response = await articleService.getRelatedArticles(articleId)
+      const articles = response.data || response
+      return articles
+    } catch (error) {
+      console.error('Error fetching related articles:', error)
+      commit('SET_ERROR', error.response?.data?.message || error.message)
+      return []
+    } finally {
+      commit('SET_LOADING', { type: 'related', status: false })
+    }
+  },
+
+  async fetchArticlesByTag({ commit }, { tagSlug, limit = 10 }) {
+    commit('SET_LOADING', { type: 'tag', status: true })
+    commit('CLEAR_ERROR')
+    try {
+      const response = await articleService.getArticlesByTag(tagSlug, { limit })
+      const articles = response.data?.data || response.data || response
+      return articles
+    } catch (error) {
+      console.error('Error fetching articles by tag:', error)
+      commit('SET_ERROR', error.response?.data?.message || error.message)
+      return []
+    } finally {
+      commit('SET_LOADING', { type: 'tag', status: false })
     }
   }
 }

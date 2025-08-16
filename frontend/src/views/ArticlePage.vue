@@ -1,97 +1,74 @@
 <template>
   <div>
-    <!-- Article Header -->
-    <div class="mb-6">
+    <!-- Loading State -->
+    <div v-if="isLoading" class="space-y-4">
+      <v-skeleton-loader type="article"></v-skeleton-loader>
+    </div>
+    
+    <!-- Error State -->
+    <div v-else-if="error" class="text-center py-8">
+      <v-alert type="error" class="mb-4">
+        {{ error }}
+      </v-alert>
+      <v-btn @click="loadArticle" color="primary">
+        Tekrar Dene
+      </v-btn>
+    </div>
+    
+    <!-- Article Content -->
+    <div v-else-if="article">
+      <!-- Article Header -->
+      <div class="mb-6">
       <div class="flex items-center mb-3">
         <span class="text-xs text-primary font-medium mr-2">
           {{ article?.category?.name || 'Kategori' }}
         </span>
         <span class="text-xs text-dark/60">
-          {{ formatDate(article?.date) || '5 Tem 2025' }}
+          {{ formatDate(article?.publishedAt || article?.createdAt) }}
         </span>
       </div>
       <h1 class="text-3xl md:text-4xl font-bold mb-4 text-dark">
-        {{ article?.title || 'Haber Başlığı' }}
+        {{ article?.title }}
       </h1>
-      <p class="text-lg text-dark/80 mb-6">
-        {{ article?.excerpt || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris.' }}
+      <p class="text-lg text-dark/80 mb-6" v-if="article?.excerpt">
+        {{ article?.excerpt }}
       </p>
       
       <!-- Author Info -->
       <div class="flex items-center mb-6">
         <div class="w-12 h-12 rounded-full bg-gray-300 mr-3 overflow-hidden">
           <img 
-            :src="article?.author?.avatar || 'https://i.pravatar.cc/100'" 
+            :src="article?.author?.profileImage || article?.author?.avatar || 'https://i.pravatar.cc/100'" 
             alt="Author" 
             class="w-full h-full object-cover"
+            @error="$event.target.src='https://i.pravatar.cc/100'"
           >
         </div>
         <div>
-          <div class="font-medium text-dark">{{ article?.author?.name || 'Yazar Adı' }}</div>
-          <div class="text-sm text-dark/60">{{ article?.author?.title || 'Editör' }}</div>
+          <div class="font-medium text-dark">
+            {{ article?.author?.name || article?.author?.firstName + ' ' + article?.author?.lastName || 'Yazar' }}
+          </div>
+          <div class="text-sm text-dark/60">{{ article?.author?.role || 'Editör' }}</div>
         </div>
       </div>
     </div>
     
     <!-- Article Featured Image -->
-    <div class="aspect-[16/9] bg-gray-200 rounded-lg overflow-hidden mb-8">
+    <div class="aspect-[16/9] bg-gray-200 rounded-lg overflow-hidden mb-8" v-if="article?.imageUrl || article?.image">
       <img 
-        :src="article?.image || 'https://picsum.photos/id/1015/1200/675'" 
-        alt="Article Image" 
+        :src="article?.imageUrl || article?.image" 
+        :alt="article?.title" 
         class="w-full h-full object-cover"
+        @error="$event.target.src='https://picsum.photos/id/1015/1200/675'"
       >
     </div>
     
     <!-- Article Content -->
     <div class="prose max-w-none mb-8 text-dark">
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.
-      </p>
-      <p>
-        Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.
-      </p>
-      
-      <!-- In-Article Banner Ad (300x250) -->
-      <div class="my-6 mx-auto max-w-sm">
-        <div class="w-full overflow-hidden rounded-lg">
-          <a href="#" target="_blank" class="block">
-            <div class="bg-blue-50 w-full h-[250px] flex flex-col items-center justify-center border border-blue-100 rounded-lg overflow-hidden">
-              <div class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mb-4">
-                A
-              </div>
-              <div class="text-xl font-bold text-blue-800 mb-2">ASELSAN</div>
-              <div class="text-sm text-blue-600 mb-4">Milli Teknoloji, Güçlü Savunma</div>
-              <div class="bg-blue-600 text-white py-2 px-6 rounded-full text-sm font-medium">
-                Keşfet
-              </div>
-            </div>
-          </a>
-          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
-        </div>
+      <div v-if="article?.content" v-html="article.content"></div>
+      <div v-else>
+        <p>Makale içeriği yükleniyor...</p>
       </div>
-      
-      <h2 class="text-dark">Alt Başlık</h2>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.
-      </p>
-      <blockquote class="border-l-4 border-primary pl-4 italic text-dark/80">
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl."
-      </blockquote>
-      <p>
-        Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.
-      </p>
-      <h2 class="text-dark">Diğer Alt Başlık</h2>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.
-      </p>
-      <ul class="text-dark">
-        <li>Liste öğesi 1</li>
-        <li>Liste öğesi 2</li>
-        <li>Liste öğesi 3</li>
-      </ul>
-      <p>
-        Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl. Sed euismod, nisl vel ultricies lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.
-      </p>
     </div>
     
     <!-- Banner Ad - Leaderboard (728x90) -->
@@ -120,16 +97,17 @@
     </div>
     
     <!-- Tags -->
-    <div class="mb-8">
+    <div class="mb-8" v-if="article?.tags && article.tags.length > 0">
       <div class="text-sm font-medium mb-2 text-dark">Etiketler:</div>
       <div class="flex flex-wrap gap-2">
-        <span 
-          v-for="(tag, index) in article?.tags || ['Etiket 1', 'Etiket 2', 'Etiket 3']" 
-          :key="index"
-          class="bg-light px-3 py-1 rounded-full text-sm text-dark border border-gray-300 shadow-sm"
+        <router-link
+          v-for="tag in article.tags" 
+          :key="tag.id"
+          :to="{ name: 'tag', params: { slug: tag.slug } }"
+          class="bg-light px-3 py-1 rounded-full text-sm text-dark border border-gray-300 shadow-sm hover:bg-primary hover:text-white transition-colors"
         >
-          {{ tag }}
-        </span>
+          {{ tag.name }}
+        </router-link>
       </div>
     </div>
     
@@ -165,24 +143,30 @@
     </div>
     
     <!-- Related News -->
-    <div class="mb-8">
+    <div class="mb-8" v-if="relatedArticles && relatedArticles.length > 0">
       <h3 class="text-xl font-bold mb-4 text-dark">İlgili Haberler</h3>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div v-for="index in 3" :key="index" class="bg-white rounded-lg shadow-md p-4">
+        <router-link 
+          v-for="relatedArticle in relatedArticles.slice(0, 3)" 
+          :key="relatedArticle.id"
+          :to="{ name: 'article', params: { slug: relatedArticle.slug } }"
+          class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow"
+        >
           <div class="aspect-[16/9] bg-gray-200 rounded-lg overflow-hidden mb-3">
             <img 
-              :src="`https://picsum.photos/id/${index + 80}/400/225`" 
-              alt="News Image" 
+              :src="relatedArticle.imageUrl || relatedArticle.image || 'https://picsum.photos/400/225'" 
+              :alt="relatedArticle.title" 
               class="w-full h-full object-cover"
+              @error="$event.target.src='https://picsum.photos/400/225'"
             >
           </div>
-          <h4 class="text-base font-bold mb-2 text-dark">
-            İlgili Haber {{ index }}
+          <h4 class="text-base font-bold mb-2 text-dark line-clamp-2">
+            {{ relatedArticle.title }}
           </h4>
           <div class="text-xs text-dark/60">
-            {{ formatDate(new Date()) }}
+            {{ formatDate(relatedArticle.publishedAt || relatedArticle.createdAt) }}
           </div>
-        </div>
+        </router-link>
       </div>
     </div>
     
@@ -286,39 +270,65 @@
         </div>
       </div>
     </div>
+    </div>
+    
+    <!-- Empty State -->
+    <div v-else class="text-center py-8">
+      <p class="text-gray-500">Makale bulunamadı</p>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 
 export default {
   name: 'ArticlePage',
   setup() {
     const route = useRoute()
+    const store = useStore()
     
     const article = ref(null)
+    const relatedArticles = ref([])
+    const loading = ref(true)
+    const error = ref(null)
     const commentText = ref('')
     const commentName = ref('')
     const commentEmail = ref('')
     
-    const loadArticle = () => {
-      // This would be an API call in a real app
-      // For now, we'll use mock data
-      article.value = {
-        id: route.params.slug,
-        title: 'Örnek Haber Başlığı - Detaylı ve İlgi Çekici',
-        excerpt: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula.',
-        image: 'https://picsum.photos/id/1015/1200/675',
-        date: new Date().toISOString(),
-        category: { id: 1, name: 'Gündem', slug: 'gundem' },
-        author: {
-          name: 'Adil Pamuk',
-          title: 'Baş Editör',
-          avatar: 'https://i.pravatar.cc/100?img=1'
-        },
-        tags: ['Gündem', 'Politika', 'Ekonomi']
+    const isLoading = computed(() => loading.value)
+    
+    const loadArticle = async () => {
+      try {
+        loading.value = true
+        error.value = null
+        
+        const slug = route.params.slug
+        const fetchedArticle = await store.dispatch('news/fetchArticleBySlug', slug)
+        article.value = fetchedArticle
+        
+        // İlgili makaleleri yükle
+        if (fetchedArticle?.id) {
+          await loadRelatedArticles(fetchedArticle.id)
+        }
+      } catch (err) {
+        console.error('Error loading article:', err)
+        error.value = 'Makale yüklenirken hata oluştu'
+      } finally {
+        loading.value = false
+      }
+    }
+    
+    const loadRelatedArticles = async (articleId) => {
+      try {
+        // Bu endpoint'i backend'den kontrol etmek gerekebilir
+        const response = await store.dispatch('news/fetchRelatedArticles', articleId)
+        relatedArticles.value = response || []
+      } catch (err) {
+        console.error('Error loading related articles:', err)
+        relatedArticles.value = []
       }
     }
     
@@ -347,6 +357,10 @@ export default {
     
     return {
       article,
+      relatedArticles,
+      loading,
+      error,
+      isLoading,
       commentText,
       commentName,
       commentEmail,

@@ -1,19 +1,35 @@
 <template>
   <div class="homepage-feed">
     <!-- Stories/Highlights Section -->
-    <section class="stories-section" v-if="featuredNews && featuredNews.length">
+    <section class="stories-section">
       <v-card class="stories-card" elevation="1" rounded="xl">
         <div class="stories-container">
-          <div class="story-item" v-for="story in featuredNews.slice(0, 5)" :key="story.id">
+          <!-- Loading State for Stories -->
+          <div v-if="$store.getters['news/isLoading']('featured')" class="stories-loading">
+            <v-skeleton-loader
+              v-for="n in 5"
+              :key="n"
+              type="avatar"
+              class="story-skeleton"
+            ></v-skeleton-loader>
+          </div>
+          
+          <!-- Actual Stories -->
+          <div v-else-if="featuredNews && featuredNews.length" class="story-item" v-for="story in featuredNews.slice(0, 5)" :key="story.id">
             <div class="story-avatar">
               <v-img 
-                :src="story.image" 
+                :src="story.image || story.imageUrl" 
                 :alt="story.category?.name"
                 cover
                 class="story-image"
               ></v-img>
             </div>
             <div class="story-label">{{ story.category?.name || 'Haber' }}</div>
+          </div>
+          
+          <!-- Empty State -->
+          <div v-else class="stories-empty">
+            <p class="text-grey">Öne çıkan haber bulunamadı</p>
           </div>
         </div>
       </v-card>
@@ -34,7 +50,19 @@
       
       <!-- Post Feed -->
       <div class="posts-container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="loading-container">
+          <v-skeleton-loader
+            v-for="n in 5"
+            :key="n"
+            type="card"
+            class="mb-4"
+          ></v-skeleton-loader>
+        </div>
+        
+        <!-- Actual Posts -->
         <NewsPost 
+          v-else
           v-for="news in filteredNews" 
           :key="news?.id || Math.random()"
           :news="news"
@@ -177,9 +205,21 @@ export default {
       displayedPostsCount: 10
     }
   },
+  async mounted() {
+    // HomePage yüklendiğinde veri varsa tekrar çekme
+    if (!this.latestNews || this.latestNews.length === 0) {
+      await this.fetchInitialData()
+    }
+  },
   computed: {
     ...mapState('categories', ['categories']),
     ...mapState('news', ['latestNews', 'popularNews', 'featuredNews']),
+    
+    isLoading() {
+      return this.$store.getters['news/isLoading']('latest') || 
+             this.$store.getters['news/isLoading']('featured') ||
+             this.$store.getters['categories/isLoading']('categories')
+    },
     
     filteredNews() {
       if (!this.latestNews || !Array.isArray(this.latestNews)) {
@@ -206,26 +246,45 @@ export default {
     }
   },
   methods: {
+    async fetchInitialData() {
+      try {
+        // Paralel olarak tüm verileri çek
+        await Promise.all([
+          this.$store.dispatch('news/fetchLatestNews', 20),
+          this.$store.dispatch('news/fetchFeaturedNews', 5),
+          this.$store.dispatch('news/fetchPopularNews', 5),
+          this.$store.dispatch('categories/fetchCategories')
+        ])
+      } catch (error) {
+        console.error('Error fetching homepage data:', error)
+      }
+    },
+    
     formatDate(dateString) {
       if (!dateString) return ''
       const date = new Date(dateString)
       return date.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })
     },
     
-    loadMorePosts() {
+    async loadMorePosts() {
       this.loadingMore = true
       
-      // Simulate API call delay
-      setTimeout(() => {
-        this.displayedPostsCount += 5
+      try {
+        // Daha fazla makale yükle
+        const currentCount = this.displayedPostsCount
+        await this.$store.dispatch('news/fetchLatestNews', currentCount + 10)
         
-        // Check if we've reached the end
-        if (this.displayedPostsCount >= this.latestNews.length) {
+        this.displayedPostsCount += 10
+        
+        // Eğer gelen veri sayısı istediğimizden azsa, daha fazla veri yok demektir
+        if (this.latestNews.length < this.displayedPostsCount) {
           this.hasMorePosts = false
         }
-        
+      } catch (error) {
+        console.error('Error loading more posts:', error)
+      } finally {
         this.loadingMore = false
-      }, 1000)
+      }
     }
   },
   
@@ -418,6 +477,32 @@ export default {
 
 .stories-container::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.5);
+}
+
+/* Loading States */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stories-loading {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+}
+
+.story-skeleton {
+  min-width: 60px;
+  height: 60px;
+}
+
+.stories-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80px;
 }
 
 /* Loading animation */

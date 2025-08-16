@@ -1,12 +1,14 @@
 import { createStore } from 'vuex'
 import news from './modules/news'
 import categories from './modules/categories'
+import tags from './modules/tags'
 import advertisements from './modules/advertisements'
 
 export default createStore({
   modules: {
     news,
     categories,
+    tags,
     advertisements
   },
   state: {
@@ -31,6 +33,7 @@ export default createStore({
       try {
         await Promise.all([
           dispatch('categories/fetchCategories'),
+          dispatch('tags/fetchPopularTags'),
           dispatch('news/fetchLatestNews'),
           dispatch('news/fetchPopularNews'),
           dispatch('news/fetchFeaturedNews'),
