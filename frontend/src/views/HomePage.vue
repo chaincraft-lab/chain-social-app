@@ -61,33 +61,32 @@
         </div>
         
         <!-- Actual Posts -->
-        <NewsPost 
-          v-else
-          v-for="news in filteredNews" 
-          :key="news?.id || Math.random()"
-          :news="news"
-        />
+        <transition-group v-else name="news-post" tag="div" class="news-posts-list">
+          <NewsPost 
+            v-for="news in filteredNews" 
+            :key="news?.id || Math.random()"
+            :news="news"
+          />
+        </transition-group>
         
-        <!-- Load More Button -->
-        <div class="load-more-section" v-if="hasMorePosts">
-          <v-btn 
+        <!-- Infinite Scroll Loading Indicator -->
+        <div class="infinite-scroll-loading" v-if="loadingMore && hasMorePosts">
+          <v-progress-circular 
+            indeterminate 
             color="primary" 
-            variant="outlined" 
-            size="large"
-            rounded="pill"
-            @click="loadMorePosts"
-            :loading="loadingMore"
-          >
-            <v-icon start>mdi-refresh</v-icon>
-            Daha Fazla Yükle
-          </v-btn>
+            size="32"
+          ></v-progress-circular>
+          <p class="loading-text">Yükleniyor...</p>
         </div>
         
         <!-- End of Feed -->
-        <div class="end-of-feed" v-else>
-          <v-icon size="large" color="grey">mdi-check-circle</v-icon>
-          <p class="text-grey">Tüm haberler yüklendi</p>
-        </div>
+        <StateMessage 
+          v-else
+          type="success"
+          title="Tüm haberler yüklendi"
+          message="Mevcut tüm haberleri görüntülediniz"
+          icon="mdi-check-circle"
+        />
       </div>
     </section>
 
@@ -162,28 +161,6 @@
       </div>
     </section>
 
-    <!-- International News -->
-    <section>
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-bold text-dark">Uluslararası</h2>
-        <router-link 
-          :to="{ name: 'category', params: { slug: 'uluslararasi' } }"
-          class="text-sm text-primary hover:text-secondary transition-colors"
-        >
-          Tümünü Gör
-        </router-link>
-      </div>
-      
-      <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <NewsCard 
-          v-for="news in getCategoryNewsBySlug('uluslararasi').slice(0, 3)" 
-          :key="news?.id || Math.random()" 
-          :news="news"
-          :show-excerpt="true"
-          excerpt-length="100"
-        />
-      </div> -->
-    </section>
   </div>
 </template>
 
@@ -191,11 +168,13 @@
 <script>
 import { mapState } from 'vuex'
 import NewsPost from '@/components/news/NewsPost.vue'
+import StateMessage from '@/components/ui/StateMessage.vue'
 
 export default {
   name: 'HomePage',
   components: {
-    NewsPost
+    NewsPost,
+    StateMessage
   },
   data() {
     return {
@@ -210,6 +189,14 @@ export default {
     if (!this.latestNews || this.latestNews.length === 0) {
       await this.fetchInitialData()
     }
+    
+    // Infinite scroll listener ekle
+    this.setupInfiniteScroll()
+  },
+  
+  beforeUnmount() {
+    // Listener'ı temizle
+    this.removeInfiniteScroll()
   },
   computed: {
     ...mapState('categories', ['categories']),
@@ -267,6 +254,8 @@ export default {
     },
     
     async loadMorePosts() {
+      if (this.loadingMore || !this.hasMorePosts) return
+      
       this.loadingMore = true
       
       try {
@@ -284,6 +273,49 @@ export default {
         console.error('Error loading more posts:', error)
       } finally {
         this.loadingMore = false
+      }
+    },
+    
+    setupInfiniteScroll() {
+      this.scrollHandler = () => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+        const windowHeight = window.innerHeight
+        const documentHeight = document.documentElement.scrollHeight
+        
+        // Sayfa sonuna 200px yaklaştığında yeni veri yükle
+        if (scrollTop + windowHeight >= documentHeight - 200) {
+          this.loadMorePosts()
+        }
+      }
+      
+      // Throttle scroll event for performance
+      this.throttledScrollHandler = this.throttle(this.scrollHandler, 300)
+      window.addEventListener('scroll', this.throttledScrollHandler)
+    },
+    
+    removeInfiniteScroll() {
+      if (this.throttledScrollHandler) {
+        window.removeEventListener('scroll', this.throttledScrollHandler)
+      }
+    },
+    
+    throttle(func, delay) {
+      let timeoutId
+      let lastExecTime = 0
+      
+      return function (...args) {
+        const currentTime = Date.now()
+        
+        if (currentTime - lastExecTime > delay) {
+          func.apply(this, args)
+          lastExecTime = currentTime
+        } else {
+          clearTimeout(timeoutId)
+          timeoutId = setTimeout(() => {
+            func.apply(this, args)
+            lastExecTime = Date.now()
+          }, delay - (currentTime - lastExecTime))
+        }
       }
     }
   },
@@ -389,28 +421,38 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 0;
+  min-height: 100vh; /* Prevent layout shift */
+  transition: opacity 0.3s ease;
 }
 
-/* Load More Section */
-.load-more-section {
+/* Prevent content jump during loading */
+.posts-container.loading {
+  opacity: 0.9;
+}
+
+.news-posts-list {
   display: flex;
-  justify-content: center;
-  padding: 2rem 0;
+  flex-direction: column;
+  gap: 0;
 }
 
-.end-of-feed {
+/* Infinite Scroll Loading */
+.infinite-scroll-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3rem 0;
   gap: 1rem;
-  opacity: 0.7;
+  padding: 2rem 0;
+  margin: 1rem 0;
 }
 
-.end-of-feed p {
+.loading-text {
   margin: 0;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.6);
   font-weight: 500;
 }
+
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
@@ -515,7 +557,38 @@ export default {
   }
 }
 
+@keyframes slideInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 .loading-posts {
   animation: pulse 1.5s ease-in-out infinite;
 }
+
+/* New posts animation */
+.news-post-enter-active {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.news-post-enter-from {
+  transform: translateY(30px);
+  opacity: 0;
+}
+
 </style> 

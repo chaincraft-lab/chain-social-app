@@ -10,7 +10,7 @@
 
     <v-divider></v-divider>
 
-    <v-list density="dense" nav>
+    <v-list density="compact" nav>
       <v-list-item
         v-for="category in categories"
         :key="category.id"
@@ -20,6 +20,16 @@
         class="category-item"
       >
         <v-list-item-title>{{ category.name }}</v-list-item-title>
+        <template v-slot:append v-if="category.articleCount">
+          <v-chip
+            size="x-small"
+            color="primary"
+            variant="flat"
+            class="category-badge"
+          >
+            {{ category.articleCount }}
+          </v-chip>
+        </template>
       </v-list-item>
     </v-list>
   </v-card>

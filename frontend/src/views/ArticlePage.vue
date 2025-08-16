@@ -100,14 +100,13 @@
     <div class="mb-8" v-if="article?.tags && article.tags.length > 0">
       <div class="text-sm font-medium mb-2 text-dark">Etiketler:</div>
       <div class="flex flex-wrap gap-2">
-        <router-link
+        <span
           v-for="tag in article.tags" 
           :key="tag.id"
-          :to="{ name: 'tag', params: { slug: tag.slug } }"
-          class="bg-light px-3 py-1 rounded-full text-sm text-dark border border-gray-300 shadow-sm hover:bg-primary hover:text-white transition-colors"
+          class="bg-light px-3 py-1 rounded-full text-sm text-dark border border-gray-300 shadow-sm"
         >
-          {{ tag.name }}
-        </router-link>
+          #{{ tag.name }}
+        </span>
       </div>
     </div>
     

@@ -1,28 +1,5 @@
 <template>
   <div class="category-page">
-    <!-- Category Header -->
-    <div class="category-header">
-      <div class="category-hero-card">
-        <div class="category-hero-content">
-          <div class="category-badge">
-            <v-icon class="mr-2" size="small">mdi-folder-open</v-icon>
-            <span>{{ currentCategory?.name || 'Kategori' }}</span>
-          </div>
-          <h1 class="category-title">{{ currentCategory?.name || 'Kategori' }}</h1>
-          <p class="category-description">
-            {{ currentCategory?.description || 'Bu kategorideki tüm haberleri görüntülüyorsunuz.' }}
-          </p>
-          <div class="category-stats">
-            <div class="stat-item">
-              <v-icon size="small" class="mr-1">mdi-newspaper</v-icon>
-              <span>{{ categoryNews.length }} haber</span>
-            </div>
-          </div>
-        </div>
-        <div class="category-hero-bg"></div>
-      </div>
-    </div>
-    
     <!-- Posts Feed -->
     <div class="posts-feed">
       <!-- Loading State -->
@@ -72,36 +49,23 @@
         </div>
         
         <!-- End of Feed -->
-        <div class="modern-end-state" v-else-if="categoryNews.length > 0">
-          <div class="end-state-card">
-            <div class="end-state-icon">
-              <v-icon size="48" color="success">mdi-check-circle</v-icon>
-            </div>
-            <h3 class="end-state-title">Tüm haberler yüklendi</h3>
-            <p class="end-state-text">Bu kategorideki tüm haberleri görüntülediniz</p>
-          </div>
-        </div>
+        <StateMessage 
+          v-else-if="categoryNews.length > 0"
+          type="success"
+          title="Tüm haberler yüklendi"
+          message="Bu kategorideki tüm haberleri görüntülediniz"
+          icon="mdi-check-circle"
+        />
         
         <!-- No Posts Found -->
-        <div class="modern-empty-state" v-else>
-          <div class="empty-state-card">
-            <div class="empty-state-icon">
-              <v-icon size="64" color="grey-lighten-1">mdi-newspaper-variant-outline</v-icon>
-            </div>
-            <h3 class="empty-state-title">Henüz haber yok</h3>
-            <p class="empty-state-text">Bu kategoride henüz haber bulunmuyor</p>
-            <v-btn 
-              color="primary" 
-              variant="outlined" 
-              rounded="pill"
-              @click="$router.push('/')"
-              class="mt-4"
-            >
-              <v-icon start>mdi-home</v-icon>
-              Ana Sayfaya Dön
-            </v-btn>
-          </div>
-        </div>
+        <StateMessage 
+          v-else
+          type="empty"
+          title="Henüz haber yok"
+          message="Bu kategoride henüz haber bulunmuyor"
+          icon="mdi-newspaper-variant-outline"
+          :show-button="true"
+        />
       </div>
     </div>
   </div>
@@ -112,11 +76,13 @@ import { computed, onMounted, watch, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import NewsPost from '@/components/news/NewsPost.vue'
+import StateMessage from '@/components/ui/StateMessage.vue'
 
 export default {
   name: 'CategoryPage',
   components: {
-    NewsPost
+    NewsPost,
+    StateMessage
   },
   setup() {
     const store = useStore()
@@ -210,77 +176,6 @@ export default {
   min-height: 100vh;
 }
 
-/* Category Hero Card */
-.category-hero-card {
-  position: relative;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 20px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-}
-
-.category-hero-bg {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-  opacity: 0.3;
-}
-
-.category-hero-content {
-  position: relative;
-  z-index: 2;
-}
-
-.category-badge {
-  display: inline-flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 25px;
-  padding: 0.5rem 1rem;
-  color: white;
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 1rem;
-}
-
-.category-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 0.75rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.category-description {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-}
-
-.category-stats {
-  display: flex;
-  gap: 1rem;
-}
-
-.stat-item {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  padding: 0.5rem 1rem;
-  color: white;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
 
 /* Posts Feed */
 .posts-feed {
@@ -354,50 +249,6 @@ export default {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
-/* Modern End States */
-.modern-end-state,
-.modern-empty-state {
-  display: flex;
-  justify-content: center;
-  padding: 3rem 0;
-}
-
-.end-state-card,
-.empty-state-card {
-  background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
-  border-radius: 20px;
-  padding: 3rem 2rem;
-  text-align: center;
-  max-width: 400px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(76, 175, 80, 0.1);
-}
-
-.empty-state-card {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.end-state-icon,
-.empty-state-icon {
-  margin-bottom: 1.5rem;
-}
-
-.end-state-title,
-.empty-state-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-bottom: 0.75rem;
-}
-
-.end-state-text,
-.empty-state-text {
-  color: #6c757d;
-  font-size: 1rem;
-  line-height: 1.5;
-  margin: 0;
-}
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
@@ -405,23 +256,7 @@ export default {
     padding: 0 0.5rem;
   }
   
-  .category-hero-card {
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .category-title {
-    font-size: 1.75rem;
-  }
-  
-  .category-stats {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .modern-load-more-card,
-  .end-state-card,
-  .empty-state-card {
+  .modern-load-more-card {
     padding: 2rem 1rem;
   }
 }
