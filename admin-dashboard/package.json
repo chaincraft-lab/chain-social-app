@@ -1,11 +1,11 @@
 {
-  "name": "tokyo-free-black-nextjs-admin-dashboard",
+  "name": "news-site-admin-dashboard",
   "version": "1.0.0",
-  "title": "Tokyo Free Black NextJS Typescript Admin Dashboard",
-  "description": "High performance React template built with lots of powerful MUI (Material-UI) components across multiple product niches for fast & perfect apps development processes",
+  "title": "News Site Admin Dashboard",
+  "description": "Modern admin dashboard for news website management built with Next.js and Material-UI",
   "author": {
-    "name": "BloomUI.com",
-    "url": "https://bloomui.com"
+    "name": "ozknsmz",
+    "url": "https://github.com/ozknsmz"
   },
   "private": false,
   "dependencies": {
@@ -18,7 +18,13 @@
     "@mui/lab": "5.0.0-alpha.84",
     "@mui/material": "5.8.2",
     "@mui/styles": "5.8.0",
+    "@types/node": "17.0.39",
+    "@types/nprogress": "0.2.0",
+    "@types/numeral": "2.0.2",
+    "@types/react": "17.0.40",
+    "@types/react-dom": "17.0.13",
     "apexcharts": "3.35.3",
+    "axios": "^1.11.0",
     "clsx": "1.1.1",
     "context-api": "0.0.2",
     "date-fns": "2.28.0",
@@ -28,14 +34,11 @@
     "numeral": "2.0.6",
     "react": "17.0.2",
     "react-apexcharts": "1.4.0",
+    "react-colorful": "^5.6.1",
     "react-custom-scrollbars-2": "4.4.0",
     "react-dom": "17.0.2",
-    "@types/node": "17.0.39",
-    "@types/nprogress": "0.2.0",
-    "@types/numeral": "2.0.2",
-    "@types/react": "17.0.40",
-    "@types/react-dom": "17.0.13",
-    "typescript": "4.7.3"
+    "typescript": "4.7.3",
+    "zustand": "^4.5.7"
   },
   "scripts": {
     "dev": "next",

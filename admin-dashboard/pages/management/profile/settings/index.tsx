@@ -42,7 +42,7 @@ function ManagementUserSettings() {
       <PageTitleWrapper>
         <PageHeader />
       </PageTitleWrapper>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Grid
           container
           direction="row"

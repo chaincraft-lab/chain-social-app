@@ -140,7 +140,7 @@ function UsersPage() {
           docs="https://example.com"
         />
       </PageTitleWrapper>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={3}>
           <Grid item xs={12}>
             <Card>
@@ -173,17 +173,17 @@ function UsersPage() {
                   />
                 </Box>
                 <TableContainer component={Paper}>
-                  <Table>
+                  <Table sx={{ minWidth: 900 }}>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Kullanıcı</TableCell>
-                        <TableCell>Kullanıcı Adı</TableCell>
-                        <TableCell>E-posta</TableCell>
-                        <TableCell>Rol</TableCell>
-                        <TableCell>Durum</TableCell>
-                        <TableCell>Makale Sayısı</TableCell>
-                        <TableCell>Katılım Tarihi</TableCell>
-                        <TableCell align="right">İşlemler</TableCell>
+                        <TableCell sx={{ width: '20%' }}>Kullanıcı</TableCell>
+                        <TableCell sx={{ width: '12%' }}>Kullanıcı Adı</TableCell>
+                        <TableCell sx={{ width: '18%' }}>E-posta</TableCell>
+                        <TableCell sx={{ width: '10%' }}>Rol</TableCell>
+                        <TableCell sx={{ width: '8%' }}>Durum</TableCell>
+                        <TableCell sx={{ width: '10%' }}>Makale Sayısı</TableCell>
+                        <TableCell sx={{ width: '12%' }}>Katılım Tarihi</TableCell>
+                        <TableCell align="right" sx={{ width: '10%' }}>İşlemler</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
