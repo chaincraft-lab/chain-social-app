@@ -39,6 +39,7 @@ interface ArticleState {
 
   // Actions
   fetchArticles: (page?: number, limit?: number, filters?: ArticleFilters) => Promise<void>;
+  fetchArticlesForAdmin: (page?: number, limit?: number, filters?: ArticleFilters) => Promise<void>;
   fetchFeaturedArticles: (page?: number, limit?: number) => Promise<void>;
   fetchBreakingArticles: (page?: number, limit?: number) => Promise<void>;
   fetchArticleById: (id: number) => Promise<void>;
@@ -114,6 +115,33 @@ export const useArticleStore = create<ArticleState>()(
         } catch (error: any) {
           set({
             error: error.response?.data?.message || 'Makaleler yüklenirken hata oluştu',
+            loading: false,
+          });
+        }
+      },
+
+      fetchArticlesForAdmin: async (page = 1, limit = 10, filters?: ArticleFilters) => {
+        set({ loading: true, error: null });
+        try {
+          const response: any = await articleService.getArticlesForAdmin(page, limit, filters);
+          
+          // Backend'den gelen format: { data: { data: [...], page, limit, total, totalPages } }
+          const articles = response.data?.data || [];
+          const pagination = {
+            page: response.data?.page || 1,
+            limit: response.data?.limit || 10,
+            total: response.data?.total || 0,
+            totalPages: response.data?.totalPages || 0,
+          };
+          
+          set({
+            articles,
+            pagination,
+            loading: false,
+          });
+        } catch (error: any) {
+          set({
+            error: error.response?.data?.message || 'Admin makaleleri yüklenirken hata oluştu',
             loading: false,
           });
         }

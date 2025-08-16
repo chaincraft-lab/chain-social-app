@@ -325,7 +325,7 @@ function CategoriesPage() {
                                   </Typography>
                                 </TableCell>
                                 <TableCell align="right">
-                                  <Tooltip title={category.isActive ? 'Pasif Yap' : 'Aktif Yap'} arrow>
+                                  {/* <Tooltip title={category.isActive ? 'Pasif Yap' : 'Aktif Yap'} arrow>
                                     <IconButton
                                       sx={{
                                         '&:hover': {
@@ -340,7 +340,7 @@ function CategoriesPage() {
                                     >
                                       {category.isActive ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
                                     </IconButton>
-                                  </Tooltip>
+                                  </Tooltip> */}
                                   <Tooltip title="Düzenle" arrow>
                                     <IconButton
                                       sx={{

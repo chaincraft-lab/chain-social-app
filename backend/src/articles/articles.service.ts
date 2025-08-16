@@ -656,6 +656,153 @@ export class ArticlesService {
     return relatedArticles.map(article => this.formatArticleResponse(article));
   }
 
+  async findAllForAdmin(filterDto: ArticleFilterDto): Promise<PaginatedResponse<ArticleResponseDto>> {
+    const { 
+      page = 1, 
+      limit = 10, 
+      categoryId, 
+      categorySlug,
+      tagIds,
+      authorId,
+      search,
+      isFeatured,
+      isBreaking,
+      status,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+      startDate,
+      endDate
+    } = filterDto;
+
+    const skip = (page - 1) * limit;
+
+    // Build where clause - admin can see all statuses
+    const where: any = {};
+
+    // If status is provided, filter by it; otherwise show all
+    if (status) {
+      where.status = status;
+    }
+
+    if (categoryId) {
+      where.categoryId = categoryId;
+    }
+
+    if (categorySlug) {
+      where.category = {
+        slug: categorySlug,
+        isActive: true,
+      };
+    }
+
+    if (tagIds && tagIds.length > 0) {
+      where.tags = {
+        some: {
+          tagId: { in: tagIds }
+        }
+      };
+    }
+
+    if (authorId) {
+      where.authorId = authorId;
+    }
+
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { excerpt: { contains: search, mode: 'insensitive' } },
+        { content: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    if (typeof isFeatured === 'boolean') {
+      where.isFeatured = isFeatured;
+    }
+
+    if (typeof isBreaking === 'boolean') {
+      where.isBreaking = isBreaking;
+    }
+
+    if (startDate) {
+      where.publishedAt = { 
+        ...where.publishedAt,
+        gte: new Date(startDate)
+      };
+    }
+
+    if (endDate) {
+      where.publishedAt = {
+        ...where.publishedAt,
+        lte: new Date(endDate + 'T23:59:59.999Z')
+      };
+    }
+
+    // Build order clause
+    const orderBy: any = {};
+    orderBy[sortBy] = sortOrder;
+
+    const [articles, total] = await Promise.all([
+      this.prisma.article.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy,
+        include: {
+          category: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              color: true,
+              icon: true,
+            }
+          },
+          author: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            }
+          },
+          tags: {
+            include: {
+              tag: {
+                select: {
+                  id: true,
+                  name: true,
+                  slug: true,
+                }
+              }
+            }
+          },
+          _count: {
+            select: {
+              articleLikes: true,
+              comments: { where: { status: CommentStatus.APPROVED } },
+            }
+          }
+        }
+      }),
+      this.prisma.article.count({ where })
+    ]);
+
+    const formattedArticles = articles.map(article => this.formatArticleResponse(article));
+
+    const totalPages = Math.ceil(total / limit);
+    const hasNext = page < totalPages;
+    const hasPrevious = page > 1;
+
+    return {
+      data: formattedArticles,
+      total,
+      page,
+      limit,
+      totalPages,
+      hasNext,
+      hasPrevious,
+    };
+  }
+
   private formatArticleResponse(article: any): ArticleResponseDto {
     return {
       id: article.id,

@@ -54,6 +54,7 @@ export interface ArticleFilters {
   search?: string;
   isFeatured?: boolean;
   isBreaking?: boolean;
+  status?: 'PUBLISHED' | 'DRAFT';
   sortBy?: string;
   sortOrder?: string;
   startDate?: string;

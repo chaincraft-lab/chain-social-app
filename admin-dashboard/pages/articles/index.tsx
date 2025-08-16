@@ -79,6 +79,7 @@ function ArticlesPage() {
     loadingUpdate,
     error,
     fetchArticles,
+    fetchArticlesForAdmin,
     deleteArticle,
     toggleArticleActive,
     clearError
@@ -98,10 +99,10 @@ function ArticlesPage() {
 
   // Sayfa yüklendiğinde makaleleri, kategorileri ve tagları getir
   useEffect(() => {
-    fetchArticles(1, 10);
+    fetchArticlesForAdmin(1, 10);
     fetchCategoriesData(1, 100);
     fetchTagsData(1, 100);
-  }, [fetchArticles, fetchCategoriesData, fetchTagsData]);
+  }, [fetchArticlesForAdmin, fetchCategoriesData, fetchTagsData]);
 
   // Search ve filtreleme
   const filteredArticles = useMemo(() => {
@@ -152,7 +153,7 @@ function ArticlesPage() {
   };
 
   const handlePageChange = (_event: ChangeEvent<unknown>, value: number) => {
-    fetchArticles(value, pagination.limit);
+    fetchArticlesForAdmin(value, pagination.limit);
   };
 
   const handleDeleteClick = (articleId: number) => {
@@ -166,7 +167,7 @@ function ArticlesPage() {
       if (success) {
         setDeleteDialogOpen(false);
         setArticleToDelete(null);
-        fetchArticles(pagination.page, pagination.limit);
+        fetchArticlesForAdmin(pagination.page, pagination.limit);
       }
     }
   };
@@ -177,7 +178,7 @@ function ArticlesPage() {
   };
 
   const handleRefresh = () => {
-    fetchArticles(pagination.page, pagination.limit);
+    fetchArticlesForAdmin(pagination.page, pagination.limit);
   };
 
   const handleToggleActive = async (articleId: number) => {

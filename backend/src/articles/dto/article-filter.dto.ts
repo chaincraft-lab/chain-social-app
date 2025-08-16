@@ -1,6 +1,7 @@
 import { IsOptional, IsString, IsInt, IsBoolean, IsEnum } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ArticleStatus } from '@prisma/client';
 
 export enum ArticleSortBy {
   CREATED_AT = 'createdAt',
@@ -141,4 +142,13 @@ export class ArticleFilterDto {
   @IsOptional()
   @IsString({ message: 'Bitiş tarihi metin olmalıdır' })
   endDate?: string;
+
+  @ApiPropertyOptional({
+    description: 'Makale durumu (admin endpoint için)',
+    example: ArticleStatus.PUBLISHED,
+    enum: ArticleStatus,
+  })
+  @IsOptional()
+  @IsEnum(ArticleStatus, { message: 'Geçerli bir makale durumu seçiniz' })
+  status?: ArticleStatus;
 }
