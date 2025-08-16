@@ -38,7 +38,7 @@ class ArticleService extends ApiService {
 
   // Popüler makaleleri getir (en çok görüntülenen)
   async getPopularArticles(limit = 5) {
-    return this.get(`/articles?limit=${limit}&sortBy=viewCount&sortOrder=desc`);
+    return this.get(`/articles?limit=${limit}&sortBy=views&sortOrder=desc`);
   }
 
   // En son makaleleri getir

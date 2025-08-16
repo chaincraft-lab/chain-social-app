@@ -1,25 +1,5 @@
 <template>
   <aside class="w-full">
-    <!-- Categories -->
-    <!-- <div v-if="showCategories" class="bg-white rounded-lg shadow-sm mb-6">
-      <div class="border-b border-light-200 px-5 py-3">
-        <h3 class="text-lg font-semibold text-dark">Kategoriler</h3>
-      </div>
-      <div class="p-3">
-        <ul class="divide-y divide-light-200">
-          <li v-for="category in categories" :key="category.id">
-            <router-link
-              :to="{ name: 'category', params: { slug: category.slug } }"
-              class="block px-2 py-2.5 text-dark hover:text-primary transition-colors"
-              active-class="text-primary font-medium"
-            >
-              {{ category.name }}
-            </router-link>
-          </li>
-        </ul>
-      </div>
-    </div> -->
-
     <VuetifyCategories
       v-if="showCategories"
       :categories="categories"
@@ -34,7 +14,7 @@
         <ul class="divide-y divide-light-200">
           <li v-for="(news, index) in popularNews" :key="news.id" class="py-3">
             <router-link
-              :to="{ name: 'article', params: { slug: news.id } }"
+              :to="{ name: 'article', params: { slug: news.slug } }"
               class="flex items-start gap-3 group"
             >
               <div
@@ -112,13 +92,12 @@
     </div>
 
     <!-- Tags -->
-    <div v-if="showTags" class="modern-tags-card">
+    <div v-if="showTags" class="tags-card">
       <div class="tags-header">
-        <div class="tags-header-content">
-          <v-icon class="mr-2" color="purple" size="small">mdi-tag-multiple</v-icon>
-          <h3 class="tags-title">Popüler Etiketler</h3>
-        </div>
-        <div class="tags-decoration"></div>
+        <h3 class="tags-title">
+          <v-icon size="small" class="mr-2" color="primary">mdi-tag-multiple</v-icon>
+          Popüler Etiketler
+        </h3>
       </div>
       <div class="tags-content">
         <!-- Loading State -->
@@ -129,20 +108,18 @@
         <!-- Tags List -->
         <div v-else-if="tags.length > 0" class="tags-grid">
           <router-link
-            v-for="(tag, index) in tags"
+            v-for="tag in tags"
             :key="tag.id"
             :to="{ name: 'tag', params: { slug: tag.slug } }"
-            class="modern-tag-chip"
-            :style="{ animationDelay: index * 100 + 'ms' }"
+            class="tag-chip"
           >
-            <v-icon size="x-small" class="mr-1">mdi-tag</v-icon>
             {{ tag.name }}
           </router-link>
         </div>
         
         <!-- Empty State -->
         <div v-else class="tags-empty-state">
-          <v-icon size="large" color="grey-lighten-2">mdi-tag-off</v-icon>
+          <v-icon size="small" color="grey-lighten-1">mdi-tag-outline</v-icon>
           <p class="empty-text">Henüz etiket bulunmuyor</p>
         </div>
       </div>
@@ -263,67 +240,48 @@ export default {
 </script>
 
 <style scoped>
-/* Modern Tags Card */
-.modern-tags-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+/* Simple Tags Card */
+.tags-card {
+  background: white;
+  border-radius: 12px;
   margin-bottom: 1.5rem;
-  overflow: hidden;
-  border: 1px solid rgba(156, 39, 176, 0.1);
 }
 
 .tags-header {
-  position: relative;
-  background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
-  padding: 1rem 1.25rem;
-}
-
-.tags-header-content {
-  display: flex;
-  align-items: center;
-  position: relative;
-  z-index: 2;
+  padding: 1rem 1.25rem 0.5rem;
+  border-bottom: 1px solid #f5f5f5;
 }
 
 .tags-title {
   font-size: 1rem;
   font-weight: 600;
-  color: white;
+  color: #2c3e50;
   margin: 0;
-}
-
-.tags-decoration {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="tagPattern" width="15" height="15" patternUnits="userSpaceOnUse"><circle cx="7.5" cy="7.5" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23tagPattern)"/></svg>');
-  opacity: 0.3;
+  display: flex;
+  align-items: center;
 }
 
 .tags-content {
-  padding: 1.25rem;
+  padding: 1rem 1.25rem 1.25rem;
 }
 
 /* Loading State */
 .tags-loading {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .tag-skeleton {
-  height: 32px;
+  height: 28px;
   background: linear-gradient(
     90deg,
-    #f3e5f5 25%,
-    #e1bee7 50%,
-    #f3e5f5 75%
+    #f8f9fa 25%,
+    #e9ecef 50%,
+    #f8f9fa 75%
   );
   background-size: 200% 100%;
-  border-radius: 16px;
+  border-radius: 14px;
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
@@ -340,33 +298,28 @@ export default {
 .tags-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
-.modern-tag-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #f3e5f5 0%, #e8eaf6 100%);
-  color: #673ab7;
-  border-radius: 20px;
-  font-size: 0.875rem;
+.tag-chip {
+  display: inline-block;
+  padding: 0.4rem 0.75rem;
+  background: #f8f9fa;
+  color: #495057;
+  border-radius: 14px;
+  font-size: 0.8rem;
   font-weight: 500;
   text-decoration: none;
-  border: 1px solid rgba(156, 39, 176, 0.2);
-  transition: all 0.3s ease;
-  animation: fadeInUp 0.4s ease-out both;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s ease;
 }
 
-.modern-tag-chip:hover {
-  background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+.tag-chip:hover {
+  background: #800000;
   color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
-}
-
-.modern-tag-chip:active {
+  border-color: #800000;
   transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(128, 0, 0, 0.2);
 }
 
 /* Empty State */
@@ -374,49 +327,37 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
   text-align: center;
 }
 
 .empty-text {
-  margin: 0.75rem 0 0 0;
-  font-size: 0.875rem;
+  margin: 0.5rem 0 0 0;
+  font-size: 0.8rem;
   color: #9e9e9e;
-}
-
-/* Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .modern-tags-card {
+  .tags-card {
     margin-bottom: 1rem;
   }
   
   .tags-header {
-    padding: 0.875rem 1rem;
+    padding: 0.75rem 1rem 0.25rem;
   }
   
   .tags-content {
-    padding: 1rem;
+    padding: 0.75rem 1rem 1rem;
   }
   
   .tags-grid {
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
   
-  .modern-tag-chip {
-    padding: 0.375rem 0.75rem;
-    font-size: 0.8rem;
+  .tag-chip {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
   }
 }
 </style> 

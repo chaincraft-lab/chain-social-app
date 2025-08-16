@@ -280,7 +280,7 @@
 </template>
 
 <script>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 
@@ -353,6 +353,13 @@ export default {
     
     onMounted(() => {
       loadArticle()
+    })
+    
+    // Route parametresi değiştiğinde makaleyi yeniden yükle
+    watch(() => route.params.slug, (newSlug, oldSlug) => {
+      if (newSlug && newSlug !== oldSlug) {
+        loadArticle()
+      }
     })
     
     return {

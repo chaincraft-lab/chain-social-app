@@ -46,11 +46,21 @@
             variant="text"
             size="large"
             @click="toggleLike"
+            :loading="loadingLike"
+            :disabled="loadingLike"
           ></v-btn>
           <v-btn icon="mdi-comment-outline" variant="text" size="large" @click="toggleComments"></v-btn>
           <v-btn icon="mdi-share-outline" variant="text" size="large" @click="sharePost"></v-btn>
         </div>
-        <v-btn icon="mdi-bookmark-outline" variant="text" size="large" @click="bookmarkPost"></v-btn>
+        <v-btn 
+          :icon="isBookmarked ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
+          :color="isBookmarked ? 'primary' : 'grey'"
+          variant="text" 
+          size="large" 
+          @click="bookmarkPost"
+          :loading="loadingBookmark"
+          :disabled="loadingBookmark"
+        ></v-btn>
       </div>
 
       <!-- Engagement Stats -->
@@ -131,6 +141,8 @@
 </template>
 
 <script>
+import { likeService, bookmarkService } from '@/services'
+
 export default {
   name: 'NewsPost',
   props: {
@@ -142,10 +154,13 @@ export default {
   data() {
     return {
       isLiked: false,
-      likesCount: Math.floor(Math.random() * 1000) + 50, // Random likes for demo
-      commentsCount: Math.floor(Math.random() * 50) + 5, // Random comments for demo
+      isBookmarked: false,
+      likesCount: this.news.likeCount || 0,
+      commentsCount: this.news.commentCount || 0,
       showComments: false,
       newComment: '',
+      loadingLike: false,
+      loadingBookmark: false,
       sampleComments: [
         { id: 1, author: 'Ahmet Yılmaz', text: 'Çok önemli bir gelişme! 👍' },
         { id: 2, author: 'Ayşe Demir', text: 'Bu konuda daha fazla detay bekliyoruz.' },
@@ -197,9 +212,32 @@ export default {
       }
       return colors[category] || 'primary'
     },
-    toggleLike() {
-      this.isLiked = !this.isLiked
-      this.likesCount += this.isLiked ? 1 : -1
+    async toggleLike() {
+      if (this.loadingLike) return
+      
+      try {
+        this.loadingLike = true
+        const response = await likeService.toggleLike(this.news.id)
+        
+        this.isLiked = response.data.action === 'liked'
+        this.likesCount = response.data.likesCount
+        
+        // Başarı mesajı (isteğe bağlı)
+        const message = this.isLiked ? 'Makale beğenildi!' : 'Beğeni kaldırıldı!'
+        this.$toast?.success(message)
+        
+      } catch (error) {
+        console.error('Like toggle error:', error)
+        
+        // Hata durumunda kullanıcıya bilgi ver
+        if (error.response?.status === 401) {
+          this.$toast?.error('Bu işlem için giriş yapmanız gerekiyor.')
+        } else {
+          this.$toast?.error('Bir hata oluştu. Lütfen tekrar deneyin.')
+        }
+      } finally {
+        this.loadingLike = false
+      }
     },
     toggleComments() {
       this.showComments = !this.showComments
@@ -218,8 +256,31 @@ export default {
         console.log('Link kopyalandı!')
       }
     },
-    bookmarkPost() {
-      console.log('Post kaydedildi!')
+    async bookmarkPost() {
+      if (this.loadingBookmark) return
+      
+      try {
+        this.loadingBookmark = true
+        const response = await bookmarkService.toggleBookmark(this.news.id)
+        
+        this.isBookmarked = response.data.action === 'bookmarked'
+        
+        // Başarı mesajı
+        const message = this.isBookmarked ? 'Makale kaydedildi!' : 'Kayıt kaldırıldı!'
+        this.$toast?.success(message)
+        
+      } catch (error) {
+        console.error('Bookmark toggle error:', error)
+        
+        // Hata durumunda kullanıcıya bilgi ver
+        if (error.response?.status === 401) {
+          this.$toast?.error('Bu işlem için giriş yapmanız gerekiyor.')
+        } else {
+          this.$toast?.error('Bir hata oluştu. Lütfen tekrar deneyin.')
+        }
+      } finally {
+        this.loadingBookmark = false
+      }
     },
     addComment() {
       if (this.newComment.trim()) {

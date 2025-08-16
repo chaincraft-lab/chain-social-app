@@ -3,7 +3,8 @@
     v-if="showCategories"
     class="mb-4 rounded-lg elevation-1"
   >
-    <v-card-title class="text-subtitle-1 font-weight-medium text-dark">
+    <v-card-title class="text-subtitle-1 font-weight-medium text-dark d-flex align-center">
+      <v-icon size="small" class="mr-2" color="primary">mdi-folder-multiple</v-icon>
       Kategoriler
     </v-card-title>
 
@@ -16,6 +17,7 @@
         :to="{ name: 'category', params: { slug: category.slug } }"
         link
         active-class="text-primary font-weight-medium"
+        class="category-item"
       >
         <v-list-item-title>{{ category.name }}</v-list-item-title>
       </v-list-item>
@@ -37,3 +39,21 @@ defineProps({
 });
 /* eslint-enable no-undef */
 </script>
+
+<style scoped>
+.category-item:hover {
+  background-color: rgba(128, 0, 0, 0.08) !important;
+  color: #800000 !important;
+}
+
+.category-item:hover .v-list-item-title {
+  color: #800000 !important;
+  font-weight: 500;
+}
+
+.category-item {
+  transition: all 0.2s ease;
+  border-radius: 8px !important;
+  margin: 2px 8px;
+}
+</style>
