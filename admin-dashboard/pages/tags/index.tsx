@@ -35,7 +35,9 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  Checkbox,
+  Toolbar
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
@@ -57,6 +59,10 @@ function TagsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
   const [editingTag, setEditingTag] = useState<TagResponse | null>(null);
+  
+  // Çoklu seçim state'leri
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
 
   // Tag store
   const {
@@ -67,6 +73,7 @@ function TagsPage() {
     error,
     fetchTags,
     deleteTag,
+    bulkDeleteTags,
     clearError
   } = useTagStore();
 
@@ -178,6 +185,69 @@ function TagsPage() {
     return { label: 'Az Kullanılan', color: 'error' };
   };
 
+  // Çoklu seçim handler'ları
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = filteredTags.map((tag) => tag.id);
+      setSelectedTags(newSelected);
+    } else {
+      setSelectedTags([]);
+    }
+  };
+
+  const handleSelectTag = (tagId: number) => {
+    const selectedIndex = selectedTags.indexOf(tagId);
+    let newSelected: number[] = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selectedTags, tagId);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selectedTags.slice(1));
+    } else if (selectedIndex === selectedTags.length - 1) {
+      newSelected = newSelected.concat(selectedTags.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selectedTags.slice(0, selectedIndex),
+        selectedTags.slice(selectedIndex + 1),
+      );
+    }
+
+    setSelectedTags(newSelected);
+  };
+
+  const isSelected = (tagId: number) => selectedTags.indexOf(tagId) !== -1;
+
+  // Bulk delete işlemleri
+  const handleBulkDeleteClick = () => {
+    setBulkDeleteDialogOpen(true);
+  };
+
+  const handleBulkDeleteConfirm = async () => {
+    if (selectedTags.length > 0) {
+      const result = await bulkDeleteTags(selectedTags);
+      if (result) {
+        setBulkDeleteDialogOpen(false);
+        setSelectedTags([]);
+        fetchTags(pagination.page, pagination.limit);
+        
+        // Sonucu kullanıcıya göster
+        if (result.failedIds.length > 0) {
+          // Some tags couldn't be deleted, show partial success message
+          clearError(); // Clear any existing error first
+        }
+      }
+    }
+  };
+
+  const handleBulkDeleteCancel = () => {
+    setBulkDeleteDialogOpen(false);
+  };
+
+  // Clear selections when tags change
+  useEffect(() => {
+    setSelectedTags([]);
+  }, [tags]);
+
   return (
     <>
       <Head>
@@ -201,7 +271,39 @@ function TagsPage() {
             <Card>
               <CardHeader
                 action={
-                  <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                    {selectedTags.length > 0 && (
+                      <Button
+                        variant="contained"
+                        color="error"
+                        startIcon={<DeleteTwoToneIcon fontSize="small" />}
+                        onClick={handleBulkDeleteClick}
+                        disabled={loadingDelete}
+                        sx={{
+                          position: 'relative',
+                          '&::after': {
+                            content: `"${selectedTags.length}"`,
+                            position: 'absolute',
+                            top: -8,
+                            right: -8,
+                            backgroundColor: 'error.dark',
+                            color: 'white',
+                            borderRadius: '50%',
+                            width: 20,
+                            height: 20,
+                            fontSize: '0.75rem',
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            minWidth: 20,
+                            border: '2px solid white'
+                          }
+                        }}
+                      >
+                        Seçilenleri Sil
+                      </Button>
+                    )}
                     <Button
                       variant="outlined"
                       startIcon={<RefreshIcon fontSize="small" />}
@@ -260,18 +362,27 @@ function TagsPage() {
                       <Table sx={{ minWidth: 800 }}>
                         <TableHead>
                           <TableRow>
-                            <TableCell sx={{ width: '25%' }}>Etiket Adı</TableCell>
-                            <TableCell sx={{ width: '20%' }}>Slug</TableCell>
-                            <TableCell sx={{ width: '15%' }}>Makale Sayısı</TableCell>
-                            <TableCell sx={{ width: '15%' }}>Popülerlik</TableCell>
-                            <TableCell sx={{ width: '15%' }}>Oluşturulma Tarihi</TableCell>
-                            <TableCell align="right" sx={{ width: '10%' }}>İşlemler</TableCell>
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                color="primary"
+                                indeterminate={selectedTags.length > 0 && selectedTags.length < filteredTags.length}
+                                checked={filteredTags.length > 0 && selectedTags.length === filteredTags.length}
+                                onChange={handleSelectAll}
+                                disabled={filteredTags.length === 0}
+                              />
+                            </TableCell>
+                            <TableCell sx={{ width: '22%' }}>Etiket Adı</TableCell>
+                            <TableCell sx={{ width: '18%' }}>Slug</TableCell>
+                            <TableCell sx={{ width: '13%' }}>Makale Sayısı</TableCell>
+                            <TableCell sx={{ width: '13%' }}>Popülerlik</TableCell>
+                            <TableCell sx={{ width: '13%' }}>Oluşturulma Tarihi</TableCell>
+                            <TableCell align="right" sx={{ width: '8%' }}>İşlemler</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
                           {filteredTags.length === 0 ? (
                             <TableRow>
-                              <TableCell colSpan={6} align="center">
+                              <TableCell colSpan={7} align="center">
                                 <Typography variant="body2" color="text.secondary">
                                   {searchTerm 
                                     ? 'Arama kriterinize uygun etiket bulunamadı.' 
@@ -281,9 +392,25 @@ function TagsPage() {
                             </TableRow>
                           ) : (
                             filteredTags.map((tag) => {
+                              const isItemSelected = isSelected(tag.id);
                               const popularity = getPopularityLevel(tag.articlesCount || 0);
                               return (
-                                <TableRow key={tag.id}>
+                                <TableRow 
+                                  key={tag.id}
+                                  hover
+                                  onClick={() => handleSelectTag(tag.id)}
+                                  role="checkbox"
+                                  aria-checked={isItemSelected}
+                                  selected={isItemSelected}
+                                  sx={{ cursor: 'pointer' }}
+                                >
+                                  <TableCell padding="checkbox">
+                                    <Checkbox
+                                      color="primary"
+                                      checked={isItemSelected}
+                                      onChange={() => handleSelectTag(tag.id)}
+                                    />
+                                  </TableCell>
                                   <TableCell>
                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                       {(tag.articlesCount || 0) >= 15 && (
@@ -328,7 +455,10 @@ function TagsPage() {
                                         }}
                                         color="inherit"
                                         size="small"
-                                        onClick={() => handleEditClick(tag)}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleEditClick(tag);
+                                        }}
                                       >
                                         <EditTwoToneIcon fontSize="small" />
                                       </IconButton>
@@ -343,7 +473,10 @@ function TagsPage() {
                                         }}
                                         color="inherit"
                                         size="small"
-                                        onClick={() => handleDeleteClick(tag.id)}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleDeleteClick(tag.id);
+                                        }}
                                         disabled={loadingDelete}
                                       >
                                         <DeleteTwoToneIcon fontSize="small" />
@@ -388,7 +521,8 @@ function TagsPage() {
           <DialogContent>
             <DialogContentText id="delete-dialog-description">
               Bu etiketi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
-              Etiket, ilişkili olduğu makalelerden de kaldırılacaktır.
+              <br /><br />
+              <strong>Not:</strong> Etiket herhangi bir makalede kullanılıyorsa silinemez.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -403,6 +537,39 @@ function TagsPage() {
               startIcon={loadingDelete ? <CircularProgress size={16} /> : null}
             >
               Sil
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Bulk Delete Confirmation Dialog */}
+        <Dialog
+          open={bulkDeleteDialogOpen}
+          onClose={handleBulkDeleteCancel}
+          aria-labelledby="bulk-delete-dialog-title"
+          aria-describedby="bulk-delete-dialog-description"
+        >
+          <DialogTitle id="bulk-delete-dialog-title">
+            Seçili Etiketleri Sil
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="bulk-delete-dialog-description">
+              {selectedTags.length} etiketi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+              <br /><br />
+              <strong>Not:</strong> Herhangi bir makalede kullanılan etiketler silinemez ve işlem sonucunda hangi etiketlerin silinebildiği bildirilecektir.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleBulkDeleteCancel} disabled={loadingDelete}>
+              İptal
+            </Button>
+            <Button 
+              onClick={handleBulkDeleteConfirm} 
+              color="error" 
+              variant="contained"
+              disabled={loadingDelete}
+              startIcon={loadingDelete ? <CircularProgress size={16} /> : null}
+            >
+              {selectedTags.length} Etiketi Sil
             </Button>
           </DialogActions>
         </Dialog>

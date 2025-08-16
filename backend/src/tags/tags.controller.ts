@@ -193,6 +193,38 @@ export class TagsController {
     return this.tagsService.update(id, updateTagDto);
   }
 
+  @Post('bulk-delete')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.EDITOR)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({
+    summary: 'Çoklu tag silme',
+    description: 'Belirtilen tagları toplu olarak siler. Sadece editörler ve yöneticiler kullanabilir.'
+  })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Taglar başarıyla silindi',
+    schema: {
+      type: 'object',
+      properties: {
+        deletedCount: { type: 'number' },
+        failedIds: { type: 'array', items: { type: 'number' } },
+        message: { type: 'string' }
+      }
+    }
+  })
+  @ApiResponse({ status: 400, description: 'Geçersiz veri' })
+  @ApiResponse({ status: 401, description: 'Yetkilendirme gerekli' })
+  @ApiResponse({ status: 403, description: 'Yetkisiz erişim' })
+  @HttpCode(HttpStatus.OK)
+  async bulkDelete(@Body('ids') ids: number[]): Promise<{
+    deletedCount: number;
+    failedIds: number[];
+    message: string;
+  }> {
+    return this.tagsService.bulkDelete(ids);
+  }
+
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.EDITOR)

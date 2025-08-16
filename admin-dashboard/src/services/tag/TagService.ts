@@ -77,6 +77,15 @@ class TagService extends ApiService {
   async deleteTag(id: number): Promise<{ message: string }> {
     return this.delete(`/tags/${id}`);
   }
+
+  // Çoklu tag silme
+  async bulkDeleteTags(ids: number[]): Promise<{
+    deletedCount: number;
+    failedIds: number[];
+    message: string;
+  }> {
+    return this.post('/tags/bulk-delete', { ids });
+  }
 }
 
 // Singleton instance

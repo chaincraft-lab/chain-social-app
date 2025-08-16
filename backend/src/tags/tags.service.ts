@@ -258,6 +258,63 @@ export class TagsService {
     return this.formatTagResponse(updatedTag, updatedTag._count.articles);
   }
 
+  async bulkDelete(ids: number[]): Promise<{
+    deletedCount: number;
+    failedIds: number[];
+    message: string;
+  }> {
+    if (!ids || ids.length === 0) {
+      throw new BadRequestException('Silinecek tag ID\'leri belirtilmeli');
+    }
+
+    const failedIds: number[] = [];
+    let deletedCount = 0;
+
+    // Her tag'i ayrı ayrı kontrol et ve sil
+    for (const id of ids) {
+      try {
+        const tag = await this.prisma.tag.findUnique({
+          where: { id },
+          include: {
+            _count: {
+              select: { articles: true }
+            }
+          }
+        });
+
+        if (!tag) {
+          failedIds.push(id);
+          continue;
+        }
+
+        // Tag'in makale bağlantısı varsa silme
+        if (tag._count.articles > 0) {
+          failedIds.push(id);
+          continue;
+        }
+
+        await this.prisma.tag.delete({
+          where: { id }
+        });
+
+        deletedCount++;
+      } catch (error) {
+        failedIds.push(id);
+      }
+    }
+
+    let message = `${deletedCount} tag başarıyla silindi`;
+    if (failedIds.length > 0) {
+      message += `, ${failedIds.length} tag silinemedi (makale bağlantısı var veya bulunamadı)`;
+    }
+
+    return {
+      deletedCount,
+      failedIds,
+      message
+    };
+  }
+
   async remove(id: number): Promise<void> {
     const tag = await this.prisma.tag.findUnique({
       where: { id },

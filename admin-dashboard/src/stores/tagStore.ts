@@ -46,6 +46,7 @@ interface TagState {
   createTag: (data: CreateTagRequest) => Promise<boolean>;
   updateTag: (id: number, data: UpdateTagRequest) => Promise<boolean>;
   deleteTag: (id: number) => Promise<boolean>;
+  bulkDeleteTags: (ids: number[]) => Promise<{ deletedCount: number; failedIds: number[]; message: string } | null>;
   fetchTagStats: () => Promise<void>;
   
   // Utility actions
@@ -243,6 +244,34 @@ export const useTagStore = create<TagState>()(
             loadingDelete: false,
           });
           return false;
+        }
+      },
+
+      bulkDeleteTags: async (ids: number[]) => {
+        set({ loadingDelete: true, error: null });
+        try {
+          const response: any = await tagService.bulkDeleteTags(ids);
+          const result = response.data || response;
+          
+          // Silinen tagları listelerden kaldır
+          const { tags, popularTags } = get();
+          const deletedIds = ids.filter(id => !result.failedIds.includes(id));
+          
+          set({
+            tags: tags.filter(tag => !deletedIds.includes(tag.id)),
+            popularTags: popularTags.filter(tag => !deletedIds.includes(tag.id)),
+            selectedTag: null,
+            loadingDelete: false,
+          });
+
+          return result;
+        } catch (error: any) {
+          // Network veya server hatası
+          set({
+            error: error.response?.data?.message || 'Taglar silinirken hata oluştu',
+            loadingDelete: false,
+          });
+          return null;
         }
       },
 
