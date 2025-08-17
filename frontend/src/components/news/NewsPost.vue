@@ -8,8 +8,8 @@
             <span class="text-white font-weight-bold">{{ getAuthorInitials() }}</span>
           </v-avatar>
           <div class="author-details">
-            <div class="author-name">{{ news.author?.name || 'Editör' }}</div>
-            <div class="post-time">{{ formatDate(news.date) }}</div>
+            <div class="author-name">{{ getAuthorName() }}</div>
+            <div class="post-time">{{ formatDate(news.publishedAt || news.createdAt || news.date) }}</div>
           </div>
         </div>
         <v-btn icon="mdi-dots-vertical" variant="text" size="small"></v-btn>
@@ -18,7 +18,7 @@
       <!-- Post Image -->
       <div class="post-image-container" @click="goToArticle" style="cursor: pointer;">
         <v-img 
-          :src="news.image" 
+          :src="news.imageUrl || news.image" 
           :alt="news.title"
           height="400"
           cover
@@ -46,11 +46,21 @@
             variant="text"
             size="large"
             @click="toggleLike"
+            :loading="loadingLike"
+            :disabled="loadingLike"
           ></v-btn>
           <v-btn icon="mdi-comment-outline" variant="text" size="large" @click="toggleComments"></v-btn>
           <v-btn icon="mdi-share-outline" variant="text" size="large" @click="sharePost"></v-btn>
         </div>
-        <v-btn icon="mdi-bookmark-outline" variant="text" size="large" @click="bookmarkPost"></v-btn>
+        <v-btn 
+          :icon="isBookmarked ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
+          :color="isBookmarked ? 'primary' : 'grey'"
+          variant="text" 
+          size="large" 
+          @click="bookmarkPost"
+          :loading="loadingBookmark"
+          :disabled="loadingBookmark"
+        ></v-btn>
       </div>
 
       <!-- Engagement Stats -->
@@ -63,7 +73,7 @@
       <!-- Post Content -->
       <div class="post-content">
         <div class="post-title" @click="goToArticle" style="cursor: pointer;">
-          <strong>{{ news.author?.name || 'editör' }}</strong>
+          <strong>{{ getAuthorName() }}</strong>
           {{ news.title }}
         </div>
         <div class="post-excerpt" v-if="news.excerpt" @click="goToArticle" style="cursor: pointer;">
@@ -72,13 +82,14 @@
         
         <!-- Tags -->
         <div class="post-tags" v-if="news.tags && news.tags.length">
-          <span 
+          <router-link
             v-for="tag in news.tags.slice(0, 3)" 
-            :key="tag" 
+            :key="tag.id || tag" 
+            :to="{ name: 'tag', params: { slug: tag.slug || tag } }"
             class="tag"
           >
-            #{{ tag }}
-          </span>
+            #{{ tag.name || tag }}
+          </router-link>
         </div>
       </div>
 
@@ -130,6 +141,8 @@
 </template>
 
 <script>
+import { likeService, bookmarkService } from '@/services'
+
 export default {
   name: 'NewsPost',
   props: {
@@ -141,10 +154,13 @@ export default {
   data() {
     return {
       isLiked: false,
-      likesCount: Math.floor(Math.random() * 1000) + 50, // Random likes for demo
-      commentsCount: Math.floor(Math.random() * 50) + 5, // Random comments for demo
+      isBookmarked: false,
+      likesCount: this.news.likeCount || 0,
+      commentsCount: this.news.commentCount || 0,
       showComments: false,
       newComment: '',
+      loadingLike: false,
+      loadingBookmark: false,
       sampleComments: [
         { id: 1, author: 'Ahmet Yılmaz', text: 'Çok önemli bir gelişme! 👍' },
         { id: 2, author: 'Ayşe Demir', text: 'Bu konuda daha fazla detay bekliyoruz.' },
@@ -153,8 +169,18 @@ export default {
     }
   },
   methods: {
+    getAuthorName() {
+      if (this.news.author?.name) {
+        return this.news.author.name
+      }
+      if (this.news.author?.firstName && this.news.author?.lastName) {
+        return `${this.news.author.firstName} ${this.news.author.lastName}`
+      }
+      return 'Editör'
+    },
+    
     getAuthorInitials() {
-      const name = this.news.author?.name || 'Editör'
+      const name = this.getAuthorName()
       return name.split(' ').map(n => n.charAt(0)).join('').toUpperCase()
     },
     formatDate(dateString) {
@@ -186,9 +212,32 @@ export default {
       }
       return colors[category] || 'primary'
     },
-    toggleLike() {
-      this.isLiked = !this.isLiked
-      this.likesCount += this.isLiked ? 1 : -1
+    async toggleLike() {
+      if (this.loadingLike) return
+      
+      try {
+        this.loadingLike = true
+        const response = await likeService.toggleLike(this.news.id)
+        
+        this.isLiked = response.data.action === 'liked'
+        this.likesCount = response.data.likesCount
+        
+        // Başarı mesajı (isteğe bağlı)
+        const message = this.isLiked ? 'Makale beğenildi!' : 'Beğeni kaldırıldı!'
+        this.$toast?.success(message)
+        
+      } catch (error) {
+        console.error('Like toggle error:', error)
+        
+        // Hata durumunda kullanıcıya bilgi ver
+        if (error.response?.status === 401) {
+          this.$toast?.error('Bu işlem için giriş yapmanız gerekiyor.')
+        } else {
+          this.$toast?.error('Bir hata oluştu. Lütfen tekrar deneyin.')
+        }
+      } finally {
+        this.loadingLike = false
+      }
     },
     toggleComments() {
       this.showComments = !this.showComments
@@ -207,8 +256,31 @@ export default {
         console.log('Link kopyalandı!')
       }
     },
-    bookmarkPost() {
-      console.log('Post kaydedildi!')
+    async bookmarkPost() {
+      if (this.loadingBookmark) return
+      
+      try {
+        this.loadingBookmark = true
+        const response = await bookmarkService.toggleBookmark(this.news.id)
+        
+        this.isBookmarked = response.data.action === 'bookmarked'
+        
+        // Başarı mesajı
+        const message = this.isBookmarked ? 'Makale kaydedildi!' : 'Kayıt kaldırıldı!'
+        this.$toast?.success(message)
+        
+      } catch (error) {
+        console.error('Bookmark toggle error:', error)
+        
+        // Hata durumunda kullanıcıya bilgi ver
+        if (error.response?.status === 401) {
+          this.$toast?.error('Bu işlem için giriş yapmanız gerekiyor.')
+        } else {
+          this.$toast?.error('Bir hata oluştu. Lütfen tekrar deneyin.')
+        }
+      } finally {
+        this.loadingBookmark = false
+      }
     },
     addComment() {
       if (this.newComment.trim()) {
@@ -224,7 +296,7 @@ export default {
     goToArticle() {
       this.$router.push({
         name: 'article',
-        params: { slug: this.news.id || this.news.slug }
+        params: { slug: this.news.slug || this.news.id }
       })
     }
   }
@@ -345,10 +417,13 @@ export default {
   color: #1976d2;
   font-size: 0.8rem;
   cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 .tag:hover {
   text-decoration: underline;
+  color: #0d47a1;
 }
 
 /* Comments */

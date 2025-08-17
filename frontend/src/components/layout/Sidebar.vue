@@ -1,25 +1,5 @@
 <template>
   <aside class="w-full">
-    <!-- Categories -->
-    <!-- <div v-if="showCategories" class="bg-white rounded-lg shadow-sm mb-6">
-      <div class="border-b border-light-200 px-5 py-3">
-        <h3 class="text-lg font-semibold text-dark">Kategoriler</h3>
-      </div>
-      <div class="p-3">
-        <ul class="divide-y divide-light-200">
-          <li v-for="category in categories" :key="category.id">
-            <router-link
-              :to="{ name: 'category', params: { slug: category.slug } }"
-              class="block px-2 py-2.5 text-dark hover:text-primary transition-colors"
-              active-class="text-primary font-medium"
-            >
-              {{ category.name }}
-            </router-link>
-          </li>
-        </ul>
-      </div>
-    </div> -->
-
     <VuetifyCategories
       v-if="showCategories"
       :categories="categories"
@@ -34,7 +14,7 @@
         <ul class="divide-y divide-light-200">
           <li v-for="(news, index) in popularNews" :key="news.id" class="py-3">
             <router-link
-              :to="{ name: 'article', params: { slug: news.id } }"
+              :to="{ name: 'article', params: { slug: news.slug } }"
               class="flex items-start gap-3 group"
             >
               <div
@@ -112,20 +92,35 @@
     </div>
 
     <!-- Tags -->
-    <div v-if="showTags" class="bg-white rounded-lg shadow-sm mb-6">
-      <div class="border-b border-light-200 px-5 py-3">
-        <h3 class="text-lg font-semibold text-dark">Etiketler</h3>
+    <div v-if="showTags" class="tags-card">
+      <div class="tags-header">
+        <h3 class="tags-title">
+          <v-icon size="small" class="mr-2" color="primary">mdi-tag-multiple</v-icon>
+          Popüler Etiketler
+        </h3>
       </div>
-      <div class="p-4">
-        <div class="flex flex-wrap gap-2">
-          <a
+      <div class="tags-content">
+        <!-- Loading State -->
+        <div v-if="isTagsLoading" class="tags-loading">
+          <div v-for="i in 6" :key="i" class="tag-skeleton" :style="{ width: Math.random() * 60 + 80 + 'px' }"></div>
+        </div>
+        
+        <!-- Tags List -->
+        <div v-else-if="tags.length > 0" class="tags-grid">
+          <router-link
             v-for="tag in tags"
             :key="tag.id"
-            href="#"
-            class="px-3 py-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-full text-sm transition-colors"
+            :to="{ name: 'tag', params: { slug: tag.slug } }"
+            class="tag-chip"
           >
             {{ tag.name }}
-          </a>
+          </router-link>
+        </div>
+        
+        <!-- Empty State -->
+        <div v-else class="tags-empty-state">
+          <v-icon size="small" color="grey-lighten-1">mdi-tag-outline</v-icon>
+          <p class="empty-text">Henüz etiket bulunmuyor</p>
         </div>
       </div>
     </div>
@@ -203,22 +198,28 @@ export default {
   data() {
     return {
       email: "",
-      tags: [
-        { id: 1, name: "Politika" },
-        { id: 2, name: "Ekonomi" },
-        { id: 3, name: "Spor" },
-        { id: 4, name: "Teknoloji" },
-        { id: 5, name: "Sağlık" },
-        { id: 6, name: "Eğitim" },
-        { id: 7, name: "Dünya" },
-        { id: 8, name: "Yaşam" },
-      ],
     };
   },
   computed: {
     ...mapState("categories", ["categories"]),
     ...mapState("news", ["popularNews"]),
+    ...mapState("tags", ["popularTags"]),
     ...mapState("advertisements", ["advertisements"]),
+    
+    tags() {
+      return this.popularTags || []
+    },
+    
+    isTagsLoading() {
+      return this.$store.getters['tags/isLoading']('popular')
+    }
+  },
+  
+  mounted() {
+    // Sidebar mount olduğunda popüler tag'leri çek
+    if (this.showTags && (!this.popularTags || this.popularTags.length === 0)) {
+      this.$store.dispatch('tags/fetchPopularTags', 10)
+    }
   },
   methods: {
     formatDate(dateString) {
@@ -236,4 +237,127 @@ export default {
     },
   },
 };
-</script> 
+</script>
+
+<style scoped>
+/* Simple Tags Card */
+.tags-card {
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.tags-header {
+  padding: 1rem 1.25rem 0.5rem;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.tags-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.tags-content {
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+/* Loading State */
+.tags-loading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-skeleton {
+  height: 28px;
+  background: linear-gradient(
+    90deg,
+    #f8f9fa 25%,
+    #e9ecef 50%,
+    #f8f9fa 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 14px;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Tags Grid */
+.tags-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-chip {
+  display: inline-block;
+  padding: 0.4rem 0.75rem;
+  background: #f8f9fa;
+  color: #495057;
+  border-radius: 14px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s ease;
+}
+
+.tag-chip:hover {
+  background: #800000;
+  color: white;
+  border-color: #800000;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(128, 0, 0, 0.2);
+}
+
+/* Empty State */
+.tags-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+
+.empty-text {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.8rem;
+  color: #9e9e9e;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tags-card {
+    margin-bottom: 1rem;
+  }
+  
+  .tags-header {
+    padding: 0.75rem 1rem 0.25rem;
+  }
+  
+  .tags-content {
+    padding: 0.75rem 1rem 1rem;
+  }
+  
+  .tags-grid {
+    gap: 0.4rem;
+  }
+  
+  .tag-chip {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+  }
+}
+</style> 

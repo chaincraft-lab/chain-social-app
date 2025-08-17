@@ -1,31 +1,23 @@
 <template>
   <div class="category-page">
-    <!-- Category Header -->
-    <div class="category-header">
-      <div class="bg-light rounded-lg p-6 mb-6">
-        <h1 class="text-2xl md:text-3xl font-bold mb-2 text-dark">{{ currentCategory?.name || 'Kategori' }}</h1>
-        <p class="text-dark/70">
-          {{ currentCategory?.description || 'Bu kategorideki tüm haberleri görüntülüyorsunuz.' }}
-        </p>
-      </div>
-    </div>
-    
     <!-- Posts Feed -->
     <div class="posts-feed">
       <!-- Loading State -->
       <div v-if="isLoading" class="loading-posts">
         <div v-for="i in 3" :key="i" class="loading-post">
-          <div class="bg-white rounded-xl shadow-sm p-4 mb-4 animate-pulse">
+          <div class="modern-loading-card">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
-              <div class="flex flex-col gap-1">
-                <div class="h-4 bg-gray-200 rounded w-24"></div>
-                <div class="h-3 bg-gray-200 rounded w-16"></div>
+              <div class="w-12 h-12 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full shimmer"></div>
+              <div class="flex flex-col gap-2">
+                <div class="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full w-32 shimmer"></div>
+                <div class="h-3 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full w-20 shimmer"></div>
               </div>
             </div>
-            <div class="h-64 bg-gray-200 rounded-lg mb-4"></div>
-            <div class="h-4 bg-gray-200 rounded mb-2"></div>
-            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-48 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl mb-4 shimmer"></div>
+            <div class="space-y-2">
+              <div class="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full shimmer"></div>
+              <div class="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full w-3/4 shimmer"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -40,30 +32,40 @@
         
         <!-- Load More Button -->
         <div class="load-more-section" v-if="hasMorePosts">
-          <v-btn 
-            color="primary" 
-            variant="outlined" 
-            size="large"
-            rounded="pill"
-            @click="loadMorePosts"
-            :loading="loadingMore"
-          >
-            <v-icon start>mdi-refresh</v-icon>
-            Daha Fazla Yükle
-          </v-btn>
+          <div class="modern-load-more-card">
+            <v-btn 
+              color="primary" 
+              variant="elevated" 
+              size="large"
+              rounded="pill"
+              @click="loadMorePosts"
+              :loading="loadingMore"
+              class="modern-btn"
+            >
+              <v-icon start>mdi-refresh</v-icon>
+              Daha Fazla Yükle
+            </v-btn>
+          </div>
         </div>
         
         <!-- End of Feed -->
-        <div class="end-of-feed" v-else-if="categoryNews.length > 0">
-          <v-icon size="large" color="grey">mdi-check-circle</v-icon>
-          <p class="text-grey">Tüm haberler yüklendi</p>
-        </div>
+        <StateMessage 
+          v-else-if="categoryNews.length > 0"
+          type="success"
+          title="Tüm haberler yüklendi"
+          message="Bu kategorideki tüm haberleri görüntülediniz"
+          icon="mdi-check-circle"
+        />
         
         <!-- No Posts Found -->
-        <div class="no-posts" v-else>
-          <v-icon size="large" color="grey">mdi-newspaper-variant-outline</v-icon>
-          <p class="text-grey">Bu kategoride henüz haber bulunmuyor</p>
-        </div>
+        <StateMessage 
+          v-else
+          type="empty"
+          title="Henüz haber yok"
+          message="Bu kategoride henüz haber bulunmuyor"
+          icon="mdi-newspaper-variant-outline"
+          :show-button="true"
+        />
       </div>
     </div>
   </div>
@@ -74,11 +76,13 @@ import { computed, onMounted, watch, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import NewsPost from '@/components/news/NewsPost.vue'
+import StateMessage from '@/components/ui/StateMessage.vue'
 
 export default {
   name: 'CategoryPage',
   components: {
-    NewsPost
+    NewsPost,
+    StateMessage
   },
   setup() {
     const store = useStore()
@@ -110,10 +114,18 @@ export default {
     
     const loadCategoryNews = async () => {
       if (route.params.slug) {
-        await store.dispatch('news/fetchCategoryNews', {
-          categorySlug: route.params.slug,
-          limit: 50 // Load more posts to enable pagination
-        })
+        try {
+          // Önce kategori bilgisini çek
+          await store.dispatch('categories/fetchCategoryBySlug', route.params.slug)
+          
+          // Sonra o kategoriye ait haberleri çek
+          await store.dispatch('news/fetchCategoryNews', {
+            categorySlug: route.params.slug,
+            limit: 50 // Load more posts to enable pagination
+          })
+        } catch (error) {
+          console.error('Error loading category data:', error)
+        }
       }
     }
     
@@ -161,11 +173,9 @@ export default {
   max-width: 600px;
   margin: 0 auto;
   padding: 0 1rem;
+  min-height: 100vh;
 }
 
-.category-header {
-  margin-bottom: 1rem;
-}
 
 /* Posts Feed */
 .posts-feed {
@@ -178,15 +188,40 @@ export default {
   gap: 0;
 }
 
-/* Loading States */
+/* Modern Loading Cards */
 .loading-posts {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
-.loading-post {
-  margin-bottom: 1rem;
+.modern-loading-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Shimmer Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 37%,
+    #f0f0f0 63%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
 }
 
 /* Load More Section */
@@ -196,21 +231,24 @@ export default {
   padding: 2rem 0;
 }
 
-.end-of-feed,
-.no-posts {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 3rem 0;
-  gap: 1rem;
-  opacity: 0.7;
+.modern-load-more-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-.end-of-feed p,
-.no-posts p {
-  margin: 0;
-  font-weight: 500;
+.modern-btn {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
 }
+
+.modern-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
@@ -218,8 +256,8 @@ export default {
     padding: 0 0.5rem;
   }
   
-  .category-header {
-    margin-bottom: 0.5rem;
+  .modern-load-more-card {
+    padding: 2rem 1rem;
   }
 }
 
@@ -227,19 +265,72 @@ export default {
   .category-page {
     padding: 0 0.25rem;
   }
+  
+  .category-hero-card {
+    padding: 1rem;
+    border-radius: 16px;
+  }
+  
+  .category-title {
+    font-size: 1.5rem;
+  }
+  
+  .modern-loading-card {
+    padding: 1rem;
+  }
 }
 
-/* Loading animation */
-@keyframes pulse {
-  0%, 100% {
+/* Animations */
+.category-hero-card {
+  animation: slideInDown 0.6s ease-out;
+}
+
+.modern-loading-card {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.end-state-card,
+.empty-state-card {
+  animation: bounceIn 0.6s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
     opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
   }
   50% {
-    opacity: 0.5;
+    opacity: 1;
+    transform: scale(1.05);
   }
-}
-
-.loading-posts {
-  animation: pulse 1.5s ease-in-out infinite;
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 </style> 

@@ -1,13 +1,17 @@
 import { createStore } from 'vuex'
 import news from './modules/news'
 import categories from './modules/categories'
+import tags from './modules/tags'
 import advertisements from './modules/advertisements'
+import user from './modules/user'
 
 export default createStore({
   modules: {
     news,
     categories,
-    advertisements
+    tags,
+    advertisements,
+    user
   },
   state: {
     isLoading: false,
@@ -29,8 +33,12 @@ export default createStore({
       commit('SET_GLOBAL_LOADING', true)
       commit('CLEAR_GLOBAL_ERROR')
       try {
+        // Auth durumunu kontrol et (token varsa)
+        dispatch('user/initializeAuth')
+        
         await Promise.all([
           dispatch('categories/fetchCategories'),
+          dispatch('tags/fetchPopularTags'),
           dispatch('news/fetchLatestNews'),
           dispatch('news/fetchPopularNews'),
           dispatch('news/fetchFeaturedNews'),
