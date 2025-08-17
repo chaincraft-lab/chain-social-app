@@ -43,4 +43,8 @@ const app = createApp(App)
 app.use(router)
 app.use(store)
 app.use(vuetify)
-app.mount('#app')
+
+// Initialize authentication state before mounting
+store.dispatch('user/initializeAuth').finally(() => {
+  app.mount('#app')
+})

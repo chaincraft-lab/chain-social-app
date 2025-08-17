@@ -28,18 +28,110 @@
             </form>
           </div>
           
-          <!-- Abone Ol Butonu -->
-          <v-btn 
-            @click="showSubscribeModal = true"
-            color="secondary"
-            variant="flat"
-            rounded="pill"
-            size="small"
-            class="hidden md:flex text-none mr-2"
-            prepend-icon="mdi-bell"
-          >
-            Abone Ol
-          </v-btn>
+          <!-- Authentication Section -->
+          <div class="flex items-center space-x-3">
+            <!-- Authenticated User -->
+            <div v-if="isAuthenticated" class="relative">
+              <!-- Profile Button -->
+              <button
+                @click="toggleProfileDropdown"
+                class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors text-white"
+              >
+                <div class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                  </svg>
+                </div>
+                <span class="text-sm font-medium hidden md:block">{{ currentUser?.name || 'Kullanıcı' }}</span>
+                <svg class="w-4 h-4 hidden md:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              
+              <!-- Profile Dropdown Menu -->
+              <div 
+                v-if="showProfileDropdown"
+                class="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                @mouseleave="hideProfileDropdown"
+              >
+                <!-- User Info -->
+                <div class="px-4 py-3 border-b border-gray-200">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center">
+                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-gray-900">{{ currentUser?.name || 'Kullanıcı' }}</p>
+                      <p class="text-xs text-gray-500">{{ currentUser?.email }}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Menu Items -->
+                <div class="py-1">
+                  <router-link
+                    to="/profile"
+                    @click="hideProfileDropdown"
+                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    Profilim
+                  </router-link>
+                  <router-link
+                    to="/bookmarks"
+                    @click="hideProfileDropdown"
+                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                    </svg>
+                    Kaydettiklerim
+                  </router-link>
+                  <router-link
+                    to="/likes"
+                    @click="hideProfileDropdown"
+                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    Beğendiklerim
+                  </router-link>
+                </div>
+                
+                <!-- Logout -->
+                <div class="border-t border-gray-200 py-1">
+                  <button
+                    @click="handleLogout"
+                    class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                  >
+                    <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                    Çıkış Yap
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Non-authenticated User -->
+            <div v-else>
+              <button 
+                @click="showAuthDialog = true"
+                class="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors font-medium text-sm"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                </svg>
+                <span>Giriş Yap</span>
+              </button>
+            </div>
+          </div>
+          
           
           <!-- Dil Seçimi Butonu -->
           <div class="relative hidden md:block">
@@ -241,16 +333,32 @@
                 </form>
               </div>
               
-              <!-- Mobil Abone Ol Butonu -->
-              <v-btn 
-                @click="showSubscribeModal = true"
-                color="secondary"
-                variant="flat"
-                rounded="pill"
-                size="small"
-                icon="mdi-bell"
-                class="flex-shrink-0 mr-2"
-              ></v-btn>
+              <!-- Mobile Auth Section -->
+              <div class="flex items-center space-x-2">
+                <!-- Authenticated User Mobile -->
+                <button 
+                  v-if="isAuthenticated"
+                  @click="toggleMobileProfileMenu"
+                  class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center hover:bg-indigo-600 transition-colors"
+                >
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                  </svg>
+                </button>
+                
+                <!-- Non-authenticated User Mobile -->
+                <button 
+                  v-else
+                  @click="showAuthDialog = true"
+                  class="flex items-center space-x-1 px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors text-sm font-medium"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                  </svg>
+                  <span>Giriş</span>
+                </button>
+              </div>
+              
               
               <!-- Mobil Dil Seçimi Butonu -->
               <v-btn
@@ -310,6 +418,50 @@
           
           <!-- Mobile Footer -->
           <div class="px-4 py-3 border-t border-dark-700">
+            <!-- Mobile Profile Section for Authenticated Users -->
+            <div v-if="isAuthenticated && showMobileProfileMenu" class="mb-4 p-3 bg-dark-800 rounded-lg">
+              <div class="flex items-center mb-3">
+                <v-icon size="large" class="mr-3 text-primary">mdi-account-circle</v-icon>
+                <div>
+                  <p class="text-sm font-medium text-light">{{ currentUser?.name || 'Kullanıcı' }}</p>
+                  <p class="text-xs text-light/70">{{ currentUser?.email }}</p>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <router-link 
+                  to="/profile" 
+                  @click="closeMobileMenu"
+                  class="flex items-center w-full text-left px-3 py-2 text-sm text-light hover:bg-dark-600 rounded-md transition-colors"
+                >
+                  <v-icon size="small" class="mr-2">mdi-account</v-icon>
+                  Profilim
+                </router-link>
+                <router-link 
+                  to="/bookmarks" 
+                  @click="closeMobileMenu"
+                  class="flex items-center w-full text-left px-3 py-2 text-sm text-light hover:bg-dark-600 rounded-md transition-colors"
+                >
+                  <v-icon size="small" class="mr-2">mdi-bookmark</v-icon>
+                  Kaydettiklerim
+                </router-link>
+                <router-link 
+                  to="/likes" 
+                  @click="closeMobileMenu"
+                  class="flex items-center w-full text-left px-3 py-2 text-sm text-light hover:bg-dark-600 rounded-md transition-colors"
+                >
+                  <v-icon size="small" class="mr-2">mdi-heart</v-icon>
+                  Beğendiklerim
+                </router-link>
+                <button
+                  @click="handleLogout"
+                  class="flex items-center w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-dark-600 rounded-md transition-colors"
+                >
+                  <v-icon size="small" class="mr-2">mdi-logout</v-icon>
+                  Çıkış Yap
+                </button>
+              </div>
+            </div>
+            
             <div class="flex items-center justify-between mb-4">
               <span class="text-sm font-medium text-light/90">{{ currentDate }}</span>
               <div class="flex items-center space-x-4">
@@ -341,80 +493,24 @@
     </div>
   </nav>
   
-  <!-- Abonelik Modal -->
-  <v-dialog v-model="showSubscribeModal" max-width="500px">
-    <v-card>
-      <!-- Modal Header -->
-      <v-card-title class="bg-secondary text-white">
-        <span class="text-lg font-semibold">Savunma Bültenine Abone Ol</span>
-        <v-spacer></v-spacer>
-        <v-btn 
-          @click="showSubscribeModal = false" 
-          icon="mdi-close"
-          variant="text"
-          color="white"
-          size="small"
-        ></v-btn>
-      </v-card-title>
-      
-      <!-- Modal Body -->
-      <v-card-text class="pt-6">
-        <p class="text-gray-700 mb-4">
-          Savunma sanayii ile ilgili en güncel haberleri, analizleri ve etkinlikleri içeren haftalık bültenimize abone olun.
-        </p>
-        
-        <v-form @submit.prevent="subscribeNewsletter">
-          <v-text-field
-            v-model="subscribeEmail"
-            label="E-posta Adresiniz"
-            placeholder="ornek@mail.com"
-            type="email"
-            variant="outlined"
-            required
-            class="mb-4"
-          ></v-text-field>
-          
-          <v-checkbox
-            v-model="subscribeConsent"
-            required
-            class="mb-4"
-          >
-            <template #label>
-              <span class="text-sm text-gray-600">
-                Kişisel verilerimin işlenmesine ve tarafıma elektronik ileti gönderilmesine izin veriyorum.
-              </span>
-            </template>
-          </v-checkbox>
-        </v-form>
-      </v-card-text>
-      
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn 
-          @click="showSubscribeModal = false"
-          variant="outlined"
-          color="grey"
-        >
-          İptal
-        </v-btn>
-        <v-btn 
-          @click="subscribeNewsletter"
-          color="secondary"
-          variant="flat"
-        >
-          Abone Ol
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  
+  <!-- Auth Dialog -->
+  <AuthDialog 
+    v-model="showAuthDialog"
+    @success="handleAuthSuccess"
+  />
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import { MENU_ITEMS, LANGUAGE_OPTIONS } from '@/constants'
+import AuthDialog from '@/components/auth/AuthDialog.vue'
 
 export default {
   name: 'SiteNavbar',
+  components: {
+    AuthDialog
+  },
   data() {
     return {
       isMobileMenuOpen: false,
@@ -425,21 +521,26 @@ export default {
       activeNestedDropdown: null,
       mobileActiveSubmenu: null,
       currentLanguage: 'Türkçe',
-      showSubscribeModal: false,
       showLanguageDropdown: false,
-      subscribeEmail: '',
-      subscribeConsent: false,
+      showProfileDropdown: false,
+      showAuthDialog: false,
+      showMobileProfileMenu: false,
       menu: MENU_ITEMS,
       languages: LANGUAGE_OPTIONS,
       dropdownTimeout: null,
       nestedDropdownTimeout: null,
       languageDropdownTimeout: null,
+      profileDropdownTimeout: null,
       searchQuery: '',
       mobileSearchQuery: ''
     }
   },
   computed: {
-    ...mapState('categories', ['categories'])
+    ...mapState('categories', ['categories']),
+    ...mapGetters('user', ['isAuthenticated', 'getCurrentUser']),
+    currentUser() {
+      return this.getCurrentUser
+    }
   },
   mounted() {
     this.updateCurrentDate()
@@ -550,13 +651,6 @@ export default {
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '');
     },
-    subscribeNewsletter() {
-      // Gerçek uygulamada burada API çağrısı yapılır
-      alert(`${this.subscribeEmail} adresi savunma bültenine başarıyla abone oldu!`);
-      this.subscribeEmail = '';
-      this.subscribeConsent = false;
-      this.showSubscribeModal = false;
-    },
     handleMenuClick(menuTitle) {
       // Üst menü linklerine tıklandığında - şimdilik hiçbir şey yapmıyor
       console.log('Menü tıklandı:', menuTitle);
@@ -566,6 +660,46 @@ export default {
       // Mobil menü linklerine tıklandığında
       this.isMobileMenuOpen = false;
       this.handleMenuClick(menuTitle);
+    },
+    
+    // Auth Methods
+    ...mapActions('user', ['login', 'logout']),
+    
+    toggleProfileDropdown() {
+      this.showProfileDropdown = !this.showProfileDropdown
+    },
+    
+    hideProfileDropdown() {
+      this.profileDropdownTimeout = setTimeout(() => {
+        this.showProfileDropdown = false
+      }, 150)
+    },
+    
+    toggleMobileProfileMenu() {
+      this.showMobileProfileMenu = !this.showMobileProfileMenu
+    },
+    
+    closeMobileMenu() {
+      this.isMobileMenuOpen = false
+      this.showMobileProfileMenu = false
+    },
+    
+    handleAuthSuccess(type) {
+      // Auth dialog'dan başarılı giriş/kayıt bilgisi geldiğinde
+      console.log('Auth success:', type)
+      // Başarılı giriş bildirimi gösterilebilir
+    },
+    
+    async handleLogout() {
+      try {
+        await this.logout()
+        this.showProfileDropdown = false
+        this.showMobileProfileMenu = false
+        this.closeMobileMenu()
+        // Çıkış bildirimi eklenebilir
+      } catch (error) {
+        console.error('Logout error:', error)
+      }
     }
   }
 }
@@ -737,5 +871,16 @@ export default {
   background: linear-gradient(135deg, rgba(25, 118, 210, 0.15), rgba(25, 118, 210, 0.08));
   border-color: rgba(25, 118, 210, 0.3);
   transform: translateY(-1px);
+}
+
+/* Profile Button */
+.profile-btn {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.profile-btn:hover {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
 }
 </style> 

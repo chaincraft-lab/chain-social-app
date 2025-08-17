@@ -3,6 +3,36 @@ import axios from 'axios';
 // API Base URL - environment variable'dan alınabilir
 const API_BASE_URL = process.env.VUE_APP_API_URL || 'http://localhost:8020/api/v1';
 
+// Cookie utility functions
+const CookieUtils = {
+  set(name, value, days = 7, secure = false) {
+    let expires = '';
+    if (days) {
+      const date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      expires = '; expires=' + date.toUTCString();
+    }
+    const secureFlag = secure ? '; secure' : '';
+    const sameSite = '; samesite=strict';
+    document.cookie = name + '=' + (value || '') + expires + '; path=/' + secureFlag + sameSite;
+  },
+
+  get(name) {
+    const nameEQ = name + '=';
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  },
+
+  remove(name) {
+    document.cookie = name + '=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  }
+};
+
 class ApiService {
   constructor() {
     this.client = axios.create({
@@ -11,14 +41,15 @@ class ApiService {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      timeout: 10000
+      timeout: 10000,
+      withCredentials: true // Cookie'lerin gönderilmesi için
     });
 
     // Request interceptor
     this.client.interceptors.request.use(
       (config) => {
         // Token varsa header'a ekle
-        const token = localStorage.getItem('token');
+        const token = CookieUtils.get('authToken');
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -37,7 +68,7 @@ class ApiService {
         // Hataları handle et
         if (error.response?.status === 401) {
           // Unauthorized - token geçersiz olabilir
-          localStorage.removeItem('token');
+          CookieUtils.remove('authToken');
           // Login sayfasına yönlendir (eğer router kullanılabilirse)
         }
         
@@ -68,18 +99,26 @@ class ApiService {
   }
 
   // Utility methods
-  setAuthToken(token) {
+  setAuthToken(token, rememberMe = false) {
     if (token) {
       this.client.defaults.headers.Authorization = `Bearer ${token}`;
-      localStorage.setItem('token', token);
+      // Remember me seçiliyse 30 gün, değilse 7 gün
+      const days = rememberMe ? 30 : 7;
+      const isSecure = location.protocol === 'https:';
+      CookieUtils.set('authToken', token, days, isSecure);
     } else {
       delete this.client.defaults.headers.Authorization;
-      localStorage.removeItem('token');
+      CookieUtils.remove('authToken');
     }
   }
 
   getAuthToken() {
-    return localStorage.getItem('token');
+    return CookieUtils.get('authToken');
+  }
+
+  // Cookie utils'i export et
+  getCookieUtils() {
+    return CookieUtils;
   }
 }
 
