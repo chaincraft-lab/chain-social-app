@@ -168,7 +168,7 @@
 <script>
 import { mapState } from 'vuex'
 import NewsPost from '@/components/news/NewsPost.vue'
-import StateMessage from '@/components/ui/StateMessage.vue'
+import StateMessage from '@/components/common/StateMessage.vue'
 
 export default {
   name: 'HomePage',
@@ -368,7 +368,7 @@ export default {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  border: 3px solid #1976d2;
+  border: 3px solid var(--color-info-600);
   padding: 2px;
   margin-bottom: 0.5rem;
   transition: transform 0.2s ease;

@@ -16,19 +16,19 @@ export const SOCIAL_LINKS = [
     name: 'Twitter',
     url: '#',
     icon: 'twitter',
-    color: '#1DA1F2'
+    color: 'var(--color-info-400)' // Twitter mavi
   },
   {
     name: 'Instagram',
     url: '#',
     icon: 'instagram',
-    color: '#E4405F'
+    color: 'var(--color-error-400)' // Instagram kırmızı/pembe
   },
   {
     name: 'Facebook',
     url: '#',
     icon: 'facebook',
-    color: '#4267B2'
+    color: 'var(--color-info-700)' // Facebook koyu mavi
   }
 ]
 

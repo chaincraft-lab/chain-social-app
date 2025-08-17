@@ -76,7 +76,7 @@ import { computed, onMounted, watch, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import NewsPost from '@/components/news/NewsPost.vue'
-import StateMessage from '@/components/ui/StateMessage.vue'
+import StateMessage from '@/components/common/StateMessage.vue'
 
 export default {
   name: 'CategoryPage',
@@ -216,9 +216,9 @@ export default {
 .shimmer {
   background: linear-gradient(
     90deg,
-    #f0f0f0 25%,
-    #e0e0e0 37%,
-    #f0f0f0 63%
+    var(--color-gray-100) 25%,
+    var(--color-gray-200) 37%,
+    var(--color-gray-100) 63%
   );
   background-size: 400px 100%;
   animation: shimmer 1.5s ease-in-out infinite;
@@ -232,7 +232,7 @@ export default {
 }
 
 .modern-load-more-card {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, var(--color-gray-50) 0%, var(--color-gray-200) 100%);
   border-radius: 20px;
   padding: 2rem;
   text-align: center;

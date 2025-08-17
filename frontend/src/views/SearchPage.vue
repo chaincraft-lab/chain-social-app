@@ -24,7 +24,7 @@
             </div>
             <button 
               type="submit"
-              class="absolute inset-y-0 right-0 flex items-center pr-4 text-primary hover:text-primary-dark"
+              class="absolute inset-y-0 right-0 flex items-center pr-4 text-primary hover:text-primary/80"
             >
               <span class="text-sm font-medium">Ara</span>
             </button>

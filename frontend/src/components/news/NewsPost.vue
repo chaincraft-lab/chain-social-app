@@ -1,485 +1,204 @@
 <template>
-  <div class="news-post">
-    <v-card class="post-card" elevation="2" rounded="xl">
+  <div class="news-post mb-8">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
       <!-- Post Header -->
-      <div class="post-header">
-        <div class="author-info">
-          <v-avatar size="40" color="primary">
-            <span class="text-white font-weight-bold">{{ getAuthorInitials() }}</span>
-          </v-avatar>
-          <div class="author-details">
-            <div class="author-name">{{ getAuthorName() }}</div>
-            <div class="post-time">{{ formatDate(news.publishedAt || news.createdAt || news.date) }}</div>
-          </div>
-        </div>
-        <v-btn icon="mdi-dots-vertical" variant="text" size="small"></v-btn>
-      </div>
+      <PostHeader
+        :author="news.author || { name: 'Editör' }"
+        :date="news.publishedAt || news.createdAt || news.date"
+        @menuClick="handleMenuClick"
+      />
 
       <!-- Post Image -->
-      <div class="post-image-container" @click="goToArticle" style="cursor: pointer;">
-        <v-img 
-          :src="news.imageUrl || news.image" 
-          :alt="news.title"
-          height="400"
-          cover
-          class="post-image"
-        >
-          <!-- Category Badge -->
-          <div class="category-badge">
-            <v-chip 
-              :color="getCategoryColor(news.category?.name)"
-              size="small"
-              variant="flat"
-            >
-              {{ news.category?.name }}
-            </v-chip>
-          </div>
-        </v-img>
-      </div>
+      <PostImage
+        :image-url="news.imageUrl || news.image"
+        :alt="news.title"
+        :category="news.category?.name"
+        @imageClick="goToArticle"
+      />
 
       <!-- Post Actions -->
-      <div class="post-actions">
-        <div class="action-buttons">
-          <v-btn 
-            :icon="isLiked ? 'mdi-heart' : 'mdi-heart-outline'"
-            :color="isLiked ? 'red' : 'grey'"
-            variant="text"
-            size="large"
-            @click="toggleLike"
-            :loading="loadingLike"
-            :disabled="loadingLike"
-          ></v-btn>
-          <v-btn icon="mdi-comment-outline" variant="text" size="large" @click="toggleComments"></v-btn>
-          <v-btn icon="mdi-share-outline" variant="text" size="large" @click="sharePost"></v-btn>
-        </div>
-        <v-btn 
-          :icon="isBookmarked ? 'mdi-bookmark' : 'mdi-bookmark-outline'"
-          :color="isBookmarked ? 'primary' : 'grey'"
-          variant="text" 
-          size="large" 
-          @click="bookmarkPost"
-          :loading="loadingBookmark"
-          :disabled="loadingBookmark"
-        ></v-btn>
-      </div>
-
-      <!-- Engagement Stats -->
-      <div class="engagement-stats">
-        <div class="likes-count" v-if="likesCount > 0">
-          <strong>{{ formatCount(likesCount) }} beğeni</strong>
-        </div>
-      </div>
+      <PostActions
+        :is-liked="isLiked"
+        :is-bookmarked="isBookmarked"
+        :loading-like="loadingLike"
+        :loading-bookmark="loadingBookmark"
+        @toggleLike="toggleLike"
+        @toggleComments="toggleComments"
+        @sharePost="sharePost"
+        @toggleBookmark="bookmarkPost"
+      />
 
       <!-- Post Content -->
-      <div class="post-content">
-        <div class="post-title" @click="goToArticle" style="cursor: pointer;">
-          <strong>{{ getAuthorName() }}</strong>
-          {{ news.title }}
-        </div>
-        <div class="post-excerpt" v-if="news.excerpt" @click="goToArticle" style="cursor: pointer;">
-          {{ news.excerpt }}
-        </div>
-        
-        <!-- Tags -->
-        <div class="post-tags" v-if="news.tags && news.tags.length">
-          <router-link
-            v-for="tag in news.tags.slice(0, 3)" 
-            :key="tag.id || tag" 
-            :to="{ name: 'tag', params: { slug: tag.slug || tag } }"
-            class="tag"
-          >
-            #{{ tag.name || tag }}
-          </router-link>
-        </div>
-      </div>
-
-      <!-- Comments Preview -->
-      <div class="comments-preview" v-if="commentsCount > 0">
-        <div class="comments-count" @click="toggleComments">
-          {{ commentsCount }} yorumun tümünü gör
-        </div>
-      </div>
+      <PostContent
+        :author-name="getAuthorName()"
+        :title="news.title"
+        :excerpt="news.excerpt"
+        :tags="news.tags"
+        :likes-count="likesCount"
+        @contentClick="goToArticle"
+      />
 
       <!-- Comments Section -->
-      <div class="comments-section" v-if="showComments">
-        <div class="comment-item" v-for="comment in sampleComments" :key="comment.id">
-          <v-avatar size="24" color="grey">
-            <span class="text-white text-caption">{{ comment.author.charAt(0) }}</span>
-          </v-avatar>
-          <div class="comment-content">
-            <strong>{{ comment.author }}</strong>
-            {{ comment.text }}
-          </div>
-        </div>
-        
-        <!-- Add Comment -->
-        <div class="add-comment">
-          <v-text-field
-            v-model="newComment"
-            placeholder="Yorum ekle..."
-            variant="plain"
-            hide-details
-            density="compact"
-            @keyup.enter="addComment"
-          >
-            <template #append>
-              <v-btn 
-                color="primary" 
-                variant="text" 
-                size="small"
-                @click="addComment"
-                :disabled="!newComment.trim()"
-              >
-              <v-icon>mdi-send</v-icon>
-            </v-btn>
-            </template>
-          </v-text-field>
-        </div>
-      </div>
-    </v-card>
+      <PostComment
+        :comments="sampleComments"
+        :comments-count="commentsCount"
+        :show-comments="showComments"
+        @toggleComments="toggleComments"
+        @addComment="addComment"
+      />
+    </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import PostHeader from '../ui/Post/PostHeader.vue'
+import PostImage from '../ui/Post/PostImage.vue'
+import PostActions from '../ui/Post/PostActions.vue'
+import PostContent from '../ui/Post/PostContent.vue'
+import PostComment from '../ui/Post/PostComment.vue'
 import { likeService, bookmarkService } from '@/services'
 
-export default {
-  name: 'NewsPost',
-  props: {
-    news: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      isLiked: false,
-      isBookmarked: false,
-      likesCount: this.news.likeCount || 0,
-      commentsCount: this.news.commentCount || 0,
-      showComments: false,
-      newComment: '',
-      loadingLike: false,
-      loadingBookmark: false,
-      sampleComments: [
-        { id: 1, author: 'Ahmet Yılmaz', text: 'Çok önemli bir gelişme! 👍' },
-        { id: 2, author: 'Ayşe Demir', text: 'Bu konuda daha fazla detay bekliyoruz.' },
-        { id: 3, author: 'Mehmet Kaya', text: 'Harika analiz, teşekkürler!' }
-      ]
-    }
-  },
-  methods: {
-    getAuthorName() {
-      if (this.news.author?.name) {
-        return this.news.author.name
-      }
-      if (this.news.author?.firstName && this.news.author?.lastName) {
-        return `${this.news.author.firstName} ${this.news.author.lastName}`
-      }
-      return 'Editör'
-    },
-    
-    getAuthorInitials() {
-      const name = this.getAuthorName()
-      return name.split(' ').map(n => n.charAt(0)).join('').toUpperCase()
-    },
-    formatDate(dateString) {
-      if (!dateString) return ''
-      const date = new Date(dateString)
-      const now = new Date()
-      const diffTime = Math.abs(now - date)
-      const diffHours = Math.floor(diffTime / (1000 * 60 * 60))
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
-      
-      if (diffHours < 1) return 'Az önce'
-      if (diffHours < 24) return `${diffHours} saat önce`
-      if (diffDays < 7) return `${diffDays} gün önce`
-      return date.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })
-    },
-    formatCount(count) {
-      if (count < 1000) return count.toString()
-      if (count < 1000000) return (count / 1000).toFixed(1) + 'B'
-      return (count / 1000000).toFixed(1) + 'M'
-    },
-    getCategoryColor(category) {
-      const colors = {
-        'Kara': 'brown',
-        'Hava': 'blue',
-        'Deniz': 'cyan',
-        'Teknoloji': 'purple',
-        'Siber': 'orange',
-        'Uzay': 'indigo'
-      }
-      return colors[category] || 'primary'
-    },
-    async toggleLike() {
-      if (this.loadingLike) return
-      
-      try {
-        this.loadingLike = true
-        const response = await likeService.toggleLike(this.news.id)
-        
-        this.isLiked = response.data.action === 'liked'
-        this.likesCount = response.data.likesCount
-        
-        // Başarı mesajı (isteğe bağlı)
-        const message = this.isLiked ? 'Makale beğenildi!' : 'Beğeni kaldırıldı!'
-        this.$toast?.success(message)
-        
-      } catch (error) {
-        console.error('Like toggle error:', error)
-        
-        // Hata durumunda kullanıcıya bilgi ver
-        if (error.response?.status === 401) {
-          this.$toast?.error('Bu işlem için giriş yapmanız gerekiyor.')
-        } else {
-          this.$toast?.error('Bir hata oluştu. Lütfen tekrar deneyin.')
-        }
-      } finally {
-        this.loadingLike = false
-      }
-    },
-    toggleComments() {
-      this.showComments = !this.showComments
-    },
-    sharePost() {
-      // Share functionality
-      if (navigator.share) {
-        navigator.share({
-          title: this.news.title,
-          text: this.news.excerpt,
-          url: window.location.href
-        })
-      } else {
-        // Fallback copy to clipboard
-        navigator.clipboard.writeText(window.location.href)
-        console.log('Link kopyalandı!')
-      }
-    },
-    async bookmarkPost() {
-      if (this.loadingBookmark) return
-      
-      try {
-        this.loadingBookmark = true
-        const response = await bookmarkService.toggleBookmark(this.news.id)
-        
-        this.isBookmarked = response.data.action === 'bookmarked'
-        
-        // Başarı mesajı
-        const message = this.isBookmarked ? 'Makale kaydedildi!' : 'Kayıt kaldırıldı!'
-        this.$toast?.success(message)
-        
-      } catch (error) {
-        console.error('Bookmark toggle error:', error)
-        
-        // Hata durumunda kullanıcıya bilgi ver
-        if (error.response?.status === 401) {
-          this.$toast?.error('Bu işlem için giriş yapmanız gerekiyor.')
-        } else {
-          this.$toast?.error('Bir hata oluştu. Lütfen tekrar deneyin.')
-        }
-      } finally {
-        this.loadingBookmark = false
-      }
-    },
-    addComment() {
-      if (this.newComment.trim()) {
-        this.sampleComments.unshift({
-          id: Date.now(),
-          author: 'Sen',
-          text: this.newComment
-        })
-        this.commentsCount++
-        this.newComment = ''
-      }
-    },
-    goToArticle() {
-      this.$router.push({
-        name: 'article',
-        params: { slug: this.news.slug || this.news.id }
-      })
-    }
+const props = defineProps({
+  news: { type: Object, required: true }
+})
+
+const router = useRouter()
+
+// Reactive state
+const isLiked = ref(false)
+const isBookmarked = ref(false)
+const likesCount = ref(props.news.likeCount || 0)
+const commentsCount = ref(props.news.commentCount || 0)
+const showComments = ref(false)
+const loadingLike = ref(false)
+const loadingBookmark = ref(false)
+
+const sampleComments = ref([
+  { id: 1, author: 'Ahmet Yılmaz', text: 'Çok önemli bir gelişme! 👍' },
+  { id: 2, author: 'Ayşe Demir', text: 'Bu konuda daha fazla detay bekliyoruz.' },
+  { id: 3, author: 'Mehmet Kaya', text: 'Harika analiz, teşekkürler!' }
+])
+
+// Methods
+const getAuthorName = () => {
+  if (props.news.author?.name) {
+    return props.news.author.name
   }
+  if (props.news.author?.firstName && props.news.author?.lastName) {
+    return `${props.news.author.firstName} ${props.news.author.lastName}`
+  }
+  return 'Editör'
+}
+
+const toggleLike = async () => {
+  if (loadingLike.value) return
+
+  try {
+    loadingLike.value = true
+    const response = await likeService.toggleLike(props.news.id)
+
+    isLiked.value = response.data.action === 'liked'
+    likesCount.value = response.data.likesCount
+
+    // Success message (optional)
+    const message = isLiked.value ? 'Makale beğenildi!' : 'Beğeni kaldırıldı!'
+    console.log(message) // Replace with toast notification
+  } catch (error) {
+    console.error('Like toggle error:', error)
+    
+    if (error.response?.status === 401) {
+      console.error('Bu işlem için giriş yapmanız gerekiyor.')
+    } else {
+      console.error('Bir hata oluştu. Lütfen tekrar deneyin.')
+    }
+  } finally {
+    loadingLike.value = false
+  }
+}
+
+const toggleComments = () => {
+  showComments.value = !showComments.value
+}
+
+const sharePost = () => {
+  if (navigator.share) {
+    navigator.share({
+      title: props.news.title,
+      text: props.news.excerpt,
+      url: window.location.href
+    })
+  } else {
+    // Fallback copy to clipboard
+    navigator.clipboard.writeText(window.location.href)
+    console.log('Link kopyalandı!')
+  }
+}
+
+const bookmarkPost = async () => {
+  if (loadingBookmark.value) return
+
+  try {
+    loadingBookmark.value = true
+    const response = await bookmarkService.toggleBookmark(props.news.id)
+
+    isBookmarked.value = response.data.action === 'bookmarked'
+
+    // Success message
+    const message = isBookmarked.value ? 'Makale kaydedildi!' : 'Kayıt kaldırıldı!'
+    console.log(message) // Replace with toast notification
+  } catch (error) {
+    console.error('Bookmark toggle error:', error)
+    
+    if (error.response?.status === 401) {
+      console.error('Bu işlem için giriş yapmanız gerekiyor.')
+    } else {
+      console.error('Bir hata oluştu. Lütfen tekrar deneyin.')
+    }
+  } finally {
+    loadingBookmark.value = false
+  }
+}
+
+const addComment = (commentText) => {
+  sampleComments.value.unshift({
+    id: Date.now(),
+    author: 'Sen',
+    text: commentText
+  })
+  commentsCount.value++
+}
+
+const goToArticle = () => {
+  router.push({
+    name: 'article',
+    params: { slug: props.news.slug || props.news.id }
+  })
+}
+
+const handleMenuClick = () => {
+  // Handle post menu (report, etc.)
+  console.log('Post menu clicked')
 }
 </script>
 
 <style scoped>
 .news-post {
-  margin-bottom: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.post-card {
-  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  background: white;
-  transition: all 0.3s ease;
-}
-
-.post-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
-}
-
-/* Post Header */
-.post-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.5rem;
-}
-
-.author-info {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.author-details {
-  display: flex;
-  flex-direction: column;
-}
-
-.author-name {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.post-time {
-  font-size: 0.75rem;
-  color: rgba(0, 0, 0, 0.6);
-}
-
-/* Post Image */
-.post-image-container {
-  position: relative;
-}
-
-.post-image {
-  width: 100%;
-}
-
-.category-badge {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  z-index: 2;
-}
-
-/* Post Actions */
-.post-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 1.5rem 0.5rem;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-/* Engagement Stats */
-.engagement-stats {
-  padding: 0 1.5rem 0.5rem;
-}
-
-.likes-count {
-  font-size: 0.9rem;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-/* Post Content */
-.post-content {
-  padding: 0 1.5rem 0.75rem;
-}
-
-.post-title {
-  font-size: 0.9rem;
-  line-height: 1.4;
-  margin-bottom: 0.5rem;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.post-excerpt {
-  font-size: 0.85rem;
-  color: rgba(0, 0, 0, 0.6);
-  line-height: 1.4;
-  margin-bottom: 0.5rem;
-}
-
-.post-tags {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.tag {
-  color: #1976d2;
-  font-size: 0.8rem;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.tag:hover {
-  text-decoration: underline;
-  color: #0d47a1;
-}
-
-/* Comments */
-.comments-preview {
-  padding: 0 1.5rem 0.75rem;
-}
-
-.comments-count {
-  font-size: 0.85rem;
-  color: rgba(0, 0, 0, 0.6);
-  cursor: pointer;
-}
-
-.comments-count:hover {
-  text-decoration: underline;
-}
-
-.comments-section {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 1rem 1.5rem;
-}
-
-.comment-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
-.comment-content {
-  font-size: 0.85rem;
-  line-height: 1.4;
-  flex: 1;
-}
-
-.add-comment {
-  margin-top: 0.75rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  padding-top: 0.75rem;
-}
-
-/* Mobile Responsive */
+/* Mobile responsive */
 @media (max-width: 768px) {
-  .post-header {
-    padding: 0.75rem 1rem;
+  .news-post {
+    margin-bottom: 1.5rem;
   }
-  
-  .post-actions,
-  .engagement-stats,
-  .post-content {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  .comments-section {
-    padding: 0.75rem 1rem;
+}
+
+@media (max-width: 480px) {
+  .news-post {
+    margin-bottom: 1rem;
   }
 }
 </style>

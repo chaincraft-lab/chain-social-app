@@ -409,11 +409,11 @@ export default {
           datasets: [{
             label: 'Güvenlik Puanı',
             data: sortedCountries.map(country => country.score),
-            backgroundColor: tabId === 'kara' ? '#8B4513' : 
-                            tabId === 'hava' ? '#4682B4' : 
-                            tabId === 'deniz' ? '#1E90FF' : 
-                            tabId === 'siber' ? '#FF8C00' : '#483D8B',
-            borderColor: '#2c3e50',
+            backgroundColor: tabId === 'kara' ? 'var(--color-warning-700)' : 
+                            tabId === 'hava' ? 'var(--color-info-600)' : 
+                            tabId === 'deniz' ? 'var(--color-info-400)' : 
+                            tabId === 'siber' ? 'var(--color-warning-500)' : 'var(--color-accent-700)',
+            borderColor: 'var(--color-gray-700)',
             borderWidth: 1
           }]
         },

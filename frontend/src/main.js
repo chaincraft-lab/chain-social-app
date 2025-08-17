@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import App from './App.vue'
 import './assets/css/main.css'
+import './assets/css/theme.css'
 import store from './store'
 import vuetify from './plugins/vuetify'
 

@@ -194,6 +194,7 @@ const getters = {
   getPopularNews: (state) => state.popularNews || [],
   getFeaturedNews: (state) => state.featuredNews || [],
   getCategoryNews: (state) => (categorySlug) => state.categoryNews[categorySlug] || [],
+  getTagNews: (state) => (tagSlug) => state.tagNews[tagSlug] || [],
   isLoading: (state) => (type) => state.loading[type],
   hasError: (state) => !!state.error
 }

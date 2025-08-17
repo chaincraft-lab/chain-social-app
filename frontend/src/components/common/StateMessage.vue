@@ -6,17 +6,6 @@
       </div>
       <h3 class="state-title">{{ title }}</h3>
       <p class="state-text" v-if="message">{{ message }}</p>
-      <!-- <v-btn
-        v-if="showButton"
-        :color="buttonColor"
-        :variant="buttonVariant"
-        rounded="pill"
-        @click="handleButtonClick"
-        class="mt-4"
-      >
-        <v-icon start v-if="buttonIcon">{{ buttonIcon }}</v-icon>
-        {{ buttonText }}
-      </v-btn> -->
     </div>
   </div>
 </template>
@@ -176,13 +165,13 @@ export default {
 .state-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--color-text-primary);
   margin-bottom: 0.75rem;
   line-height: 1.3;
 }
 
 .state-text {
-  color: #6c757d;
+  color: var(--color-text-secondary);
   font-size: 1rem;
   line-height: 1.5;
   margin: 0;

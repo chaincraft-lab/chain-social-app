@@ -19,3 +19,19 @@ Frontend projesi şu an hem Vuetify hem Tailwind kullanılmış. Aşağıdaki is
    - Tüm formlar aynı "FormField" component'ini kullanabilsin.
    - Modal pencereler ortak "ModalWrapper" component'i üzerinden gelsin.
    - Tablolarda sayfalama, filtreleme, sıralama gibi özellikler tekrar tekrar yazılmasın, component mantığı ile parçalanıp tekrar kullanılabilsin.
+
+
+  - src/components/layout/Navbar.vue 
+  - src/components/layout/Sidebar.vue #done 
+  - src/components/layout/Footer.vue 
+  - src/components/news/NewsPost.vue 
+  - src/components/ui/CategoriesList.vue #done
+  - src/components/auth/AuthDialog.vue
+
+  Views:
+  - src/views/HomePage.vue
+  - src/views/CategoryPage.vue
+  - src/views/TagPage.vue
+  - src/views/DefenseLeaguePage.vue
+  - src/views/ArticlePage.vue
+  - src/views/SearchPage.vue

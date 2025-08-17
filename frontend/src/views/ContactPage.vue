@@ -121,13 +121,13 @@ export default {
 .contact-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2c3e50;
+  color: var(--color-text-primary);
   margin-bottom: 1rem;
 }
 
 .contact-subtitle {
   font-size: 1.1rem;
-  color: #6c757d;
+  color: var(--color-text-secondary);
 }
 
 .contact-content {
@@ -140,7 +140,7 @@ export default {
 .contact-form h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--color-text-primary);
   margin-bottom: 1.5rem;
 }
 
@@ -150,7 +150,7 @@ export default {
   gap: 1rem;
   margin-bottom: 1rem;
   font-size: 1rem;
-  color: #495057;
+  color: var(--color-text-secondary);
 }
 
 @media (max-width: 768px) {

@@ -10,7 +10,7 @@ const customTheme = {
   dark: false,
   colors: {
     // Primary colors from your existing design
-    primary: '#800000', // Bordo
+    primary: '#6B7280', // Bordo
     secondary: '#B0C4DE', // Açık mavi
     accent: '#459c98', // Teal
     error: '#ef4444',
