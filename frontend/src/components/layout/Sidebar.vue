@@ -47,49 +47,6 @@
       </div>
     </div>
 
-    <!-- Advertisement -->
-    <div v-if="showAds" class="bg-white rounded-lg shadow-sm mb-6">
-      <div class="border-b border-light-200 px-5 py-3">
-        <h3 class="text-lg font-semibold text-dark">Sponsorlu</h3>
-      </div>
-      <div class="p-3">
-        <!-- First Ad -->
-        <div class="mb-4">
-          <a href="#" target="_blank" class="block">
-            <img
-              src="@/assets/reklam/reklam_1.jpeg"
-              alt="Savunma Sanayii Reklamı"
-              class="w-full rounded"
-            />
-          </a>
-          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
-        </div>
-
-        <!-- Second Ad -->
-        <div class="mb-4">
-          <a href="#" target="_blank" class="block">
-            <img
-              src="@/assets/reklam/reklam_2.jpg"
-              alt="Savunma Sanayii Reklamı"
-              class="w-full rounded"
-            />
-          </a>
-          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
-        </div>
-
-        <!-- Third Ad - Only visible on larger screens -->
-        <div class="mb-4">
-          <a href="#" target="_blank" class="block">
-            <img
-              src="@/assets/reklam/reklam_3.jpg"
-              alt="Savunma Sanayii Reklamı"
-              class="w-full rounded"
-            />
-          </a>
-          <div class="text-xs text-gray-500 mt-1 text-right">Reklam</div>
-        </div>
-      </div>
-    </div>
 
     <!-- Tags -->
     <div v-if="showTags" class="tags-card">

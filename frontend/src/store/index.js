@@ -42,7 +42,7 @@ export default createStore({
           dispatch('news/fetchLatestNews'),
           dispatch('news/fetchPopularNews'),
           dispatch('news/fetchFeaturedNews'),
-          dispatch('advertisements/fetchAdvertisements')
+          // dispatch('advertisements/fetchAdvertisements')
         ])
       } catch (error) {
         commit('SET_GLOBAL_ERROR', 'Başlangıç verileri yüklenirken hata oluştu')
