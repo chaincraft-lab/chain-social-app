@@ -1,10 +1,8 @@
 <template>
-  <nav class="bg-dark text-light shadow-sm relative" style="z-index: 9998">
-    <div class="container mx-auto">
+  <nav class="shadow-lg relative" style="z-index: 9998; background-color: var(--color-navbar-bg); color: var(--color-navbar-text)">
+    <div class="container mx-auto px-4">
       <!-- Top Bar -->
-      <div
-        class="flex items-center justify-between py-3 border-b border-dark-700"
-      >
+      <div class="flex items-center justify-between py-3" style="border-bottom: 1px solid var(--color-navbar-border)">
         <!-- Logo -->
         <router-link to="/" class="flex items-center">
           <img src="@/assets/logo.png" alt="Logo" class="h-10" />
@@ -13,317 +11,53 @@
         <!-- Search and Actions -->
         <div class="flex items-center space-x-4">
           <!-- Search -->
-          <div class="relative hidden md:block">
-            <form @submit.prevent="handleSearch">
-              <input
-                v-model="searchQuery"
-                type="text"
-                placeholder="Haber ara..."
-                class="w-64 py-2 pl-10 pr-4 text-sm bg-dark-700 border-none rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 text-light placeholder-light/70"
-                @keyup.enter="handleSearch"
-              />
-              <div
-                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-4 h-4 text-light/70"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </div>
-            </form>
+          <div class="hidden md:block">
+            <SearchBox
+              v-model="searchQuery"
+              placeholder="Haber ara..."
+              @search="handleSearch"
+            />
           </div>
 
           <!-- Authentication Section -->
           <div class="flex items-center space-x-3">
             <!-- Authenticated User -->
-            <div v-if="isAuthenticated" class="relative">
-              <!-- Profile Button -->
-              <button
-                @click="toggleProfileDropdown"
-                class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors text-white"
-              >
-                <div
-                  class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center"
-                >
-                  <svg
-                    class="w-5 h-5 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                </div>
-                <span class="text-sm font-medium hidden md:block">{{
-                  currentUser?.name || "Kullanıcı"
-                }}</span>
-                <svg
-                  class="w-4 h-4 hidden md:block"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              <!-- Profile Dropdown Menu -->
-              <div
-                v-if="showProfileDropdown"
-                class="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
-                @mouseleave="hideProfileDropdown"
-              >
-                <!-- User Info -->
-                <div class="px-4 py-3 border-b border-gray-200">
-                  <div class="flex items-center space-x-3">
-                    <div
-                      class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center"
-                    >
-                      <svg
-                        class="w-6 h-6 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <p class="text-sm font-medium text-gray-900">
-                        {{ currentUser?.name || "Kullanıcı" }}
-                      </p>
-                      <p class="text-xs text-gray-500">
-                        {{ currentUser?.email }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Menu Items -->
-                <div class="py-1">
-                  <router-link
-                    to="/profile"
-                    @click="hideProfileDropdown"
-                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                  >
-                    <svg
-                      class="w-4 h-4 mr-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                    Profilim
-                  </router-link>
-                  <router-link
-                    to="/bookmarks"
-                    @click="hideProfileDropdown"
-                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                  >
-                    <svg
-                      class="w-4 h-4 mr-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-                      />
-                    </svg>
-                    Kaydettiklerim
-                  </router-link>
-                  <router-link
-                    to="/likes"
-                    @click="hideProfileDropdown"
-                    class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                  >
-                    <svg
-                      class="w-4 h-4 mr-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                      />
-                    </svg>
-                    Beğendiklerim
-                  </router-link>
-                </div>
-
-                <!-- Logout -->
-                <div class="border-t border-gray-200 py-1">
-                  <button
-                    @click="handleLogout"
-                    class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                  >
-                    <svg
-                      class="w-4 h-4 mr-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                      />
-                    </svg>
-                    Çıkış Yap
-                  </button>
-                </div>
-              </div>
-            </div>
+            <UserProfile
+              v-if="isAuthenticated"
+              :user="currentUser"
+              @logout="handleLogout"
+            />
 
             <!-- Non-authenticated User -->
-            <div v-else>
-              <button
-                @click="showAuthDialog = true"
-                class="flex items-center space-x-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors font-medium text-sm"
-              >
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                  />
-                </svg>
-                <span>Giriş Yap</span>
-              </button>
-            </div>
+            <AuthButton
+              v-else
+              @login="showAuthDialog = true"
+            />
           </div>
 
-          <!-- Dil Seçimi Butonu -->
-          <div class="relative hidden md:block">
-            <v-btn
-              @click="toggleLanguageDropdown"
-              variant="text"
-              color="white"
-              size="small"
-              rounded="pill"
-              icon="mdi-web"
-              class="language-btn"
-            ></v-btn>
-
-            <!-- Dil Dropdown -->
-            <div
-              v-if="showLanguageDropdown"
-              class="absolute right-0 top-full mt-2 w-40 bg-white text-dark shadow-lg rounded-md py-2 z-50 dropdown-shadow"
-              @mouseleave="hideLanguageDropdown"
-            >
-              <button
-                v-for="language in languages"
-                :key="language.code"
-                @click="selectLanguage(language)"
-                class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors flex items-center"
-                :class="{
-                  'bg-primary/10 text-primary':
-                    currentLanguage === language.name,
-                }"
-              >
-                <span class="mr-2">{{ language.flag }}</span>
-                <span>{{ language.name }}</span>
-                <v-icon
-                  v-if="currentLanguage === language.name"
-                  class="ml-auto"
-                  size="small"
-                  >mdi-check</v-icon
-                >
-              </button>
-            </div>
-          </div>
+          <!-- Language Selector -->
+          <LanguageSelector
+            class="hidden md:block"
+            :languages="languages"
+            :current-language="currentLanguage"
+            @language-changed="selectLanguage"
+          />
 
           <!-- Mobile Menu Button -->
-          <!-- <v-btn 
-            @click="isMobileMenuOpen = !isMobileMenuOpen" 
-            :icon="isMobileMenuOpen ? 'mdi-close' : 'mdi-menu'"
-            variant="text"
-            color="white"
-            class="md:hidden"
-          ></v-btn> -->
+          <MobileMenuButton
+            :is-open="isMobileMenuOpen"
+            @toggle="isMobileMenuOpen = !isMobileMenuOpen"
+          />
 
           <!-- Social Icons -->
-          <div class="hidden md:flex items-center space-x-3">
-            <a href="#" class="text-light/80 hover:text-secondary">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"
-                />
-              </svg>
-            </a>
-            <a href="#" class="text-light/80 hover:text-secondary">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-                />
-              </svg>
-            </a>
-            <a href="#" class="text-light/80 hover:text-secondary">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"
-                />
-              </svg>
-            </a>
+          <div class="hidden md:block">
+            <SocialLinks
+              :social-links="[
+                { name: 'twitter', url: '#' },
+                { name: 'instagram', url: '#' },
+                { name: 'facebook', url: '#' }
+              ]"
+            />
           </div>
         </div>
       </div>
@@ -401,11 +135,19 @@
                       class="flex items-center justify-between px-4 py-2 text-sm text-light hover:bg-altmenu-700 hover:text-secondary cursor-pointer transition-colors"
                     >
                       <div class="flex items-center">
-                        <v-icon
-                          :icon="nestedCategory.icon"
-                          size="small"
-                          class="mr-2"
-                        ></v-icon>
+                        <svg
+                          class="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                          />
+                        </svg>
                         <span>{{ nestedCategory.title }}</span>
                       </div>
                       <svg
@@ -449,19 +191,7 @@
           </ul>
 
           <div class="flex items-center">
-            <div
-              class="date-container rounded-lg px-3 py-2 flex items-center space-x-2 cursor-pointer"
-            >
-              <v-icon size="small" color="primary">mdi-calendar-today</v-icon>
-              <div class="flex flex-col">
-                <span class="text-xs font-medium text-primary">{{
-                  currentDay
-                }}</span>
-                <span class="text-xs text-light/80">{{
-                  currentDateFormatted
-                }}</span>
-              </div>
-            </div>
+            <DateDisplay />
           </div>
         </div>
 
@@ -506,33 +236,12 @@
           <div class="relative px-4 py-3 border-b border-dark-700">
             <div class="flex items-center gap-2">
               <div class="relative flex-1">
-                <form @submit.prevent="handleMobileSearch">
-                  <input
-                    v-model="mobileSearchQuery"
-                    type="text"
-                    placeholder="Haber ara..."
-                    class="w-full py-2 pl-10 pr-4 text-sm bg-dark-700 border-none rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 text-light placeholder-light/70"
-                    @keyup.enter="handleMobileSearch"
-                  />
-                  <div
-                    class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="w-4 h-4 text-light/70"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  </div>
-                </form>
+                <SearchBox
+                  v-model="mobileSearchQuery"
+                  placeholder="Haber ara..."
+                  input-class="w-full bg-dark-700 text-light placeholder-light/70"
+                  @search="handleMobileSearch"
+                />
               </div>
 
               <!-- Mobile Auth Section -->
@@ -559,38 +268,32 @@
                 </button>
 
                 <!-- Non-authenticated User Mobile -->
-                <button
+                <AuthButton
                   v-else
-                  @click="showAuthDialog = true"
-                  class="flex items-center space-x-1 px-3 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors text-sm font-medium"
-                >
-                  <svg
-                    class="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                    />
-                  </svg>
-                  <span>Giriş</span>
-                </button>
+                  button-text="Giriş"
+                  @login="showAuthDialog = true"
+                />
               </div>
 
               <!-- Mobil Dil Seçimi Butonu -->
-              <v-btn
+              <button
                 @click="toggleLanguageDropdown"
-                variant="outlined"
-                color="white"
-                size="small"
-                rounded="pill"
-                icon="mdi-web"
-                class="flex-shrink-0"
-              ></v-btn>
+                class="flex-shrink-0 p-2 border border-white/30 rounded-full text-white hover:bg-white/10 transition-colors"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-3.25m0-9.75V15M12 3l2.25 2.25L12 3zm0 0l-2.25 2.25L12 3z"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
 
@@ -611,9 +314,6 @@
                     }"
                   >
                     <div class="flex items-center">
-                      <!-- <span class="mr-3 text-lg">
-                        {{ menuItem.icon || getMenuIcon(menuItem.title) }}
-                      </span> -->
                       <span>{{ menuItem.title }}</span>
                     </div>
                     <svg
@@ -665,98 +365,25 @@
           <!-- Mobile Footer -->
           <div class="px-4 py-3 border-t border-dark-700">
             <!-- Mobile Profile Section for Authenticated Users -->
-            <div
-              v-if="isAuthenticated && showMobileProfileMenu"
-              class="mb-4 p-3 bg-dark-800 rounded-lg"
-            >
-              <div class="flex items-center mb-3">
-                <v-icon size="large" class="mr-3 text-primary"
-                  >mdi-account-circle</v-icon
-                >
-                <div>
-                  <p class="text-sm font-medium text-light">
-                    {{ currentUser?.name || "Kullanıcı" }}
-                  </p>
-                  <p class="text-xs text-light/70">{{ currentUser?.email }}</p>
-                </div>
-              </div>
-              <div class="space-y-2">
-                <router-link
-                  to="/profile"
-                  @click="closeMobileMenu"
-                  class="flex items-center w-full text-left px-3 py-2 text-sm text-light hover:bg-dark-600 rounded-md transition-colors"
-                >
-                  <v-icon size="small" class="mr-2">mdi-account</v-icon>
-                  Profilim
-                </router-link>
-                <router-link
-                  to="/bookmarks"
-                  @click="closeMobileMenu"
-                  class="flex items-center w-full text-left px-3 py-2 text-sm text-light hover:bg-dark-600 rounded-md transition-colors"
-                >
-                  <v-icon size="small" class="mr-2">mdi-bookmark</v-icon>
-                  Kaydettiklerim
-                </router-link>
-                <router-link
-                  to="/likes"
-                  @click="closeMobileMenu"
-                  class="flex items-center w-full text-left px-3 py-2 text-sm text-light hover:bg-dark-600 rounded-md transition-colors"
-                >
-                  <v-icon size="small" class="mr-2">mdi-heart</v-icon>
-                  Beğendiklerim
-                </router-link>
-                <button
-                  @click="handleLogout"
-                  class="flex items-center w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-dark-600 rounded-md transition-colors"
-                >
-                  <v-icon size="small" class="mr-2">mdi-logout</v-icon>
-                  Çıkış Yap
-                </button>
-              </div>
-            </div>
+            <MobileProfileMenu
+              v-if="isAuthenticated"
+              :is-visible="showMobileProfileMenu"
+              :user="currentUser"
+              @close="closeMobileMenu"
+              @logout="handleLogout"
+            />
 
             <div class="flex items-center justify-between mb-4">
               <span class="text-sm font-medium text-light/90">{{
                 currentDate
               }}</span>
-              <div class="flex items-center space-x-4">
-                <a href="#" class="text-light/80 hover:text-secondary">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"
-                    />
-                  </svg>
-                </a>
-                <a href="#" class="text-light/80 hover:text-secondary">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-                    />
-                  </svg>
-                </a>
-                <a href="#" class="text-light/80 hover:text-secondary">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"
-                    />
-                  </svg>
-                </a>
-              </div>
+              <SocialLinks
+                :social-links="[
+                  { name: 'twitter', url: '#' },
+                  { name: 'instagram', url: '#' },
+                  { name: 'facebook', url: '#' }
+                ]"
+              />
             </div>
           </div>
         </div>
@@ -771,11 +398,27 @@
 import { mapState, mapGetters, mapActions } from "vuex";
 import { MENU_ITEMS, LANGUAGE_OPTIONS } from "@/constants";
 import AuthDialog from "@/components/auth/AuthDialog.vue";
+import SearchBox from "@/components/ui/Navigation/SearchBox.vue";
+import UserProfile from "@/components/ui/Navigation/UserProfile.vue";
+import LanguageSelector from "@/components/ui/Navigation/LanguageSelector.vue";
+import SocialLinks from "@/components/ui/Navigation/SocialLinks.vue";
+import DateDisplay from "@/components/ui/Navigation/DateDisplay.vue";
+import AuthButton from "@/components/ui/Navigation/AuthButton.vue";
+import MobileMenuButton from "@/components/ui/Navigation/MobileMenuButton.vue";
+import MobileProfileMenu from "@/components/ui/Navigation/MobileProfileMenu.vue";
 
 export default {
   name: "SiteNavbar",
   components: {
     AuthDialog,
+    SearchBox,
+    UserProfile,
+    LanguageSelector,
+    SocialLinks,
+    DateDisplay,
+    AuthButton,
+    MobileMenuButton,
+    MobileProfileMenu,
   },
   data() {
     return {
@@ -1164,4 +807,4 @@ export default {
   border-color: rgba(255, 255, 255, 0.6) !important;
   background-color: rgba(255, 255, 255, 0.1) !important;
 }
-</style> 
+</style>

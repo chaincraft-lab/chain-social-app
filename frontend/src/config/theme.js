@@ -137,6 +137,22 @@ export const THEME_COLORS = {
     900: '#0A1F44',
     950: '#020617',
   },
+
+  navbar: {
+    name: 'Navbar (Koyu Gri)',
+    DEFAULT: '#111827', // gray-900 rengi
+    bg: '#111827',
+    text: '#FFFFFF',
+    border: '#374151', // gray-700
+  },
+
+  auth: {
+    name: 'Auth Button (İndigo)',
+    DEFAULT: '#6366f1', // indigo-500
+    bg: '#6366f1',
+    hover: '#4f46e5', // indigo-600
+    text: '#FFFFFF',
+  },
   
   light: {
     name: 'Light (Beyaz)',

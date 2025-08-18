@@ -152,6 +152,18 @@
   --color-altmenu-900: #18181b;
   --color-altmenu-950: #09090b;
 
+  /* Navbar (Koyu Gri) */
+  --color-navbar: #111827;
+  --color-navbar-bg: #111827;
+  --color-navbar-text: #FFFFFF;
+  --color-navbar-border: #374151;
+
+  /* Auth Button (İndigo) */
+  --color-auth: #6366f1;
+  --color-auth-bg: #6366f1;
+  --color-auth-hover: #4f46e5;
+  --color-auth-text: #FFFFFF;
+
   /* === GRAY PALETİ === */
   --color-gray-50: #f9fafb;
   --color-gray-100: #f3f4f6;
