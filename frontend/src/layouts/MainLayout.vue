@@ -1,39 +1,39 @@
 <template>
-  <div>
+  <div class="min-h-screen flex flex-col">
     <!-- Navbar -->
     <Navbar />
 
     <!-- Main Content -->
-    <v-main>
-      <div class="container mx-auto">
-        <v-row class="py-6">
+    <main class="flex-1">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-12 gap-6 py-6">
           <!-- Left Sidebar - Hidden on Mobile -->
-          <v-col cols="12" lg="3" class="d-none d-lg-block">
+          <div class="col-span-12 lg:col-span-3 hidden lg:block">
             <Sidebar
               position="left"
               :showPopular="false"
               :showAds="false"
               :showNewsletter="false"
             />
-          </v-col>
+          </div>
 
           <!-- Main Content -->
-          <v-col cols="12" lg="6">
+          <div class="col-span-12 lg:col-span-6">
             <router-view />
-          </v-col>
+          </div>
 
           <!-- Right Sidebar - Hidden on Mobile -->
-          <v-col cols="12" lg="3" class="d-none d-lg-block">
+          <div class="col-span-12 lg:col-span-3 hidden lg:block">
             <Sidebar
               position="right"
               :showCategories="false"
               :showTags="false"
               :showNewsletter="false"
             />
-          </v-col>
-        </v-row>
+          </div>
+        </div>
       </div>
-    </v-main>
+    </main>
 
     <!-- Footer -->
     <Footer />
