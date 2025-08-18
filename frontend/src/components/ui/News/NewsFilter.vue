@@ -1,21 +1,20 @@
 <template>
-  <div class="feed-header">
-    <h2 class="feed-title">{{ title }}</h2>
-    <div class="feed-filter">
-      <v-chip-group 
-        :model-value="selectedFilter" 
-        @update:model-value="$emit('update:selectedFilter', $event)"
-        color="primary" 
-        variant="flat"
+  <div class="feed-header flex justify-between items-center mb-6 px-2">
+    <h2 class="text-2xl font-bold text-gray-900 m-0">{{ title }}</h2>
+    <div class="feed-filter flex gap-2">
+      <button
+        v-for="filter in filters"
+        :key="filter.value"
+        @click="$emit('update:selectedFilter', filter.value)"
+        :class="[
+          'px-4 py-2 rounded-full text-sm font-medium transition-colors',
+          selectedFilter === filter.value
+            ? 'bg-primary text-white'
+            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+        ]"
       >
-        <v-chip 
-          v-for="filter in filters" 
-          :key="filter.value"
-          :value="filter.value"
-        >
-          {{ filter.label }}
-        </v-chip>
-      </v-chip-group>
+        {{ filter.label }}
+      </button>
     </div>
   </div>
 </template>
@@ -44,42 +43,26 @@ defineEmits(['update:selectedFilter'])
 </script>
 
 <style scoped>
-.feed-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding: 0 0.5rem;
-}
-
-.feed-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: rgba(0, 0, 0, 0.87);
-  margin: 0;
-}
-
-.feed-filter {
-  display: flex;
-  gap: 0.5rem;
-}
-
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .feed-header {
-    flex-direction: column;
+    flex-direction: column !important;
     gap: 1rem;
-    align-items: flex-start;
+    align-items: flex-start !important;
   }
 
-  .feed-title {
-    font-size: 1.25rem;
+  .feed-header h2 {
+    font-size: 1.25rem !important;
   }
 }
 
 @media (max-width: 480px) {
   .feed-header {
-    padding: 0 0.25rem;
+    padding: 0 0.25rem !important;
+  }
+  
+  .feed-filter {
+    flex-wrap: wrap;
   }
 }
 </style>

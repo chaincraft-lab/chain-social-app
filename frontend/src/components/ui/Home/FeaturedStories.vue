@@ -1,42 +1,49 @@
 <template>
-  <section class="stories-section">
-    <v-card class="stories-card" elevation="1" rounded="xl">
-      <div class="stories-container">
+  <section class="mb-8">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+      <div class="flex gap-4 overflow-x-auto py-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         <!-- Loading State for Stories -->
-        <div v-if="isLoading" class="stories-loading">
-          <v-skeleton-loader
+        <div v-if="isLoading" class="flex gap-4">
+          <div
             v-for="n in 5"
             :key="n"
-            type="avatar"
-            class="story-skeleton"
-          ></v-skeleton-loader>
+            class="flex flex-col items-center min-w-[80px]"
+          >
+            <div class="w-15 h-15 bg-gray-200 rounded-full animate-pulse mb-2"></div>
+            <div class="w-12 h-3 bg-gray-200 rounded animate-pulse"></div>
+          </div>
         </div>
 
         <!-- Actual Stories -->
-        <div
-          v-else-if="stories && stories.length"
-          class="story-item"
-          v-for="story in stories.slice(0, 5)"
-          :key="story.id"
-          @click="$emit('storyClick', story)"
-        >
-          <div class="story-avatar">
-            <v-img
-              :src="story.image || story.imageUrl"
-              :alt="story.category?.name"
-              cover
-              class="story-image"
-            ></v-img>
+        <template v-else-if="stories && stories.length">
+          <div
+            v-for="story in stories.slice(0, 5)"
+            :key="story.id"
+            @click="$emit('storyClick', story)"
+            class="flex flex-col items-center min-w-[80px] cursor-pointer group"
+          >
+            <div class="relative w-15 h-15 mb-2">
+              <div class="w-full h-full rounded-full border-3 border-primary p-0.5 group-hover:scale-105 transition-transform">
+                <img
+                  :src="story.image || story.imageUrl"
+                  :alt="story.category?.name"
+                  class="w-full h-full rounded-full object-cover"
+                  @error="$event.target.src = '/placeholder-image.jpg'"
+                />
+              </div>
+            </div>
+            <div class="text-xs text-center text-gray-700 font-medium">
+              {{ story.category?.name || "Haber" }}
+            </div>
           </div>
-          <div class="story-label">{{ story.category?.name || "Haber" }}</div>
-        </div>
+        </template>
 
         <!-- Empty State -->
-        <div v-else class="stories-empty">
-          <p class="text-grey">Öne çıkan haber bulunamadı</p>
+        <div v-else class="flex justify-center items-center min-h-[80px] w-full">
+          <p class="text-gray-500">Öne çıkan haber bulunamadı</p>
         </div>
       </div>
-    </v-card>
+    </div>
   </section>
 </template>
 
@@ -56,120 +63,62 @@ defineEmits(['storyClick'])
 </script>
 
 <style scoped>
-/* Stories Section */
-.stories-section {
-  margin-bottom: 2rem;
-}
-
-.stories-card {
-  padding: 1rem;
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.stories-container {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  padding: 0.5rem 0;
-}
-
-.story-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 80px;
-  cursor: pointer;
-}
-
-.story-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 3px solid var(--color-info-600);
-  padding: 2px;
-  margin-bottom: 0.5rem;
-  transition: transform 0.2s ease;
-}
-
-.story-avatar:hover {
-  transform: scale(1.05);
-}
-
-.story-image {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-}
-
-.story-label {
-  font-size: 0.75rem;
-  text-align: center;
-  color: rgba(0, 0, 0, 0.7);
-  font-weight: 500;
-}
-
-.stories-loading {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  padding: 0.5rem 0;
-}
-
-.story-skeleton {
-  min-width: 60px;
-  height: 60px;
-}
-
-.stories-empty {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80px;
-}
-
-/* Mobile Responsive */
+/* Mobile responsive adjustments */
 @media (max-width: 768px) {
-  .stories-container {
-    gap: 0.75rem;
-  }
-
-  .story-item {
+  .min-w-\[80px\] {
     min-width: 70px;
   }
-
-  .story-avatar {
+  
+  .w-15 {
     width: 50px;
     height: 50px;
   }
-
-  .story-label {
+  
+  .text-xs {
     font-size: 0.7rem;
   }
 }
 
 @media (max-width: 480px) {
-  .stories-card {
+  .p-4 {
     padding: 0.75rem;
+  }
+  
+  .gap-4 {
+    gap: 0.75rem;
   }
 }
 
-/* Scrollbar for stories */
-.stories-container::-webkit-scrollbar {
+/* Custom scrollbar (Tailwind scrollbar plugin alternative) */
+.scrollbar-thin::-webkit-scrollbar {
   height: 4px;
 }
 
-.stories-container::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+.scrollbar-track-gray-100::-webkit-scrollbar-track {
+  background: rgb(243 244 246);
   border-radius: 2px;
 }
 
-.stories-container::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3);
+.scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
+  background: rgb(209 213 219);
   border-radius: 2px;
 }
 
-.stories-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.5);
+.scrollbar-thumb-gray-300::-webkit-scrollbar-thumb:hover {
+  background: rgb(156 163 175);
+}
+
+/* Custom border width for story border */
+.border-3 {
+  border-width: 3px;
+}
+
+/* Custom width/height for story avatar */
+.w-15 {
+  width: 3.75rem;
+}
+
+.h-15 {
+  height: 3.75rem;
 }
 </style>
