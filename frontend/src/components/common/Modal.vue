@@ -1,0 +1,57 @@
+<template>
+  <div v-if="isOpen" class="fixed inset-0 z-[9999] flex items-center justify-center">
+    <!-- Backdrop -->
+    <div 
+      class="absolute inset-0 bg-black/80 backdrop-blur-sm" 
+      @click="closeOnBackdrop && $emit('close')"
+    ></div>
+    
+    <!-- Modal Content -->
+    <div 
+      :class="[
+        'relative bg-gray-900 rounded-2xl shadow-2xl w-full mx-4',
+        sizeClasses,
+        customClass
+      ]"
+    >
+      <!-- Close Button -->
+      <button
+        v-if="showCloseButton"
+        @click="$emit('close')"
+        class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors z-10"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <!-- Modal Content Slot -->
+      <slot />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+
+const props = defineProps({
+  isOpen: { type: Boolean, default: false },
+  size: { type: String, default: 'md' },
+  closeOnBackdrop: { type: Boolean, default: true },
+  showCloseButton: { type: Boolean, default: true },
+  customClass: { type: String, default: '' }
+})
+
+defineEmits(['close'])
+
+const sizeClasses = computed(() => {
+  const sizes = {
+    sm: 'max-w-sm',
+    md: 'max-w-md',
+    lg: 'max-w-lg',
+    xl: 'max-w-xl',
+    '2xl': 'max-w-2xl'
+  }
+  return sizes[props.size] || sizes.md
+})
+</script>

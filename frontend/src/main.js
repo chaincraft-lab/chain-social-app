@@ -14,7 +14,6 @@ import TagPage from './views/TagPage.vue'
 import SearchPage from './views/SearchPage.vue'
 import ArticlePage from './views/ArticlePage.vue'
 import DefenseLeaguePage from './views/DefenseLeaguePage.vue'
-import ContactPage from './views/ContactPage.vue'
 
 // Create router
 const router = createRouter({
@@ -31,7 +30,6 @@ const router = createRouter({
         { path: '/article/:slug', component: ArticlePage, name: 'article' },
         { path: '/defense-leagues', component: DefenseLeaguePage, name: 'defense-leagues' },
         { path: '/defense-leagues/:category', component: DefenseLeaguePage, name: 'defense-leagues-category' },
-        { path: '/iletisim', component: ContactPage, name: 'contact' },
       ]
     }
   ]

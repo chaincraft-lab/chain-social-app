@@ -5,6 +5,7 @@ const state = () => ({
   popularNews: [],
   featuredNews: [],
   categoryNews: {},
+  tagNews: {},
   loading: {
     latest: false,
     popular: false,
@@ -31,6 +32,9 @@ const mutations = {
   },
   SET_CATEGORY_NEWS(state, { categorySlug, news }) {
     state.categoryNews = { ...state.categoryNews, [categorySlug]: news }
+  },
+  SET_TAG_NEWS(state, { tagSlug, news }) {
+    state.tagNews = { ...state.tagNews, [tagSlug]: news }
   },
   SET_LOADING(state, { type, status }) {
     state.loading[type] = status
@@ -172,17 +176,17 @@ const actions = {
     }
   },
 
-  async fetchArticlesByTag({ commit }, { tagSlug, limit = 10 }) {
+  async fetchTagNews({ commit }, { tagSlug, limit = 50 }) {
     commit('SET_LOADING', { type: 'tag', status: true })
     commit('CLEAR_ERROR')
     try {
       const response = await articleService.getArticlesByTag(tagSlug, { limit })
+      // Backend response'unu handle et
       const articles = response.data?.data || response.data || response
-      return articles
+      commit('SET_TAG_NEWS', { tagSlug, news: articles })
     } catch (error) {
-      console.error('Error fetching articles by tag:', error)
+      console.error('Error fetching tag news:', error)
       commit('SET_ERROR', error.response?.data?.message || error.message)
-      return []
     } finally {
       commit('SET_LOADING', { type: 'tag', status: false })
     }

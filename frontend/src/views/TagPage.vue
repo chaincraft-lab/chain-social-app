@@ -1,153 +1,182 @@
 <template>
-  <div class="max-w-4xl mx-auto px-4 py-8">
-    <!-- Loading State -->
-    <LoadingSpinner
-      v-if="isLoading"
-      size="lg"
-      text="Etiket bilgileri yükleniyor..."
-      :fullScreen="false"
-    />
-
-    <!-- Error State -->
-    <ErrorState
-      v-else-if="error"
-      :title="errorTitle"
-      :message="error"
-      @retry="loadTagData"
-    />
-
-    <!-- Tag Content -->
-    <div v-else-if="currentTag">
-      <!-- Tag Posts List -->
-      <TagPostsList
-        :posts="tagArticles"
-        :is-loading="articlesLoading"
+  <div class="tag-page">
+    <!-- Posts Feed -->
+    <div class="posts-feed">
+      <!-- Loading State -->
+      <LoadingSpinner
+        v-if="isLoading"
+        size="lg"
+        text="Etiket haberleri yükleniyor..."
+        :fullScreen="false"
       />
 
-      <!-- Load More Button -->
-      <LoadMoreButton
-        :has-more="hasMorePosts"
-        :is-loading="loadingMore"
-        :show-end-message="tagArticles.length > 0 && !hasMorePosts"
-        @loadMore="loadMorePosts"
-      />
-    </div>
+      <!-- Tag Posts -->
+      <div v-else class="posts-container">
+        <NewsPost
+          v-for="news in tagNews"
+          :key="news?.id || Math.random()"
+          :news="news"
+        />
 
-    <!-- Empty State -->
-    <div v-else class="text-center py-12">
-      <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a1.994 1.994 0 01-1.414.586H7a4 4 0 01-4-4V7a4 4 0 014-4z"/>
-      </svg>
-      <p class="text-gray-500 text-lg">Etiket bulunamadı</p>
+        <!-- Load More Button -->
+        <LoadMoreButton
+          :has-more="hasMorePosts"
+          :is-loading="loadingMore"
+          :show-end-message="tagNews.length > 0 && !hasMorePosts"
+          button-text="Daha Fazla Yükle"
+          end-message="Bu etiketteki tüm haberleri görüntülediniz"
+          @loadMore="loadMorePosts"
+        />
+
+        <!-- No Posts Found -->
+        <StateMessage
+          v-if="tagNews.length === 0"
+          type="empty"
+          title="Henüz haber yok"
+          message="Bu etikette henüz haber bulunmuyor"
+          icon="mdi-newspaper-variant-outline"
+          :show-button="true"
+        />
+      </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
+<script>
+import { computed, onMounted, watch, ref } from "vue";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+import NewsPost from "@/components/news/NewsPost.vue";
+import StateMessage from "@/components/common/StateMessage.vue";
+import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
+import LoadMoreButton from "@/components/common/LoadMoreButton.vue";
 
-// Components
-import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
-import ErrorState from '@/components/common/ErrorState.vue'
-import TagPostsList from '@/components/ui/Tags/TagPostsList.vue'
-import LoadMoreButton from '@/components/ui/Tags/LoadMoreButton.vue'
+export default {
+  name: "TagPage",
+  components: {
+    NewsPost,
+    StateMessage,
+    LoadingSpinner,
+    LoadMoreButton,
+  },
+  setup() {
+    const store = useStore();
+    const route = useRoute();
 
-const route = useRoute()
-const store = useStore()
+    const displayedPostsCount = ref(10);
+    const loadingMore = ref(false);
 
-// Reactive state
-const currentTag = ref(null)
-const tagArticles = ref([])
-const totalArticles = ref(0)
-const isLoading = ref(true)
-const articlesLoading = ref(false)
-const loadingMore = ref(false)
-const hasMorePosts = ref(true)
-const error = ref(null)
-const currentPage = ref(1)
-const postsPerPage = 10
+    const currentTag = computed(() => {
+      // Tag bilgisini store'dan al (eğer lazımsa)
+      return { name: route.params.slug, slug: route.params.slug };
+    });
 
-// Computed properties
-const errorTitle = computed(() => {
-  if (error.value?.includes('404') || error.value?.includes('bulunamadı')) {
-    return 'Etiket Bulunamadı'
-  }
-  return 'Bir Hata Oluştu'
-})
+    const allTagNews = computed(() => {
+      return store.getters["news/getTagNews"](route.params.slug);
+    });
 
-// Methods
-const loadTagData = async () => {
-  try {
-    isLoading.value = true
-    error.value = null
+    const tagNews = computed(() => {
+      return allTagNews.value.slice(0, displayedPostsCount.value);
+    });
 
-    const slug = route.params.slug
+    const hasMorePosts = computed(() => {
+      return allTagNews.value.length > displayedPostsCount.value;
+    });
 
-    // Tag bilgisini çek ve articles'ları ondan al
-    const tagData = await store.dispatch("tags/fetchTagBySlug", slug)
-    currentTag.value = tagData
-    
-    if (tagData && tagData.articles) {
-      tagArticles.value = tagData.articles
-      totalArticles.value = tagData.articles.length
-    }
-    
-    // HasMorePosts logic - eğer sayfalama varsa
-    hasMorePosts.value = false // Store'dan gelen veri full list ise false
+    const isLoading = computed(() => store.getters["news/isLoading"]("tag"));
 
-  } catch (err) {
-    console.error("Error loading tag data:", err)
-    error.value = "Etiket bilgileri yüklenirken hata oluştu"
-  } finally {
-    isLoading.value = false
-  }
-}
+    const loadTagNews = async () => {
+      if (route.params.slug) {
+        try {
+          // Önce tag bilgisini çek (eğer gerekiyorsa)
+          await store.dispatch("tags/fetchTagBySlug", route.params.slug);
 
-const loadTagInfo = async (tagSlug) => {
-  // Bu function artık kullanılmıyor, loadTagData içinde birleştirildi
-}
+          // Sonra o tag'e ait haberleri çek
+          await store.dispatch("news/fetchTagNews", {
+            tagSlug: route.params.slug,
+            limit: 50, // Load more posts to enable pagination
+          });
+        } catch (error) {
+          console.error("Error loading tag data:", error);
+        }
+      }
+    };
 
-const loadMorePosts = async () => {
-  if (loadingMore.value || !hasMorePosts.value) return
-  
-  loadingMore.value = true
-  
-  try {
-    // Eğer sayfalama gerekirse buraya sayfalama logic'i eklenebilir
-    // Şimdilik store'dan gelen veri full list olduğu için boş
-    console.log('Load more posts - implement if pagination needed')
-  } catch (err) {
-    console.error('Load more error:', err)
-  } finally {
-    loadingMore.value = false
-  }
-}
+    const loadMorePosts = () => {
+      loadingMore.value = true;
 
-// Lifecycle and watchers
-onMounted(() => {
-  loadTagData()
-})
+      // Simulate loading delay
+      setTimeout(() => {
+        displayedPostsCount.value += 10;
+        loadingMore.value = false;
+      }, 1000);
+    };
 
-// Watch route changes
-watch(() => route.params.slug, () => {
-  if (route.name === 'tag') {
-    loadTagData()
-  }
-})
+    const formatDate = (dateString) => {
+      if (!dateString) return "";
+      const date = new Date(dateString);
+      return date.toLocaleDateString("tr-TR", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+    };
+
+    onMounted(() => {
+      loadTagNews();
+    });
+
+    watch(
+      () => route.params.slug,
+      () => {
+        displayedPostsCount.value = 10; // Reset pagination when tag changes
+        loadTagNews();
+      }
+    );
+
+    return {
+      currentTag,
+      tagNews,
+      hasMorePosts,
+      isLoading,
+      loadingMore,
+      loadMorePosts,
+      formatDate,
+    };
+  },
+};
 </script>
 
 <style scoped>
-/* Tag page specific styles */
+/* Tag Page Layout */
 .tag-page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 1rem;
   min-height: 100vh;
 }
 
-/* Responsive */
+/* Posts Feed */
+.posts-feed {
+  margin-bottom: 2rem;
+}
+
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Mobile Responsive */
 @media (max-width: 768px) {
   .tag-page {
-    padding: 1rem 0.5rem;
+    padding: 0 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tag-page {
+    padding: 0 0.25rem;
   }
 }
 </style>

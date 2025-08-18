@@ -79,15 +79,23 @@ class ArticleService extends ApiService {
 
   // Etikete göre makaleleri getir
   async getArticlesByTag(tagSlug, filters = {}) {
-    // Tag endpoint'ini kullan, çünkü zaten articles array'i döndürüyor
-    const response = await this.get(`/tags/slug/${tagSlug}`);
-    
-    // Response'dan articles'ı çıkar
-    if (response.data && response.data.articles) {
-      return response.data.articles;
-    }
-    
-    return [];
+    const params = new URLSearchParams({
+      tagSlug,
+      page: filters.page || 1,
+      limit: filters.limit || 10,
+      sortBy: filters.sortBy || 'publishedAt',
+      sortOrder: filters.sortOrder || 'desc'
+    });
+
+    // Diğer filtreleri ekle
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '' && 
+          !['page', 'limit', 'sortBy', 'sortOrder'].includes(key)) {
+        params.append(key, value.toString());
+      }
+    });
+
+    return this.get(`/articles?${params.toString()}`);
   }
 
   // Yazara göre makaleleri getir
