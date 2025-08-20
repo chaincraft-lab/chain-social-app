@@ -68,8 +68,7 @@ class ApiService {
         // Hataları handle et
         if (error.response?.status === 401) {
           // Unauthorized - token geçersiz olabilir
-          CookieUtils.remove('authToken');
-          // Login sayfasına yönlendir (eğer router kullanılabilirse)
+          this.handleUnauthorized();
         }
         
         return Promise.reject(error);
@@ -119,6 +118,26 @@ class ApiService {
   // Cookie utils'i export et
   getCookieUtils() {
     return CookieUtils;
+  }
+
+  // 401 Unauthorized durumunu handle et
+  handleUnauthorized() {
+    // Token'ı temizle
+    CookieUtils.remove('authToken');
+    delete this.client.defaults.headers.Authorization;
+    
+    // User bilgilerini localStorage'dan temizle
+    localStorage.removeItem('user');
+    
+    // Store'u temizle (eğer store varsa)
+    if (typeof window !== 'undefined' && window.$store) {
+      window.$store.commit('user/LOGOUT_USER');
+    }
+    
+    // Event dispatch et ki diğer componentler dinleyebilsin
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('auth:logout', { detail: { reason: 'token_expired' } }));
+    }
   }
 }
 
