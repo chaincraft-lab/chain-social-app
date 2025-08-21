@@ -1,7 +1,16 @@
 <template>
-  <div class="tag-page">
+  <div class="tag-page theme-bg-primary theme-text-primary">
     <!-- Posts Feed -->
     <div class="posts-feed">
+      <!-- Tag Header -->
+      <div class="pt-3">
+        <NewsFilter 
+          :title="`#${currentTag.name}`"
+          :selectedFilter="'all'"
+          :filters="[]"
+        />
+      </div>
+
       <!-- Loading State -->
       <LoadingSpinner
         v-if="isLoading"
@@ -50,6 +59,7 @@ import NewsPost from "@/components/news/NewsPost.vue";
 import StateMessage from "@/components/common/StateMessage.vue";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
 import LoadMoreButton from "@/components/common/LoadMoreButton.vue";
+import NewsFilter from "@/components/ui/News/NewsFilter.vue";
 
 export default {
   name: "TagPage",
@@ -58,6 +68,7 @@ export default {
     StateMessage,
     LoadingSpinner,
     LoadMoreButton,
+    NewsFilter,
   },
   setup() {
     const store = useStore();

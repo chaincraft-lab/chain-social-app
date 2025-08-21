@@ -8,41 +8,7 @@
           iconSizeClass,
           iconBgClass
         ]">
-          <!-- Success Icon -->
-          <svg v-if="(icon || defaultIcon) === 'mdi-check-circle'" :class="iconColorClass" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          
-          <!-- Empty/Inbox Icon -->
-          <svg v-else-if="(icon || defaultIcon) === 'mdi-inbox-outline'" :class="iconColorClass" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
-          </svg>
-          
-          <!-- Error Icon -->
-          <svg v-else-if="(icon || defaultIcon) === 'mdi-alert-circle'" :class="iconColorClass" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          
-          <!-- Info Icon -->
-          <svg v-else-if="(icon || defaultIcon) === 'mdi-information'" :class="iconColorClass" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          
-          <!-- Search Icon -->
-          <svg v-else-if="(icon || defaultIcon) === 'mdi-magnify'" :class="iconColorClass" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-          </svg>
-          
-          <!-- Search Remove Icon -->
-          <svg v-else-if="(icon || defaultIcon) === 'mdi-magnify-remove-outline'" :class="iconColorClass" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"/>
-          </svg>
-          
-          <!-- Default fallback icon -->
-          <svg v-else :class="iconColorClass" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
+          <Icon :icon="currentIconName" :class="iconColorClass" />
         </div>
       </div>
       
@@ -182,16 +148,31 @@ export default {
     defaultIcon() {
       switch (this.type) {
         case "success":
-          return "mdi-check-circle";
+          return "heroicons:check-circle";
         case "empty":
-          return "mdi-inbox-outline";
+          return "heroicons:inbox";
         case "error":
-          return "mdi-alert-circle";
+          return "heroicons:exclamation-circle";
         case "info":
-          return "mdi-information";
+          return "heroicons:information-circle";
         default:
-          return "mdi-check-circle";
+          return "heroicons:check-circle";
       }
+    },
+    currentIconName() {
+      if (this.icon) {
+        // Map legacy icon names to new ones
+        const iconMapping = {
+          'mdi-check-circle': 'heroicons:check-circle',
+          'mdi-inbox-outline': 'heroicons:inbox',
+          'mdi-alert-circle': 'heroicons:exclamation-circle',
+          'mdi-information': 'heroicons:information-circle',
+          'mdi-magnify': 'heroicons:magnifying-glass',
+          'mdi-magnify-remove-outline': 'heroicons:magnifying-glass-minus',
+        }
+        return iconMapping[this.icon] || this.icon
+      }
+      return this.defaultIcon
     },
   },
   methods: {

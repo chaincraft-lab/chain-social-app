@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="min-h-screen flex flex-col bg-gray-50">
+  <div id="app" class="min-h-screen flex flex-col theme-bg-primary theme-text-primary">
     <router-view v-slot="{ Component }">
       <transition name="fade" mode="out-in">
         <component :is="Component" />
@@ -33,30 +33,33 @@ body {
   font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Scrollbar styling */
+/* Scrollbar styling - theme aware */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--color-bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--color-border-secondary);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--color-primary);
 }
 
-/* Focus styles for accessibility */
+/* Focus styles for accessibility - theme aware */
 *:focus {
-  outline: 2px solid theme('colors.primary.500');
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -64,9 +67,9 @@ body {
   outline: none;
 }
 
-/* Selection styles */
+/* Selection styles - theme aware */
 ::selection {
-  background-color: theme('colors.primary.100');
-  color: theme('colors.primary.900');
+  background-color: var(--color-primary);
+  color: var(--color-bg-primary);
 }
 </style>

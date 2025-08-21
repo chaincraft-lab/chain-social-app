@@ -1,6 +1,6 @@
 <template>
   <div class="news-post mb-8">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
+    <div class="theme-card rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
       <!-- Post Header -->
       <PostHeader
         :author="news.author || { name: 'Editör' }"

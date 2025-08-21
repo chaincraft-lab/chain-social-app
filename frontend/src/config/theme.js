@@ -203,77 +203,108 @@ export const THEME_COLORS = {
   },
 }
 
-// Light Mode ve Dark Mode için ayrı tema setleri
-export const LIGHT_MODE_COLORS = {
-  // Ana renk paleti (Light mode için optimize)
-  primary: '#6B7280', // Kül grisi - light mode'da biraz daha açık
-  'primary-50': '#F9FAFB',
-  'primary-100': '#F3F4F6',
-  'primary-200': '#E5E7EB',
-  'primary-300': '#D1D5DB',
-  'primary-400': '#9CA3AF',
-  'primary-500': '#6B7280',
-  'primary-600': '#4B5563',
-  'primary-700': '#374151',
-  'primary-800': '#1F2937',
-  'primary-900': '#111827',
+// Light Mode tema renkleri
+export const LIGHT_MODE_THEME = {
+  // Ana renk paleti
+  primary: '#6B7280', // Kül grisi (mevcut)
   
-  // Semantic renkler (Light mode)
-  'text-primary': '#111827',
-  'text-secondary': '#4B5563',
-  'text-muted': '#6B7280',
-  'text-inverse': '#F9FAFB',
+  // Text renkler
+  text: {
+    primary: '#111827',
+    secondary: '#4B5563', 
+    muted: '#6B7280',
+    inverse: '#FFFFFF'
+  },
   
-  'bg-primary': '#FFFFFF',
-  'bg-secondary': '#F9FAFB',
-  'bg-tertiary': '#F3F4F6',
-  'bg-inverse': '#1F2937',
+  // Background renkler
+  bg: {
+    primary: '#FFFFFF',
+    secondary: '#F9FAFB',
+    tertiary: '#F3F4F6',
+    card: '#FFFFFF',
+    overlay: 'rgba(0, 0, 0, 0.5)'
+  },
   
-  'border-primary': '#E5E7EB',
-  'border-secondary': '#D1D5DB',
-  'border-muted': '#F3F4F6',
+  // Border renkler
+  border: {
+    primary: '#E5E7EB',
+    secondary: '#D1D5DB',
+    muted: '#F3F4F6'
+  },
   
-  // Accent renkler (Light mode'da daha canlı)
-  'accent-primary': '#3B82F6', // Mavi
-  'accent-secondary': '#10B981', // Yeşil
-  'accent-warning': '#F59E0B', // Turuncu
-  'accent-danger': '#EF4444', // Kırmızı
+  // Navbar renkleri (light mode)
+  navbar: {
+    bg: '#FFFFFF',
+    text: '#111827', 
+    border: '#E5E7EB',
+    shadow: 'rgba(0, 0, 0, 0.1)'
+  },
+  
+  // Auth button renkleri (mevcut)
+  auth: {
+    bg: '#6366f1', // indigo-500
+    hover: '#4f46e5', // indigo-600
+    text: '#FFFFFF',
+    border: '#6366f1'
+  },
+  
+  // System renkler
+  success: '#10b981',
+  error: '#ef4444',
+  warning: '#f59e0b',
+  info: '#3b82f6'
 }
 
-export const DARK_MODE_COLORS = {
-  // Ana renk paleti (Dark mode için optimize)
+// Dark Mode tema renkleri
+export const DARK_MODE_THEME = {
+  // Ana renk paleti
   primary: '#9CA3AF', // Dark mode'da daha açık kül
-  'primary-50': '#030712',
-  'primary-100': '#111827',
-  'primary-200': '#1F2937',
-  'primary-300': '#374151',
-  'primary-400': '#4B5563',
-  'primary-500': '#6B7280',
-  'primary-600': '#9CA3AF',
-  'primary-700': '#D1D5DB',
-  'primary-800': '#E5E7EB',
-  'primary-900': '#F3F4F6',
   
-  // Semantic renkler (Dark mode)
-  'text-primary': '#F9FAFB',
-  'text-secondary': '#D1D5DB',
-  'text-muted': '#9CA3AF',
-  'text-inverse': '#111827',
+  // Text renkler
+  text: {
+    primary: '#F9FAFB',
+    secondary: '#D1D5DB',
+    muted: '#9CA3AF',
+    inverse: '#111827'
+  },
   
-  'bg-primary': '#111827',
-  'bg-secondary': '#1F2937',
-  'bg-tertiary': '#374151',
-  'bg-inverse': '#F9FAFB',
+  // Background renkler
+  bg: {
+    primary: '#111827',
+    secondary: '#1F2937',
+    tertiary: '#374151',
+    card: '#1F2937',
+    overlay: 'rgba(0, 0, 0, 0.8)'
+  },
   
-  'border-primary': '#374151',
-  'border-secondary': '#4B5563',
-  'border-muted': '#1F2937',
+  // Border renkler
+  border: {
+    primary: '#374151',
+    secondary: '#4B5563',
+    muted: '#1F2937'
+  },
   
-  // Accent renkler (Dark mode'da daha yumuşak)
-  'accent-primary': '#60A5FA', // Açık mavi
-  'accent-secondary': '#34D399', // Açık yeşil
-  'accent-warning': '#FBBF24', // Açık turuncu
-  'accent-danger': '#F87171', // Açık kırmızı
+  // Navbar renkleri (mevcut - dark mode)
+  navbar: {
+    bg: '#111827', // mevcut navbar bg
+    text: '#FFFFFF',
+    border: '#374151', // mevcut navbar border
+    shadow: 'rgba(0, 0, 0, 0.3)'
+  },
+  
+  // Auth button renkleri (mevcut - dark mode'da aynı)
+  auth: {
+    bg: '#6366f1', // indigo-500
+    hover: '#4f46e5', // indigo-600  
+    text: '#FFFFFF',
+    border: '#6366f1'
+  },
+  
+  // System renkler (dark mode'da daha yumuşak)
+  success: '#34d399',
+  error: '#f87171', 
+  warning: '#fbbf24',
+  info: '#60a5fa'
 }
 
 // CSS değişkenleri için renk değerlerini hazırla
@@ -292,8 +323,17 @@ export const CSS_VARIABLES = Object.keys(THEME_COLORS).reduce((acc, colorKey) =>
   return acc
 }, {})
 
-// Tema fonksiyonları
+// Tema yönetimi fonksiyonları
 export const themeUtils = {
+  /**
+   * Aktif temayı döndürür (light/dark)
+   * @param {boolean} isDark - Dark mode aktif mi?
+   * @returns {Object} Tema renkleri
+   */
+  getTheme(isDark = false) {
+    return isDark ? DARK_MODE_THEME : LIGHT_MODE_THEME
+  },
+
   /**
    * CSS değişkenini döndürür
    * @param {string} color - Renk adı (primary, secondary, vb.)
@@ -308,7 +348,26 @@ export const themeUtils = {
   },
 
   /**
-   * Hex renk değerini döndürür
+   * Temadan renk alır
+   * @param {boolean} isDark - Dark mode aktif mi?
+   * @param {string} path - Renk path'i (örn: 'text.primary', 'navbar.bg')
+   * @returns {string} Hex renk değeri
+   */
+  getThemeColor(isDark, path) {
+    const theme = this.getTheme(isDark)
+    const keys = path.split('.')
+    let color = theme
+    
+    for (const key of keys) {
+      color = color?.[key]
+      if (!color) break
+    }
+    
+    return color || '#000000'
+  },
+
+  /**
+   * Hex renk değerini döndürür (eski renkler için)
    * @param {string} color - Renk adı
    * @param {string|number} shade - Renk tonu
    * @returns {string} Hex renk değeri
@@ -327,6 +386,32 @@ export const themeUtils = {
     return result 
       ? `${parseInt(result[1], 16)} ${parseInt(result[2], 16)} ${parseInt(result[3], 16)}`
       : '0 0 0'
+  },
+
+  /**
+   * Dark mode için CSS class'ları oluşturur
+   * @returns {Object} CSS variables
+   */
+  generateCSSVariables(isDark = false) {
+    const theme = this.getTheme(isDark)
+    const variables = {}
+    
+    // Flatten theme object
+    const flatten = (obj, prefix = '') => {
+      Object.keys(obj).forEach(key => {
+        const value = obj[key]
+        const cssVar = prefix ? `${prefix}-${key}` : key
+        
+        if (typeof value === 'object' && value !== null) {
+          flatten(value, cssVar)
+        } else {
+          variables[`--theme-${cssVar}`] = value
+        }
+      })
+    }
+    
+    flatten(theme)
+    return variables
   },
 
   /**
@@ -351,13 +436,16 @@ export const themeUtils = {
 }
 
 // Örnek kullanım:
-// themeUtils.getCSSVariable('primary') → 'var(--color-primary)'
-// themeUtils.getCSSVariable('primary', 500) → 'var(--color-primary-500)'
-// themeUtils.getHexColor('primary') → '#800000'
-// themeUtils.hexToRgb('#800000') → '128 0 0'
+// themeUtils.getTheme(false) → Light mode renkleri
+// themeUtils.getTheme(true) → Dark mode renkleri
+// themeUtils.getThemeColor(false, 'navbar.bg') → '#FFFFFF' (light mode navbar bg)
+// themeUtils.getThemeColor(true, 'navbar.bg') → '#111827' (dark mode navbar bg)
+// themeUtils.getThemeColor(false, 'auth.bg') → '#6366f1' (auth button bg)
 
 export default {
   colors: THEME_COLORS,
+  lightTheme: LIGHT_MODE_THEME,
+  darkTheme: DARK_MODE_THEME,
   cssVariables: CSS_VARIABLES,
   utils: themeUtils
 }

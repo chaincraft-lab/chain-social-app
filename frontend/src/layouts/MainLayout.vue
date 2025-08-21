@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col theme-bg-primary theme-text-primary">
     <!-- Navbar -->
     <Navbar />
 
     <!-- Main Content -->
-    <main class="flex-1">
+    <main class="flex-1 theme-bg-secondary">
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-12 gap-6 py-6">
           <!-- Left Sidebar - Hidden on Mobile -->

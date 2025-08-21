@@ -1,14 +1,14 @@
 <template>
   <div v-if="articles && articles.length > 0" class="mb-8">
-    <h3 class="text-xl font-bold mb-4 text-gray-900">İlgili Haberler</h3>
+    <h3 class="text-xl font-bold mb-4 theme-text-primary">İlgili Haberler</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <router-link 
         v-for="article in articles.slice(0, 3)" 
         :key="article.id"
         :to="{ name: 'article', params: { slug: article.slug } }"
-        class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200"
+        class="theme-card rounded-lg shadow-sm theme-border overflow-hidden hover:shadow-md transition-all duration-200 hover:theme-bg-secondary"
       >
-        <div class="aspect-[16/9] bg-gray-200 overflow-hidden">
+        <div class="aspect-[16/9] theme-bg-tertiary overflow-hidden">
           <img 
             :src="article.imageUrl || article.image || 'https://picsum.photos/400/225'" 
             :alt="article.title" 
@@ -18,10 +18,10 @@
         </div>
         
         <div class="p-4">
-          <h4 class="text-base font-semibold mb-2 text-gray-900 line-clamp-2">
+          <h4 class="text-base font-semibold mb-2 theme-text-primary line-clamp-2">
             {{ article.title }}
           </h4>
-          <div class="text-xs text-gray-500">
+          <div class="text-xs theme-text-muted">
             {{ formatDate(article.publishedAt || article.createdAt) }}
           </div>
         </div>

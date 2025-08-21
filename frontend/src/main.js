@@ -5,6 +5,7 @@ import './assets/css/main.css'
 import './assets/css/theme.css'
 import store from './store'
 import vuetify from './plugins/vuetify'
+import { Icon } from '@iconify/vue'
 
 // Import layouts and pages
 import MainLayout from './layouts/MainLayout.vue'
@@ -37,8 +38,12 @@ const app = createApp(App)
 app.use(router)
 app.use(store)
 app.use(vuetify)
+app.component('Icon', Icon)
 
-// Initialize authentication state before mounting
-store.dispatch('user/initializeAuth').finally(() => {
+// Initialize authentication and theme state before mounting
+Promise.all([
+  store.dispatch('user/initializeAuth'),
+  store.dispatch('theme/initializeTheme')
+]).finally(() => {
   app.mount('#app')
 })

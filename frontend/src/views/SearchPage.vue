@@ -1,5 +1,5 @@
 <template>
-  <div class="search-page">
+  <div class="search-page theme-bg-primary theme-text-primary">
     <!-- Search Header -->
     <SearchHeader
       v-model:query="searchQuery"

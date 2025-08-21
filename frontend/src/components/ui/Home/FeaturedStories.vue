@@ -1,7 +1,9 @@
 <template>
   <section class="mb-8">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-      <div class="flex gap-4 overflow-x-auto py-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+    <div class="p-4">
+      <div
+        class="flex gap-4 overflow-x-auto py-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+      >
         <!-- Loading State for Stories -->
         <div v-if="isLoading" class="flex gap-4">
           <div
@@ -9,8 +11,10 @@
             :key="n"
             class="flex flex-col items-center min-w-[80px]"
           >
-            <div class="w-15 h-15 bg-gray-200 rounded-full animate-pulse mb-2"></div>
-            <div class="w-12 h-3 bg-gray-200 rounded animate-pulse"></div>
+            <div
+              class="w-15 h-15 theme-bg-tertiary rounded-full animate-pulse mb-2"
+            ></div>
+            <div class="w-12 h-3 theme-bg-tertiary rounded animate-pulse"></div>
           </div>
         </div>
 
@@ -23,7 +27,9 @@
             class="flex flex-col items-center min-w-[80px] cursor-pointer group"
           >
             <div class="relative w-15 h-15 mb-2">
-              <div class="w-full h-full rounded-full border-3 border-primary p-0.5 group-hover:scale-105 transition-transform">
+              <div
+                class="w-full h-full rounded-full border-3 border-primary p-0.5 group-hover:scale-105 transition-transform"
+              >
                 <img
                   :src="story.image || story.imageUrl"
                   :alt="story.category?.name"
@@ -32,15 +38,18 @@
                 />
               </div>
             </div>
-            <div class="text-xs text-center text-gray-700 font-medium">
+            <div class="text-xs text-center theme-text-secondary font-medium">
               {{ story.category?.name || "Haber" }}
             </div>
           </div>
         </template>
 
         <!-- Empty State -->
-        <div v-else class="flex justify-center items-center min-h-[80px] w-full">
-          <p class="text-gray-500">Öne çıkan haber bulunamadı</p>
+        <div
+          v-else
+          class="flex justify-center items-center min-h-[80px] w-full"
+        >
+          <p class="theme-text-muted">Öne çıkan haber bulunamadı</p>
         </div>
       </div>
     </div>
@@ -51,15 +60,15 @@
 defineProps({
   stories: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   isLoading: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
-defineEmits(['storyClick'])
+defineEmits(["storyClick"]);
 </script>
 
 <style scoped>
@@ -68,12 +77,12 @@ defineEmits(['storyClick'])
   .min-w-\[80px\] {
     min-width: 70px;
   }
-  
+
   .w-15 {
     width: 50px;
     height: 50px;
   }
-  
+
   .text-xs {
     font-size: 0.7rem;
   }
@@ -83,29 +92,29 @@ defineEmits(['storyClick'])
   .p-4 {
     padding: 0.75rem;
   }
-  
+
   .gap-4 {
     gap: 0.75rem;
   }
 }
 
-/* Custom scrollbar (Tailwind scrollbar plugin alternative) */
+/* Custom scrollbar - tema aware */
 .scrollbar-thin::-webkit-scrollbar {
   height: 4px;
 }
 
 .scrollbar-track-gray-100::-webkit-scrollbar-track {
-  background: rgb(243 244 246);
+  background: var(--color-bg-secondary);
   border-radius: 2px;
 }
 
 .scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
-  background: rgb(209 213 219);
+  background: var(--color-border-secondary);
   border-radius: 2px;
 }
 
 .scrollbar-thumb-gray-300::-webkit-scrollbar-thumb:hover {
-  background: rgb(156 163 175);
+  background: var(--color-primary);
 }
 
 /* Custom border width for story border */

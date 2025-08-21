@@ -1,5 +1,5 @@
 <template>
-  <div class="homepage-feed">
+  <div class="homepage-feed theme-bg-primary theme-text-primary">
     <!-- Stories/Highlights Section -->
     <FeaturedStories 
       :stories="featuredNews"

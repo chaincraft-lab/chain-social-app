@@ -3,11 +3,11 @@
   <li class="py-3">
     <router-link
       :to="{ name: 'article', params: { slug: news.slug } }"
-      class="flex items-start gap-3 group hover:bg-gray-50 rounded-lg p-2 -m-2 transition-colors"
+      class="flex items-start gap-3 group hover:theme-bg-secondary rounded-lg p-2 -m-2 transition-colors"
     >
       <!-- News Image -->
       <div
-        class="flex-shrink-0 w-16 h-16 bg-gray-100 rounded-lg overflow-hidden"
+        class="flex-shrink-0 w-16 h-16 theme-bg-tertiary rounded-lg overflow-hidden"
       >
         <img
           :src="news.image"
@@ -23,7 +23,7 @@
           {{ formattedDate }}
         </span>
         <h4
-          class="text-sm font-medium text-dark group-hover:text-primary transition-colors line-clamp-2 mt-1"
+          class="text-sm font-medium theme-text-primary group-hover:text-primary transition-colors line-clamp-2 mt-1"
         >
           {{ news.title }}
         </h4>
@@ -31,7 +31,7 @@
 
       <!-- Index Badge -->
       <div
-        class="flex-shrink-0 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-sm font-semibold text-primary"
+        class="flex-shrink-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-sm font-semibold text-white"
       >
         {{ index + 1 }}
       </div>

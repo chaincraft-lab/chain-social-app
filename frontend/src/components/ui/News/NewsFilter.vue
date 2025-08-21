@@ -1,6 +1,6 @@
 <template>
   <div class="feed-header flex justify-between items-center mb-6 px-2">
-    <h2 class="text-2xl font-bold text-gray-900 m-0">{{ title }}</h2>
+    <h2 class="text-2xl font-bold theme-text-primary m-0">{{ title }}</h2>
     <div class="feed-filter flex gap-2">
       <button
         v-for="filter in filters"
@@ -10,7 +10,7 @@
           'px-4 py-2 rounded-full text-sm font-medium transition-colors',
           selectedFilter === filter.value
             ? 'bg-primary text-white'
-            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            : 'theme-bg-tertiary theme-text-secondary hover:theme-bg-secondary'
         ]"
       >
         {{ filter.label }}

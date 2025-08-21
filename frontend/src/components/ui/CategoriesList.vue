@@ -1,11 +1,9 @@
 <template>
-  <div v-if="showCategories" class="bg-white rounded-lg shadow-sm mb-4">
+  <div v-if="showCategories" class="theme-card rounded-lg shadow-sm mb-4">
     <!-- Header -->
     <SectionHeader title="Kategoriler">
       <template #icon>
-        <svg class="w-5 h-5 mr-2 text-primary" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
-        </svg>
+        <Icon icon="heroicons:folder" class="w-5 h-5 mr-2 text-primary" />
       </template>
     </SectionHeader>
 

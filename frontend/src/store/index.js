@@ -4,6 +4,7 @@ import categories from './modules/categories'
 import tags from './modules/tags'
 import advertisements from './modules/advertisements'
 import user from './modules/user'
+import theme from './modules/theme'
 
 export default createStore({
   modules: {
@@ -11,7 +12,8 @@ export default createStore({
     categories,
     tags,
     advertisements,
-    user
+    user,
+    theme
   },
   state: {
     isLoading: false,
@@ -35,6 +37,9 @@ export default createStore({
       try {
         // Auth durumunu kontrol et (token varsa)
         dispatch('user/initializeAuth')
+        
+        // Theme'i initialize et
+        dispatch('theme/initializeTheme')
         
         await Promise.all([
           dispatch('categories/fetchCategories'),

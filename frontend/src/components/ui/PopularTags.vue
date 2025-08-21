@@ -1,17 +1,12 @@
 <template>
-<div v-if="props.showTags" class="bg-white rounded-lg shadow-sm mb-6">
+<div v-if="props.showTags" class="theme-card rounded-lg shadow-sm mb-6">
     <!-- Header -->
     <SectionHeader title="Popüler Etiketler">
       <template #icon>
-        <svg
+        <Icon
+          icon="heroicons:tag"
           class="w-5 h-5 mr-2 text-primary"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 2 2 2h11c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"
-          />
-        </svg>
+        />
       </template>
     </SectionHeader>
 

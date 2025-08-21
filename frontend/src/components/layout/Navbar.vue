@@ -1,5 +1,5 @@
 <template>
-  <nav class="shadow-lg relative" style="z-index: 9998; background-color: var(--color-navbar-bg); color: var(--color-navbar-text)">
+  <nav class="shadow-lg relative theme-navbar" style="z-index: 9998">
     <div class="container mx-auto px-4">
       <!-- Top Bar -->
       <div class="flex items-center justify-between py-3" style="border-bottom: 1px solid var(--color-navbar-border)">
@@ -34,6 +34,9 @@
               @login="showAuthDialog = true"
             />
           </div>
+
+          <!-- Theme Toggle -->
+          <ThemeToggle class="hidden md:block" />
 
           <!-- Language Selector -->
           <LanguageSelector
@@ -79,21 +82,11 @@
                 @mouseleave="hideDropdown(index)"
               >
                 <span>{{ menuItem.title }}</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
+                <Icon
+                  icon="heroicons:chevron-down"
                   class="h-4 w-4 ml-1 transition-transform"
                   :class="{ 'rotate-180': activeDropdown === index }"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
+                />
 
                 <!-- Regular Dropdown Menu -->
                 <div
@@ -135,35 +128,16 @@
                       class="flex items-center justify-between px-4 py-2 text-sm text-light hover:bg-altmenu-700 hover:text-secondary cursor-pointer transition-colors"
                     >
                       <div class="flex items-center">
-                        <svg
+                        <Icon
+                          icon="heroicons:shield-check"
                           class="w-4 h-4 mr-2"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                          />
-                        </svg>
+                        />
                         <span>{{ nestedCategory.title }}</span>
                       </div>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
+                      <Icon
+                        icon="heroicons:chevron-right"
                         class="h-3 w-3"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
+                      />
                     </div>
 
                     <!-- Sub-sub Dropdown -->
@@ -198,7 +172,7 @@
         <!-- Mobile Navigation -->
         <div
           v-show="isMobileMenuOpen"
-          class="md:hidden fixed inset-0 z-50 flex flex-col bg-dark mobile-menu-container"
+          class="md:hidden fixed inset-0 z-50 flex flex-col theme-bg-inverse mobile-menu-container"
         >
           <!-- Mobile Menu Header -->
           <div
@@ -215,20 +189,10 @@
               @click="isMobileMenuOpen = false"
               class="p-2 text-light focus:outline-none rounded-full hover:bg-dark-700"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
+              <Icon
+                icon="heroicons:x-mark"
                 class="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              />
             </button>
           </div>
 
@@ -252,19 +216,10 @@
                   @click="toggleMobileProfileMenu"
                   class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center hover:bg-indigo-600 transition-colors"
                 >
-                  <svg
+                  <Icon
+                    icon="heroicons:user"
                     class="w-6 h-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
+                  />
                 </button>
 
                 <!-- Non-authenticated User Mobile -->
@@ -275,24 +230,18 @@
                 />
               </div>
 
+              <!-- Theme Toggle Mobile -->
+              <ThemeToggle />
+
               <!-- Mobil Dil Seçimi Butonu -->
               <button
                 @click="toggleLanguageDropdown"
                 class="flex-shrink-0 p-2 border border-white/30 rounded-full text-white hover:bg-white/10 transition-colors"
               >
-                <svg
+                <Icon
+                  icon="heroicons:globe-alt"
                   class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-3.25m0-9.75V15M12 3l2.25 2.25L12 3zm0 0l-2.25 2.25L12 3z"
-                  />
-                </svg>
+                />
               </button>
             </div>
           </div>
@@ -316,23 +265,13 @@
                     <div class="flex items-center">
                       <span>{{ menuItem.title }}</span>
                     </div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
+                    <Icon
+                      icon="heroicons:chevron-down"
                       class="h-5 w-5 transition-transform duration-200"
                       :class="{
                         'transform rotate-180': mobileActiveSubmenu === index,
                       }"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    />
                   </button>
 
                   <div
@@ -406,6 +345,7 @@ import DateDisplay from "@/components/ui/Navigation/DateDisplay.vue";
 import AuthButton from "@/components/ui/Navigation/AuthButton.vue";
 import MobileMenuButton from "@/components/ui/Navigation/MobileMenuButton.vue";
 import MobileProfileMenu from "@/components/ui/Navigation/MobileProfileMenu.vue";
+import ThemeToggle from "@/components/ui/Navigation/ThemeToggle.vue";
 
 export default {
   name: "SiteNavbar",
@@ -419,6 +359,7 @@ export default {
     AuthButton,
     MobileMenuButton,
     MobileProfileMenu,
+    ThemeToggle,
   },
   data() {
     return {
