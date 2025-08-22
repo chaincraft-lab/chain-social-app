@@ -1,39 +1,41 @@
 <template>
-  <div>
+  <div class="min-h-screen flex flex-col theme-bg-primary theme-text-primary">
     <!-- Navbar -->
     <Navbar />
 
     <!-- Main Content -->
-    <v-main>
-      <div class="container mx-auto">
-        <v-row class="py-6">
+    <main class="flex-1 theme-bg-secondary">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-12 gap-6 py-6">
           <!-- Left Sidebar - Hidden on Mobile -->
-          <v-col cols="12" lg="3" class="d-none d-lg-block">
-            <Sidebar
-              position="left"
-              :showPopular="false"
-              :showAds="false"
-              :showNewsletter="false"
-            />
-          </v-col>
+          <div class="col-span-12 lg:col-span-3 hidden lg:block">
+            <div class="sticky top-36">
+              <Sidebar
+                position="left"
+                :showPopular="false"
+                :showAds="false"
+                :showNewsletter="false"
+              />
+            </div>
+          </div>
 
           <!-- Main Content -->
-          <v-col cols="12" lg="6">
+          <div class="col-span-12 lg:col-span-6">
             <router-view />
-          </v-col>
+          </div>
 
           <!-- Right Sidebar - Hidden on Mobile -->
-          <v-col cols="12" lg="3" class="d-none d-lg-block">
+          <div class="col-span-12 lg:col-span-3 hidden lg:block">
             <Sidebar
               position="right"
               :showCategories="false"
               :showTags="false"
               :showNewsletter="false"
             />
-          </v-col>
-        </v-row>
+          </div>
+        </div>
       </div>
-    </v-main>
+    </main>
 
     <!-- Footer -->
     <Footer />
@@ -60,5 +62,27 @@ export default {
 </script>
 
 <style scoped>
-/* Any additional styling specific to the layout */
+/* Sticky sidebar height calculation */
+.sticky {
+  max-height: calc(100vh - 6rem);
+  overflow-y: auto;
+}
+
+/* Custom scrollbar for sidebar */
+.sticky::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sticky::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sticky::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.sticky::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
 </style> 

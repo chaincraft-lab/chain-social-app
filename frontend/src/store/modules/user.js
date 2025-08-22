@@ -281,6 +281,13 @@ const actions = {
       commit('LOGOUT_USER')
       apiService.setAuthToken(null)
     }
+    
+    // Auth logout event'ini dinle
+    if (typeof window !== 'undefined') {
+      window.addEventListener('auth:logout', () => {
+        commit('LOGOUT_USER')
+      })
+    }
   },
 
   async forgotPassword({ commit }, email) {
@@ -301,7 +308,12 @@ const actions = {
 
 const getters = {
   getCurrentUser: (state) => state.currentUser,
-  isAuthenticated: (state) => state.isAuthenticated,
+  isAuthenticated: (state) => {
+    // Token ve kullanıcı bilgilerinin varlığını kontrol et
+    const hasToken = apiService.getAuthToken()
+    const hasUser = !!state.currentUser
+    return state.isAuthenticated && hasToken && hasUser
+  },
   getUserStats: (state) => state.userStats,
   getUserLikes: (state) => state.userLikes,
   getUserBookmarks: (state) => state.userBookmarks,

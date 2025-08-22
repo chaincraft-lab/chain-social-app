@@ -128,6 +128,7 @@ export class ArticlesService {
       categoryId, 
       categorySlug,
       tagIds,
+      tagSlug,
       authorId,
       search,
       isFeatured,
@@ -160,6 +161,16 @@ export class ArticlesService {
       where.tags = {
         some: {
           tagId: { in: tagIds }
+        }
+      };
+    }
+
+    if (tagSlug) {
+      where.tags = {
+        some: {
+          tag: {
+            slug: tagSlug
+          }
         }
       };
     }
@@ -663,6 +674,7 @@ export class ArticlesService {
       categoryId, 
       categorySlug,
       tagIds,
+      tagSlug,
       authorId,
       search,
       isFeatured,
@@ -699,6 +711,16 @@ export class ArticlesService {
       where.tags = {
         some: {
           tagId: { in: tagIds }
+        }
+      };
+    }
+
+    if (tagSlug) {
+      where.tags = {
+        some: {
+          tag: {
+            slug: tagSlug
+          }
         }
       };
     }

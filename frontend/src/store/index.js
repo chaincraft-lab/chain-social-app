@@ -4,6 +4,7 @@ import categories from './modules/categories'
 import tags from './modules/tags'
 import advertisements from './modules/advertisements'
 import user from './modules/user'
+import theme from './modules/theme'
 
 export default createStore({
   modules: {
@@ -11,7 +12,8 @@ export default createStore({
     categories,
     tags,
     advertisements,
-    user
+    user,
+    theme
   },
   state: {
     isLoading: false,
@@ -36,13 +38,16 @@ export default createStore({
         // Auth durumunu kontrol et (token varsa)
         dispatch('user/initializeAuth')
         
+        // Theme'i initialize et
+        dispatch('theme/initializeTheme')
+        
         await Promise.all([
           dispatch('categories/fetchCategories'),
           dispatch('tags/fetchPopularTags'),
           dispatch('news/fetchLatestNews'),
           dispatch('news/fetchPopularNews'),
           dispatch('news/fetchFeaturedNews'),
-          dispatch('advertisements/fetchAdvertisements')
+          // dispatch('advertisements/fetchAdvertisements')
         ])
       } catch (error) {
         commit('SET_GLOBAL_ERROR', 'Başlangıç verileri yüklenirken hata oluştu')

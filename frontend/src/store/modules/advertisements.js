@@ -1,4 +1,3 @@
-import { advertisementService } from '@/api'
 
 const state = () => ({
   advertisements: [],

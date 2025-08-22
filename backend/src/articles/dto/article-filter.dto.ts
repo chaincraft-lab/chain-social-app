@@ -73,6 +73,14 @@ export class ArticleFilterDto {
   tagIds?: number[];
 
   @ApiPropertyOptional({
+    description: 'Etiket slug ile filtrele',
+    example: 'teknoloji',
+  })
+  @IsOptional()
+  @IsString({ message: 'Etiket slug metin olmalıdır' })
+  tagSlug?: string;
+
+  @ApiPropertyOptional({
     description: 'Yazar ID ile filtrele',
     example: 1,
   })
