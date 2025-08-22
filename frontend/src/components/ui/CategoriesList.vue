@@ -3,12 +3,12 @@
     <!-- Header -->
     <SectionHeader title="Kategoriler">
       <template #icon>
-        <Icon icon="heroicons:folder" class="w-5 h-5 mr-2 text-primary" />
+        <Icon icon="heroicons:folder" class="w-6 h-6 mr-2 text-primary" />
       </template>
     </SectionHeader>
 
     <!-- Categories Content -->
-    <div class="p-2">
+    <div class="p-3">
       <!-- Loading State -->
       <div v-if="isLoading" class="space-y-2">
         <SkeletonLoader v-for="i in 4" :key="i" type="list" />

@@ -1,5 +1,5 @@
 <template>
-  <div class="news-post mb-8">
+  <div class="news-post mb-6">
     <div class="theme-card rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
       <!-- Post Header -->
       <PostHeader
@@ -185,7 +185,7 @@ const handleMenuClick = () => {
 
 <style scoped>
 .news-post {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
 }
 

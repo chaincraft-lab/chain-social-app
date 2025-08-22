@@ -241,7 +241,7 @@ export default {
 <style scoped>
 /* Homepage Feed Layout */
 .homepage-feed {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
   padding: 0 1rem;
 }

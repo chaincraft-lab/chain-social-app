@@ -1,11 +1,11 @@
 <template>
-<div v-if="props.showTags" class="theme-card rounded-lg shadow-sm mb-6">
+<div v-if="props.showTags" class="theme-card rounded-lg shadow-sm mb-4">
     <!-- Header -->
     <SectionHeader title="Popüler Etiketler">
       <template #icon>
         <Icon
           icon="heroicons:tag"
-          class="w-5 h-5 mr-2 text-primary"
+          class="w-6 h-6 mr-2 text-primary"
         />
       </template>
     </SectionHeader>

@@ -158,7 +158,7 @@ export default {
 <style scoped>
 /* Tag Page Layout */
 .tag-page {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
   padding: 0 1rem;
   min-height: 100vh;

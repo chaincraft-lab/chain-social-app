@@ -1,13 +1,13 @@
 <template>
-  <div v-if="showPopular" class="theme-card rounded-lg shadow-sm mb-6">
+  <div v-if="showPopular" class="theme-card rounded-lg shadow-sm mb-4">
     <!-- Header -->
     <SectionHeader title="Popüler Haberler">
       <template #icon>
-        <Icon icon="heroicons:chart-bar-square" class="w-5 h-5 mr-2 text-primary" />
+        <Icon icon="heroicons:chart-bar-square" class="w-6 h-6 mr-2 text-primary" />
       </template>
     </SectionHeader>
 
-    <div class="p-3">
+    <div class="p-4">
       <!-- Loading State -->
       <div v-if="isLoading" class="divide-y divide-gray-200">
         <SkeletonLoader v-for="i in 5" :key="i" type="popular-news" />

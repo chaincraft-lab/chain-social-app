@@ -1,29 +1,29 @@
 <!-- components/NewsItem.vue -->
 <template>
-  <li class="py-3">
+  <li class="py-4">
     <router-link
       :to="{ name: 'article', params: { slug: news.slug } }"
-      class="flex items-start gap-3 group hover:theme-bg-secondary rounded-lg p-2 -m-2 transition-colors"
+      class="flex items-start gap-4 group hover:theme-bg-secondary rounded-lg p-3 -m-3 transition-colors"
     >
       <!-- News Image -->
       <div
-        class="flex-shrink-0 w-16 h-16 theme-bg-tertiary rounded-lg overflow-hidden"
+        class="flex-shrink-0 w-20 h-20 theme-bg-tertiary rounded-lg overflow-hidden"
       >
         <img
           :src="news.image"
           :alt="news.title"
           class="w-full h-full object-cover"
-          @error="$event.target.src = 'https://picsum.photos/64/64'"
+          @error="$event.target.src = 'https://picsum.photos/80/80'"
         />
       </div>
 
       <!-- News Content -->
       <div class="flex-1 min-w-0">
-        <span class="text-xs text-primary font-medium">
+        <span class="text-sm text-primary font-medium">
           {{ formattedDate }}
         </span>
         <h4
-          class="text-sm font-medium theme-text-primary group-hover:text-primary transition-colors line-clamp-2 mt-1"
+          class="text-base font-medium theme-text-primary group-hover:text-primary transition-colors line-clamp-2 mt-1"
         >
           {{ news.title }}
         </h4>
