@@ -9,7 +9,9 @@
 
     <div class="p-3">
       <!-- Loading State -->
-      <SkeletonLoader v-if="isLoading" :count="5" type="news" />
+      <div v-if="isLoading" class="divide-y divide-gray-200">
+        <SkeletonLoader v-for="i in 5" :key="i" type="popular-news" />
+      </div>
 
       <!-- News List -->
       <ul v-else-if="popularNews && popularNews.length > 0" class="divide-y divide-gray-200">

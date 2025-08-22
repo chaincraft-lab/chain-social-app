@@ -17,12 +17,9 @@
       <!-- Post Feed -->
       <div class="posts-container">
         <!-- Loading State -->
-        <LoadingSpinner 
-          v-if="isLoading" 
-          size="lg" 
-          text="Haberler yükleniyor..." 
-          :fullScreen="false" 
-        />
+        <div v-if="isLoading" class="space-y-4">
+          <SkeletonLoader v-for="i in 10" :key="i" type="news" />
+        </div>
 
         <!-- Actual Posts -->
         <transition-group
@@ -57,7 +54,7 @@
 import { mapState } from "vuex";
 import NewsPost from "@/components/news/NewsPost.vue";
 import StateMessage from "@/components/common/StateMessage.vue";
-import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
+import SkeletonLoader from "@/components/common/SkeletonLoader.vue";
 import LoadMoreButton from "@/components/common/LoadMoreButton.vue";
 import FeaturedStories from "@/components/ui/Home/FeaturedStories.vue";
 import NewsFilter from "@/components/ui/News/NewsFilter.vue";
@@ -67,7 +64,7 @@ export default {
   components: {
     NewsPost,
     StateMessage,
-    LoadingSpinner,
+    SkeletonLoader,
     LoadMoreButton,
     FeaturedStories,
     NewsFilter,

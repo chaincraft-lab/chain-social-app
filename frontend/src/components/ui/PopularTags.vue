@@ -13,7 +13,7 @@
     <!-- Tags Content -->
     <div class="p-4">
       <!-- Loading State -->
-      <SkeletonLoader v-if="isTagsLoading" :count="6" />
+      <SkeletonLoader v-if="isTagsLoading" :count="6" type="tags" />
 
       <!-- Tags List -->
       <div v-else-if="tags.length > 0" class="flex flex-wrap gap-2">

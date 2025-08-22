@@ -12,12 +12,9 @@
       </div>
 
       <!-- Loading State -->
-      <LoadingSpinner
-        v-if="isLoading"
-        size="lg"
-        text="Etiket haberleri yükleniyor..."
-        :fullScreen="false"
-      />
+      <div v-if="isLoading" class="space-y-4 mt-4">
+        <SkeletonLoader v-for="i in 10" :key="i" type="news" />
+      </div>
 
       <!-- Tag Posts -->
       <div v-else class="posts-container">
@@ -57,7 +54,7 @@ import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import NewsPost from "@/components/news/NewsPost.vue";
 import StateMessage from "@/components/common/StateMessage.vue";
-import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
+import SkeletonLoader from "@/components/common/SkeletonLoader.vue";
 import LoadMoreButton from "@/components/common/LoadMoreButton.vue";
 import NewsFilter from "@/components/ui/News/NewsFilter.vue";
 
@@ -66,7 +63,7 @@ export default {
   components: {
     NewsPost,
     StateMessage,
-    LoadingSpinner,
+    SkeletonLoader,
     LoadMoreButton,
     NewsFilter,
   },
