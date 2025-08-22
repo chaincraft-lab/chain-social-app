@@ -29,11 +29,6 @@
       />
     </div>
 
-    <FormCheckbox
-      v-model="formData.rememberMe"
-      label="Beni hatırla"
-    />
-
     <FormButton
       type="submit"
       variant="primary"
@@ -46,7 +41,6 @@
 
 <script setup>
 import FormInput from '@/components/forms/FormInput.vue'
-import FormCheckbox from '@/components/forms/FormCheckbox.vue'
 import FormButton from '@/components/forms/FormButton.vue'
 
 defineProps({

@@ -16,7 +16,7 @@
         :required="required"
         :disabled="disabled"
         :class="[
-          'block w-full rounded-md bg-white dark:bg-gray-800 px-3 py-2 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 sm:text-sm',
+          'block w-full rounded-md bg-white dark:!bg-gray-800 px-3 py-2 text-gray-900 dark:!text-gray-100 border border-gray-300 dark:border-gray-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500',
           error ? 'border-red-500' : '',
           type === 'password' ? 'pr-10' : '',
           disabled ? 'opacity-50 cursor-not-allowed' : ''
