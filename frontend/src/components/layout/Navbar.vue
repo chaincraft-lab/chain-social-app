@@ -1,5 +1,5 @@
 <template>
-  <nav class="shadow-lg relative theme-navbar" style="z-index: 9998">
+  <nav class="shadow-lg sticky top-0 theme-navbar" style="z-index: 9998">
     <div class="container mx-auto px-4">
       <!-- Top Bar -->
       <div class="flex items-center justify-between py-3" style="border-bottom: 1px solid var(--color-navbar-border)">
