@@ -283,6 +283,7 @@
 .theme-bg-inverse { background-color: var(--color-bg-inverse) !important; }
 
 /* Border Colors */
+.theme-border { border-color: var(--color-border-primary) !important; }
 .theme-border-primary { border-color: var(--color-border-primary) !important; }
 .theme-border-secondary { border-color: var(--color-border-secondary) !important; }
 .theme-border-muted { border-color: var(--color-border-muted) !important; }
@@ -327,6 +328,7 @@
   color: var(--color-text-muted);
   opacity: 0.7;
 }
+
 
 /* Link Colors */
 .theme-link {

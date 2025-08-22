@@ -11,11 +11,11 @@
 
     <div>
       <div class="flex items-center justify-between">
-        <span class="block text-sm font-medium text-gray-100">Şifre</span>
+        <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">Şifre</span>
         <button
           type="button"
           @click="$emit('forgotPassword')"
-          class="text-sm text-indigo-400 hover:text-indigo-300"
+          class="text-sm text-primary hover:text-primary/80"
         >
           Şifremi unuttum?
         </button>

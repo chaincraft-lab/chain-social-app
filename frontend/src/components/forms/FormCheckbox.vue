@@ -8,13 +8,13 @@
       :required="required"
       :disabled="disabled"
       :class="[
-        'h-4 w-4 rounded border-gray-600 bg-gray-700 text-indigo-500 focus:ring-indigo-500',
+        'h-4 w-4 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-indigo-500 focus:ring-indigo-500',
         disabled ? 'opacity-50 cursor-not-allowed' : '',
         alignTop ? 'mt-1' : ''
       ]"
     />
     <label v-if="label" :for="id" :class="[
-      'ml-2 block text-sm text-gray-300',
+      'ml-2 block text-sm text-gray-700 dark:text-gray-300',
       disabled ? 'opacity-50' : ''
     ]">
       <span v-html="label"></span>

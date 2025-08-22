@@ -3,7 +3,7 @@
     <button
       @click="$emit('click')"
       :disabled="isLoading"
-      class="w-full flex items-center justify-center px-4 py-2.5 border border-gray-700 rounded-lg text-white bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50"
+      class="w-full flex items-center justify-center px-4 py-2.5 theme-border rounded-lg theme-text-primary theme-bg-secondary hover:theme-bg-tertiary transition-colors disabled:opacity-50"
     >
       <img :src="iconUrl" :alt="provider" class="w-5 h-5 mr-3">
       <span>{{ provider }} ile {{ actionText }}</span>
@@ -12,10 +12,10 @@
     
     <div class="relative my-6">
       <div class="absolute inset-0 flex items-center">
-        <div class="w-full border-t border-gray-700"></div>
+        <div class="w-full border-t theme-border"></div>
       </div>
       <div class="relative flex justify-center text-sm">
-        <span class="px-2 text-gray-400 bg-gray-900">veya</span>
+        <span class="px-2 theme-text-muted theme-bg-primary">veya</span>
       </div>
     </div>
   </div>

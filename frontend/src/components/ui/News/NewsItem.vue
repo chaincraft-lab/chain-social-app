@@ -30,11 +30,11 @@
       </div>
 
       <!-- Index Badge -->
-      <div
+      <!-- <div
         class="flex-shrink-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-sm font-semibold text-white"
       >
         {{ index + 1 }}
-      </div>
+      </div> -->
     </router-link>
   </li>
 </template>

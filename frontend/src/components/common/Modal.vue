@@ -9,7 +9,7 @@
     <!-- Modal Content -->
     <div 
       :class="[
-        'relative bg-gray-900 rounded-2xl shadow-2xl w-full mx-4',
+        'relative theme-bg-primary rounded-2xl shadow-2xl w-full mx-4 theme-border',
         sizeClasses,
         customClass
       ]"
@@ -18,7 +18,7 @@
       <button
         v-if="showCloseButton"
         @click="$emit('close')"
-        class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors z-10"
+        class="absolute top-4 right-4 theme-text-muted hover:theme-text-primary transition-colors z-10"
       >
         <Icon icon="heroicons:x-mark" class="w-6 h-6" />
       </button>

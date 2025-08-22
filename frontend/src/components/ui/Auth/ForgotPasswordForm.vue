@@ -1,11 +1,11 @@
 <template>
   <div class="space-y-6">
     <div class="text-center mb-6">
-      <div class="mx-auto flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100">
-        <Icon icon="heroicons:envelope" class="w-6 h-6 text-indigo-500" />
+      <div class="mx-auto flex items-center justify-center w-12 h-12 rounded-full theme-bg-tertiary">
+        <Icon icon="heroicons:envelope" class="w-6 h-6 text-primary" />
       </div>
-      <h3 class="mt-4 text-lg font-semibold text-white">Şifremi Unuttum</h3>
-      <p class="mt-2 text-sm text-gray-400">E-posta adresinizi girin, şifre sıfırlama bağlantısını size göndereceğiz.</p>
+      <h3 class="mt-4 text-lg font-semibold theme-text-primary">Şifremi Unuttum</h3>
+      <p class="mt-2 text-sm theme-text-secondary">E-posta adresinizi girin, şifre sıfırlama bağlantısını size göndereceğiz.</p>
     </div>
 
     <form @submit.prevent="$emit('submit')">
