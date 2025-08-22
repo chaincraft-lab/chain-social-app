@@ -1,5 +1,5 @@
 <template>
-  <section class="mb-8">
+  <section class="mb-8 theme-bg-primary rounded-lg">
     <div class="p-4">
       <div
         class="flex gap-4 overflow-x-auto py-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"

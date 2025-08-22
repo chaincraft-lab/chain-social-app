@@ -1,5 +1,5 @@
 <template>
-  <div class="tag-page theme-bg-primary theme-text-primary">
+  <div class="tag-page theme-bg-secondary theme-text-primary">
     <!-- Posts Feed -->
     <div class="posts-feed">
       <!-- Tag Header -->

@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl mx-auto px-4 py-8 theme-bg-primary theme-text-primary">
+  <div class="max-w-4xl mx-auto px-4 py-8 theme-bg-primary theme-text-primary rounded-lg">
     <!-- Loading State -->
     <LoadingSpinner 
       v-if="isLoading" 

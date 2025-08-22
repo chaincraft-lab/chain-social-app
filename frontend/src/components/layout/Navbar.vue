@@ -172,11 +172,11 @@
         <!-- Mobile Navigation -->
         <div
           v-show="isMobileMenuOpen"
-          class="md:hidden fixed inset-0 z-50 flex flex-col theme-bg-inverse mobile-menu-container"
+          class="md:hidden fixed inset-0 z-50 flex flex-col theme-bg-primary theme-text-primary mobile-menu-container"
         >
           <!-- Mobile Menu Header -->
           <div
-            class="flex items-center justify-between px-4 py-3 border-b border-dark-700"
+            class="flex items-center justify-between px-4 py-3 theme-border-primary border-b"
           >
             <router-link
               to="/"
@@ -187,7 +187,7 @@
             </router-link>
             <button
               @click="isMobileMenuOpen = false"
-              class="p-2 text-light focus:outline-none rounded-full hover:bg-dark-700"
+              class="p-2 theme-text-primary focus:outline-none rounded-full hover:theme-bg-secondary"
             >
               <Icon
                 icon="heroicons:x-mark"
@@ -197,13 +197,13 @@
           </div>
 
           <!-- Mobile Search -->
-          <div class="relative px-4 py-3 border-b border-dark-700">
+          <div class="relative px-4 py-3 theme-border-primary border-b">
             <div class="flex items-center gap-2">
               <div class="relative flex-1">
                 <SearchBox
                   v-model="mobileSearchQuery"
                   placeholder="Haber ara..."
-                  input-class="w-full bg-dark-700 text-light placeholder-light/70"
+                  input-class="w-full theme-bg-secondary theme-text-primary"
                   @search="handleMobileSearch"
                 />
               </div>
@@ -214,7 +214,7 @@
                 <button
                   v-if="isAuthenticated"
                   @click="toggleMobileProfileMenu"
-                  class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center hover:bg-indigo-600 transition-colors"
+                  class="w-10 h-10 bg-primary rounded-full flex items-center justify-center hover:bg-primary-dark transition-colors"
                 >
                   <Icon
                     icon="heroicons:user"
@@ -236,7 +236,7 @@
               <!-- Mobil Dil Seçimi Butonu -->
               <button
                 @click="toggleLanguageDropdown"
-                class="flex-shrink-0 p-2 border border-white/30 rounded-full text-white hover:bg-white/10 transition-colors"
+                class="flex-shrink-0 p-2 theme-border-secondary border rounded-full theme-text-primary hover:theme-bg-secondary transition-colors"
               >
                 <Icon
                   icon="heroicons:globe-alt"
@@ -254,10 +254,10 @@
                 :key="index"
                 class="rounded-lg overflow-hidden"
               >
-                <div class="bg-dark-800 rounded-lg mb-1">
+                <div class="theme-bg-secondary rounded-lg mb-1">
                   <button
                     @click="toggleMobileSubmenu(index)"
-                    class="flex items-center justify-between w-full text-left text-light hover:text-secondary font-medium py-3 px-4 rounded-lg"
+                    class="flex items-center justify-between w-full text-left theme-text-primary hover:text-primary font-medium py-3 px-4 rounded-lg"
                     :class="{
                       'bg-primary text-white': mobileActiveSubmenu === index,
                     }"
@@ -276,7 +276,7 @@
 
                   <div
                     v-show="mobileActiveSubmenu === index"
-                    class="bg-dark-700 rounded-b-lg overflow-hidden transition-all duration-300 ease-in-out"
+                    class="theme-bg-tertiary rounded-b-lg overflow-hidden transition-all duration-300 ease-in-out"
                     :style="{
                       maxHeight:
                         mobileActiveSubmenu === index
@@ -290,7 +290,7 @@
                         :key="subIndex"
                         href="#"
                         @click.prevent="handleMobileMenuClick(subtitle)"
-                        class="block text-sm text-light/90 hover:text-secondary py-2 px-3 rounded-md hover:bg-dark-600"
+                        class="block text-sm theme-text-secondary hover:text-primary py-2 px-3 rounded-md hover:theme-bg-secondary"
                       >
                         {{ subtitle }}
                       </a>
@@ -302,7 +302,7 @@
           </div>
 
           <!-- Mobile Footer -->
-          <div class="px-4 py-3 border-t border-dark-700">
+          <div class="px-4 py-3 theme-border-primary border-t">
             <!-- Mobile Profile Section for Authenticated Users -->
             <MobileProfileMenu
               v-if="isAuthenticated"
@@ -313,7 +313,7 @@
             />
 
             <div class="flex items-center justify-between mb-4">
-              <span class="text-sm font-medium text-light/90">{{
+              <span class="text-sm font-medium theme-text-secondary">{{
                 currentDate
               }}</span>
               <SocialLinks
