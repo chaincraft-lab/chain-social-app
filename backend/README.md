@@ -56,6 +56,9 @@ $ yarn run test:cov
 
 ## Documentation
 
+
+npx majestic: http://localhost:4000
+
 Swagger: http://localhost:3000/api
 
 ## Stay in touch

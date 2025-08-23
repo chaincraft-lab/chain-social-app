@@ -21,7 +21,7 @@
     <!-- Profile Dropdown Menu -->
     <div
       v-if="showDropdown"
-      class="absolute right-0 top-full mt-2 w-56 theme-card rounded-lg shadow-lg py-2 z-50"
+      class="absolute right-0 top-full mt-2  theme-card rounded-lg shadow-lg py-2 z-[10000]"
       @mouseleave="hideDropdown"
     >
       <!-- User Info -->
