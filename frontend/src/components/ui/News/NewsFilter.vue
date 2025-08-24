@@ -1,7 +1,7 @@
 <template>
   <div class="feed-header flex justify-between items-center mb-6 px-2">
     <h2 class="text-2xl font-bold theme-text-primary m-0">{{ title }}</h2>
-    <div class="feed-filter flex gap-2">
+    <!-- <div class="feed-filter flex gap-2">
       <button
         v-for="filter in filters"
         :key="filter.value"
@@ -15,7 +15,7 @@
       >
         {{ filter.label }}
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 

@@ -98,6 +98,57 @@ class ArticleService extends ApiService {
     return this.get(`/articles?${params.toString()}`);
   }
 
+  // Filtrelenmiş makaleleri getir (arama, kategori, etiket, tarih)
+  async getFilteredArticles(filters = {}) {
+    const params = new URLSearchParams({
+      page: filters.page || 1,
+      limit: filters.limit || 10,
+      sortBy: this.getSortBy(filters.sort),
+      sortOrder: this.getSortOrder(filters.sort)
+    });
+
+    // Filtreleri ekle
+    if (filters.search && filters.search.trim()) {
+      params.append('search', filters.search.trim());
+    }
+    
+    if (filters.category && filters.category.trim()) {
+      params.append('categorySlug', filters.category.trim());
+    }
+    
+    if (filters.tag && filters.tag.trim()) {
+      params.append('tagSlug', filters.tag.trim());
+    }
+    
+    if (filters.dateRange && filters.dateRange.trim()) {
+      params.append('dateRange', filters.dateRange);
+    }
+
+    return this.get(`/articles?${params.toString()}`);
+  }
+
+  // Sort parametresini backend formatına çevir
+  getSortBy(sort) {
+    const sortMap = {
+      'newest': 'publishedAt',
+      'oldest': 'publishedAt', 
+      'popular': 'views',
+      'trending': 'likes'
+    };
+    return sortMap[sort] || 'publishedAt';
+  }
+
+  getSortOrder(sort) {
+    const orderMap = {
+      'newest': 'desc',
+      'oldest': 'asc',
+      'popular': 'desc', 
+      'trending': 'desc'
+    };
+    return orderMap[sort] || 'desc';
+  }
+
+
   // Yazara göre makaleleri getir
   async getArticlesByAuthor(authorId, filters = {}) {
     const params = new URLSearchParams({

@@ -1,16 +1,14 @@
 <template>
   <div class="homepage-feed theme-bg-secondary theme-text-primary">
-    <!-- Stories/Highlights Section -->
-    <FeaturedStories 
-      :stories="featuredNews"
-      :is-loading="$store.getters['news/isLoading']('featured')"
-      @storyClick="handleStoryClick"
+    <!-- Filter Panel -->
+    <NewsFilterPanel 
+      :results-count="filteredNews.length"
+      @filter-change="handleFilterChange"
     />
 
     <!-- News Feed Posts -->
     <section class="news-feed">
       <NewsFilter 
-        v-model:selectedFilter="selectedFilter"
         title="Son Haberler"
       />
 
@@ -40,6 +38,7 @@
           :has-more="hasMorePosts"
           :is-loading="loadingMore"
           :show-end-message="!hasMorePosts && filteredNews.length > 0"
+          :show-skeleton="isLoading"
           button-text="Daha Fazla Haber Yükle"
           end-message="Tüm haberler yüklendi"
           @loadMore="loadMorePosts"
@@ -56,7 +55,7 @@ import NewsPost from "@/components/news/NewsPost.vue";
 import StateMessage from "@/components/common/StateMessage.vue";
 import SkeletonLoader from "@/components/common/SkeletonLoader.vue";
 import LoadMoreButton from "@/components/common/LoadMoreButton.vue";
-import FeaturedStories from "@/components/ui/Home/FeaturedStories.vue";
+import NewsFilterPanel from "@/components/ui/News/NewsFilterPanel.vue";
 import NewsFilter from "@/components/ui/News/NewsFilter.vue";
 
 export default {
@@ -66,7 +65,7 @@ export default {
     StateMessage,
     SkeletonLoader,
     LoadMoreButton,
-    FeaturedStories,
+    NewsFilterPanel,
     NewsFilter,
   },
   data() {
@@ -75,6 +74,13 @@ export default {
       loadingMore: false,
       hasMorePosts: true,
       displayedPostsCount: 10,
+      activeFilters: {
+        search: '',
+        category: '',
+        tag: '',
+        dateRange: '',
+        sort: 'newest'
+      },
     };
   },
   async mounted() {
@@ -152,12 +158,30 @@ export default {
       });
     },
 
-    handleStoryClick(story) {
-      // Story'ye tıklandığında makale sayfasına yönlendir
-      this.$router.push({
-        name: 'article',
-        params: { slug: story.slug }
-      });
+    handleFilterChange(filters) {
+      this.activeFilters = { ...filters };
+      this.displayedPostsCount = 10;
+      this.hasMorePosts = true;
+      
+      // Backend'den filtrelenmiş veri çek
+      this.fetchFilteredNews();
+    },
+
+    async fetchFilteredNews() {
+      try {
+        const params = {
+          search: this.activeFilters.search,
+          category: this.activeFilters.category,
+          tag: this.activeFilters.tag,
+          dateRange: this.activeFilters.dateRange,
+          sort: this.activeFilters.sort,
+          limit: this.displayedPostsCount
+        };
+
+        await this.$store.dispatch('news/fetchFilteredNews', params);
+      } catch (error) {
+        console.error('Error fetching filtered news:', error);
+      }
     },
 
     async loadMorePosts() {

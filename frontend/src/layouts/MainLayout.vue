@@ -9,14 +9,12 @@
         <div class="grid grid-cols-12 gap-6 py-6">
           <!-- Left Sidebar - Hidden on Mobile -->
           <div class="col-span-12 lg:col-span-3 hidden lg:block">
-            <div class="sticky top-36">
               <Sidebar
                 position="left"
                 :showPopular="false"
                 :showAds="false"
                 :showNewsletter="false"
               />
-            </div>
           </div>
 
           <!-- Main Content -->

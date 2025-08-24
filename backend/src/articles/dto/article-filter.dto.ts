@@ -16,6 +16,13 @@ export enum SortOrder {
   DESC = 'desc',
 }
 
+export enum DateRange {
+  TODAY = 'today',
+  WEEK = 'week',
+  MONTH = 'month',
+  YEAR = 'year',
+}
+
 export class ArticleFilterDto {
   @ApiPropertyOptional({
     description: 'Sayfa numarası',
@@ -150,6 +157,15 @@ export class ArticleFilterDto {
   @IsOptional()
   @IsString({ message: 'Bitiş tarihi metin olmalıdır' })
   endDate?: string;
+
+  @ApiPropertyOptional({
+    description: 'Önceden tanımlanmış tarih aralığı',
+    example: DateRange.TODAY,
+    enum: DateRange,
+  })
+  @IsOptional()
+  @IsEnum(DateRange, { message: 'Geçerli bir tarih aralığı seçiniz' })
+  dateRange?: DateRange;
 
   @ApiPropertyOptional({
     description: 'Makale durumu (admin endpoint için)',

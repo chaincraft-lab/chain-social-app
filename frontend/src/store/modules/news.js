@@ -144,6 +144,23 @@ const actions = {
     }
   },
 
+  async fetchFilteredNews({ commit }, filters = {}) {
+    commit('SET_LOADING', { type: 'latest', status: true })
+    commit('CLEAR_ERROR')
+    try {
+      const response = await articleService.getFilteredArticles(filters)
+      const articles = response.data?.data || response.data || response
+      commit('SET_LATEST_NEWS', articles)
+      return articles
+    } catch (error) {
+      console.error('Error fetching filtered news:', error)
+      commit('SET_ERROR', error.response?.data?.message || error.message)
+      return []
+    } finally {
+      commit('SET_LOADING', { type: 'latest', status: false })
+    }
+  },
+
   async fetchArticleBySlug({ commit }, slug) {
     commit('SET_LOADING', { type: 'detail', status: true })
     commit('CLEAR_ERROR')

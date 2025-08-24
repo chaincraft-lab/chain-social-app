@@ -1,6 +1,6 @@
 <template>
   <div class="load-more-section py-8">
-    <div v-if="hasMore" class="text-center">
+    <div v-if="hasMore && !showSkeleton" class="text-center">
       <div class="theme-card rounded-xl shadow-sm theme-border inline-block overflow-hidden">
         <button
           @click="$emit('loadMore')"
@@ -31,7 +31,8 @@ defineProps({
   isLoading: { type: Boolean, default: false },
   showEndMessage: { type: Boolean, default: false },
   buttonText: { type: String, default: 'Daha Fazla Yükle' },
-  endMessage: { type: String, default: 'Tüm makaleler yüklendi' }
+  endMessage: { type: String, default: 'Tüm makaleler yüklendi' },
+  showSkeleton: { type: Boolean, default: false }
 })
 
 defineEmits(['loadMore'])
