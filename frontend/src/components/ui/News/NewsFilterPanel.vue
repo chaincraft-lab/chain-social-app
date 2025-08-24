@@ -1,23 +1,24 @@
 <template>
-  <!-- Title and Filter Button -->
-  <div class="feed-header flex justify-between items-center mb-6 px-2">
-    <h1 class="text-2xl font-bold theme-text-primary m-0">{{ title }}</h1>
-    
-    <!-- Filter Button -->
-    <button
-      @click="isOpen = !isOpen"
-      class="flex items-center gap-2 px-4 py-2 theme-bg-primary theme-border rounded-lg hover:theme-bg-secondary transition-all"
-    >
-      <Icon icon="heroicons:funnel" class="w-5 h-5" />
-      <span class="font-medium">Filtrele</span>
-      <Icon 
-        :icon="isOpen ? 'heroicons:chevron-up' : 'heroicons:chevron-down'" 
-        class="w-4 h-4 transition-transform" 
-      />
-    </button>
-  </div>
+  <div class="news-filter-container">
+    <!-- Title and Filter Button -->
+    <div class="feed-header flex justify-between items-center mb-6 px-2">
+      <h1 class="text-2xl font-bold theme-text-primary m-0">{{ title }}</h1>
+      
+      <!-- Filter Button -->
+      <button
+        @click="isOpen = !isOpen"
+        class="flex items-center gap-2 px-4 py-2 theme-bg-primary theme-border rounded-lg hover:theme-bg-secondary transition-all"
+      >
+        <Icon icon="heroicons:funnel" class="w-5 h-5" />
+        <span class="font-medium">Filtrele</span>
+        <Icon 
+          :icon="isOpen ? 'heroicons:chevron-up' : 'heroicons:chevron-down'" 
+          class="w-4 h-4 transition-transform" 
+        />
+      </button>
+    </div>
 
-  <!-- Filter Panel -->
+    <!-- Filter Panel -->
   <Transition name="filter-panel">
     <div 
       v-if="isOpen" 
@@ -179,6 +180,7 @@
     </div>
     </div>
   </Transition>
+  </div>
 </template>
 
 <script setup>
