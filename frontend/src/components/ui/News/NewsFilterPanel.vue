@@ -1,19 +1,20 @@
 <template>
-  <!-- Filter Button -->
-  <div class="filter-button-container mb-6">
-    <div class="flex justify-end">
-      <button
-        @click="isOpen = !isOpen"
-        class="flex items-center gap-2 px-4 py-2 theme-bg-primary theme-border rounded-lg hover:theme-bg-secondary transition-all"
-      >
-        <Icon icon="heroicons:funnel" class="w-5 h-5" />
-        <span class="font-medium">Filtrele</span>
-        <Icon 
-          :icon="isOpen ? 'heroicons:chevron-up' : 'heroicons:chevron-down'" 
-          class="w-4 h-4 transition-transform" 
-        />
-      </button>
-    </div>
+  <!-- Title and Filter Button -->
+  <div class="feed-header flex justify-between items-center mb-6 px-2">
+    <h1 class="text-2xl font-bold theme-text-primary m-0">{{ title }}</h1>
+    
+    <!-- Filter Button -->
+    <button
+      @click="isOpen = !isOpen"
+      class="flex items-center gap-2 px-4 py-2 theme-bg-primary theme-border rounded-lg hover:theme-bg-secondary transition-all"
+    >
+      <Icon icon="heroicons:funnel" class="w-5 h-5" />
+      <span class="font-medium">Filtrele</span>
+      <Icon 
+        :icon="isOpen ? 'heroicons:chevron-up' : 'heroicons:chevron-down'" 
+        class="w-4 h-4 transition-transform" 
+      />
+    </button>
   </div>
 
   <!-- Filter Panel -->
@@ -188,6 +189,7 @@ const store = useStore()
 
 // Props
 const props = defineProps({
+  title: { type: String, default: 'Son Haberler' },
   resultsCount: { type: Number, default: 0 }
 })
 
@@ -355,5 +357,24 @@ onMounted(async () => {
 .filter-panel-leave-to {
   opacity: 0;
   transform: translateY(-10px) scaleY(0.95);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .feed-header {
+    flex-direction: column !important;
+    gap: 1rem;
+    align-items: flex-start !important;
+  }
+
+  .feed-header h1 {
+    font-size: 1.25rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .feed-header {
+    padding: 0 0.25rem !important;
+  }
 }
 </style>

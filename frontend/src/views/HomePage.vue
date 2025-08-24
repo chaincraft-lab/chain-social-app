@@ -1,16 +1,14 @@
 <template>
   <div class="homepage-feed theme-bg-secondary theme-text-primary">
-    <!-- Filter Panel -->
-    <NewsFilterPanel 
+    <!-- News Header with Filter Panel -->
+    <NewsHeader 
+      title="Son Haberler"
       :results-count="filteredNews.length"
       @filter-change="handleFilterChange"
     />
 
     <!-- News Feed Posts -->
     <section class="news-feed">
-      <NewsFilter 
-        title="Son Haberler"
-      />
 
       <!-- Post Feed -->
       <div class="posts-container">
@@ -55,8 +53,7 @@ import NewsPost from "@/components/news/NewsPost.vue";
 import StateMessage from "@/components/common/StateMessage.vue";
 import SkeletonLoader from "@/components/common/SkeletonLoader.vue";
 import LoadMoreButton from "@/components/common/LoadMoreButton.vue";
-import NewsFilterPanel from "@/components/ui/News/NewsFilterPanel.vue";
-import NewsFilter from "@/components/ui/News/NewsFilter.vue";
+import NewsHeader from "@/components/ui/News/NewsHeader.vue";
 
 export default {
   name: "HomePage",
@@ -65,8 +62,7 @@ export default {
     StateMessage,
     SkeletonLoader,
     LoadMoreButton,
-    NewsFilterPanel,
-    NewsFilter,
+    NewsHeader,
   },
   data() {
     return {

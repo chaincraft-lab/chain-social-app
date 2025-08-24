@@ -3,13 +3,10 @@
     <!-- Posts Feed -->
     <div class="posts-feed">
       <!-- Category Header -->
-      <div class="pt-3">
-        <NewsFilter 
+        <NewsHeader 
           :title="currentCategory ? `${currentCategory.name}` : 'Kategori Haberleri'"
-          :selectedFilter="'all'"
-          :filters="[]"
+          :results-count="categoryNews.length"
         />
-      </div>
 
       <!-- Loading State -->
       <div v-if="isLoading" class="space-y-4 mt-4">
@@ -56,7 +53,7 @@ import NewsPost from "@/components/news/NewsPost.vue";
 import StateMessage from "@/components/common/StateMessage.vue";
 import SkeletonLoader from "@/components/common/SkeletonLoader.vue";
 import LoadMoreButton from "@/components/common/LoadMoreButton.vue";
-import NewsFilter from "@/components/ui/News/NewsFilter.vue";
+import NewsHeader from "@/components/ui/News/NewsHeader.vue";
 
 export default {
   name: "CategoryPage",
@@ -65,7 +62,7 @@ export default {
     StateMessage,
     SkeletonLoader,
     LoadMoreButton,
-    NewsFilter,
+    NewsHeader,
   },
   setup() {
     const store = useStore();
