@@ -29,6 +29,8 @@
               :showCategories="false"
               :showTags="false"
               :showNewsletter="false"
+              :showWeather="true"
+              :showMarket="true"
             />
           </div>
         </div>
