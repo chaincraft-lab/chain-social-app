@@ -181,4 +181,18 @@ export class ArticleResponseDto {
     example: 5,
   })
   commentCount: number;
+
+  @ApiProperty({
+    description: 'Kullanıcı bu makaleyi beğendi mi?',
+    example: false,
+    required: false,
+  })
+  isLikedByUser?: boolean;
+
+  @ApiProperty({
+    description: 'Kullanıcı bu makaleyi yer imlerine ekledi mi?',
+    example: false,
+    required: false,
+  })
+  isBookmarkedByUser?: boolean;
 }

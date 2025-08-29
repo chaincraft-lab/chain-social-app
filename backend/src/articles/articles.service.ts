@@ -8,7 +8,7 @@ import { PrismaService } from '../common/prisma/prisma.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleResponseDto } from './dto/article-response.dto';
-import { ArticleFilterDto } from './dto/article-filter.dto';
+import { ArticleFilterDto, DateRange } from './dto/article-filter.dto';
 import { PaginatedResponse } from '../common/dto/pagination.dto';
 import { generateSlug } from '../common/utils/slug.util';
 import { UserRole, ArticleStatus, CommentStatus } from '@prisma/client';
@@ -16,6 +16,50 @@ import { UserRole, ArticleStatus, CommentStatus } from '@prisma/client';
 @Injectable()
 export class ArticlesService {
   constructor(private readonly prisma: PrismaService) {}
+
+  private handleDateRangeFilter(where: any, dateRange: DateRange, startDate?: string, endDate?: string) {
+    if (dateRange) {
+      const now = new Date();
+      let calculatedStartDate: Date;
+      let calculatedEndDate: Date = now;
+
+      switch (dateRange) {
+        case DateRange.TODAY:
+          calculatedStartDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          calculatedEndDate = new Date(calculatedStartDate.getTime() + 24 * 60 * 60 * 1000 - 1);
+          break;
+        case DateRange.WEEK:
+          calculatedStartDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          break;
+        case DateRange.MONTH:
+          calculatedStartDate = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+          break;
+        case DateRange.YEAR:
+          calculatedStartDate = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+          break;
+      }
+
+      where.createdAt = {
+        gte: calculatedStartDate,
+        lte: calculatedEndDate
+      };
+    } else {
+      // Handle explicit startDate and endDate
+      if (startDate) {
+        where.publishedAt = { 
+          ...where.publishedAt,
+          gte: new Date(startDate)
+        };
+      }
+
+      if (endDate) {
+        where.publishedAt = {
+          ...where.publishedAt,
+          lte: new Date(endDate + 'T23:59:59.999Z')
+        };
+      }
+    }
+  }
 
   async create(createArticleDto: CreateArticleDto, authorId: number): Promise<ArticleResponseDto> {
     const { title, excerpt, content, image, categoryId, tagIds, isFeatured, isBreaking } = createArticleDto;
@@ -121,7 +165,7 @@ export class ArticlesService {
     return this.formatArticleResponse(article);
   }
 
-  async findAll(filterDto: ArticleFilterDto): Promise<PaginatedResponse<ArticleResponseDto>> {
+  async findAll(filterDto: ArticleFilterDto, userId?: number): Promise<PaginatedResponse<ArticleResponseDto>> {
     const { 
       page = 1, 
       limit = 10, 
@@ -136,7 +180,8 @@ export class ArticlesService {
       sortBy = 'createdAt',
       sortOrder = 'desc',
       startDate,
-      endDate
+      endDate,
+      dateRange
     } = filterDto;
 
     const skip = (page - 1) * limit;
@@ -195,19 +240,8 @@ export class ArticlesService {
       where.isBreaking = isBreaking;
     }
 
-    if (startDate) {
-      where.publishedAt = { 
-        ...where.publishedAt,
-        gte: new Date(startDate)
-      };
-    }
-
-    if (endDate) {
-      where.publishedAt = {
-        ...where.publishedAt,
-        lte: new Date(endDate + 'T23:59:59.999Z')
-      };
-    }
+    // Handle date filtering
+    this.handleDateRangeFilter(where, dateRange, startDate, endDate);
 
     // Build order clause
     const orderBy: any = {};
@@ -252,13 +286,23 @@ export class ArticlesService {
               articleLikes: true,
               comments: { where: { status: CommentStatus.APPROVED } },
             }
-          }
+          },
+          ...(userId ? {
+            articleLikes: {
+              where: { userId },
+              select: { id: true }
+            },
+            bookmarks: {
+              where: { userId },
+              select: { id: true }
+            }
+          } : {})
         }
       }),
       this.prisma.article.count({ where })
     ]);
 
-    const formattedArticles = articles.map(article => this.formatArticleResponse(article));
+    const formattedArticles = articles.map(article => this.formatArticleResponse(article, userId));
 
     const totalPages = Math.ceil(total / limit);
     const hasNext = page < totalPages;
@@ -683,7 +727,8 @@ export class ArticlesService {
       sortBy = 'createdAt',
       sortOrder = 'desc',
       startDate,
-      endDate
+      endDate,
+      dateRange
     } = filterDto;
 
     const skip = (page - 1) * limit;
@@ -745,19 +790,8 @@ export class ArticlesService {
       where.isBreaking = isBreaking;
     }
 
-    if (startDate) {
-      where.publishedAt = { 
-        ...where.publishedAt,
-        gte: new Date(startDate)
-      };
-    }
-
-    if (endDate) {
-      where.publishedAt = {
-        ...where.publishedAt,
-        lte: new Date(endDate + 'T23:59:59.999Z')
-      };
-    }
+    // Handle date filtering
+    this.handleDateRangeFilter(where, dateRange, startDate, endDate);
 
     // Build order clause
     const orderBy: any = {};
@@ -825,7 +859,7 @@ export class ArticlesService {
     };
   }
 
-  private formatArticleResponse(article: any): ArticleResponseDto {
+  private formatArticleResponse(article: any, userId?: number): ArticleResponseDto {
     return {
       id: article.id,
       title: article.title,
@@ -845,6 +879,8 @@ export class ArticlesService {
       viewCount: article.views,
       likeCount: article._count?.articleLikes || 0,
       commentCount: article._count?.comments || 0,
+      isLikedByUser: userId ? (article.articleLikes?.length > 0) : false,
+      isBookmarkedByUser: userId ? (article.bookmarks?.length > 0) : false,
     };
   }
 }

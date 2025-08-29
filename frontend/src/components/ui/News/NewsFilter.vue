@@ -1,7 +1,8 @@
 <template>
   <div class="feed-header flex justify-between items-center mb-6 px-2">
     <h2 class="text-2xl font-bold theme-text-primary m-0">{{ title }}</h2>
-    <div class="feed-filter flex gap-2">
+
+    <!-- <div class="feed-filter flex gap-2">
       <button
         v-for="filter in filters"
         :key="filter.value"
@@ -15,7 +16,7 @@
       >
         {{ filter.label }}
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -23,23 +24,15 @@
 defineProps({
   title: {
     type: String,
-    default: 'Son Haberler'
+    default: "Son Haberler",
   },
   selectedFilter: {
     type: String,
-    default: 'all'
+    default: "all",
   },
-  filters: {
-    type: Array,
-    default: () => [
-      { value: 'all', label: 'Tümü' },
-      { value: 'trending', label: 'Trend' },
-      { value: 'recent', label: 'Yeni' }
-    ]
-  }
-})
+});
 
-defineEmits(['update:selectedFilter'])
+defineEmits(["update:selectedFilter"]);
 </script>
 
 <style scoped>
@@ -59,10 +52,6 @@ defineEmits(['update:selectedFilter'])
 @media (max-width: 480px) {
   .feed-header {
     padding: 0 0.25rem !important;
-  }
-  
-  .feed-filter {
-    flex-wrap: wrap;
   }
 }
 </style>

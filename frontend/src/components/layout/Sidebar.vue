@@ -6,8 +6,35 @@
     />
 
     <!-- Popular News Component -->
-    <PopularNews :show-popular="showPopular" />
+     <PopularNews 
+       :show-popular="showPopular" 
+       title-size="sm"
+       :max-title-length="60"
+     /> 
 
+    <!-- Defense Info Cards (Right Sidebar Only) -->
+    <template v-if="position === 'right'">
+      <!-- Weather Card -->
+      <WeatherWidget 
+        v-if="showWeather"
+        city="Ankara"
+        :latitude="39.9334"
+        :longitude="32.8597"
+        :auto-refresh="true"
+        :refresh-interval="300000"
+      />
+      
+      <!-- Market Widget -->
+      <MarketWidget 
+        v-if="showMarket"
+        base-currency="TRY"
+        :auto-refresh="true"
+        :refresh-interval="300000"
+      />
+      
+      <!-- Additional Defense Cards can be added here -->
+      <slot name="defense-cards"></slot>
+    </template>
 
     <!-- Popular Tags Component -->
     <PopularTags :show-tags="showTags" />
@@ -21,6 +48,8 @@ import { mapState } from "vuex";
 import CategoriesList from "../ui/CategoriesList.vue";
 import PopularNews from "../ui/PopularNews.vue";
 import PopularTags from "../ui/PopularTags.vue";
+import WeatherWidget from "../widgets/WeatherWidget.vue";
+import MarketWidget from "../widgets/MarketWidget.vue";
 
 export default {
   name: "SiteSidebar",
@@ -28,6 +57,8 @@ export default {
     CategoriesList,
     PopularNews,
     PopularTags,
+    WeatherWidget,
+    MarketWidget,
   },
   props: {
     showCategories: {
@@ -54,6 +85,14 @@ export default {
       type: String,
       default: "right",
       validator: (value) => ["left", "right"].includes(value),
+    },
+    showWeather: {
+      type: Boolean,
+      default: true,
+    },
+    showMarket: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {

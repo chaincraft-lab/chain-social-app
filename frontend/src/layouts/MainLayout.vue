@@ -1,22 +1,20 @@
 <template>
-  <div class="min-h-screen flex flex-col theme-bg-primary theme-text-primary">
+  <div class="min-h-screen flex flex-col  theme-text-primary relative">
     <!-- Navbar -->
     <Navbar />
 
     <!-- Main Content -->
-    <main class="flex-1 theme-bg-secondary">
+    <main class="flex-1 theme-bg-primary">
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-12 gap-6 py-6">
           <!-- Left Sidebar - Hidden on Mobile -->
           <div class="col-span-12 lg:col-span-3 hidden lg:block">
-            <div class="sticky top-36">
               <Sidebar
                 position="left"
                 :showPopular="false"
                 :showAds="false"
                 :showNewsletter="false"
               />
-            </div>
           </div>
 
           <!-- Main Content -->
@@ -31,6 +29,8 @@
               :showCategories="false"
               :showTags="false"
               :showNewsletter="false"
+              :showWeather="true"
+              :showMarket="true"
             />
           </div>
         </div>
@@ -62,27 +62,5 @@ export default {
 </script>
 
 <style scoped>
-/* Sticky sidebar height calculation */
-.sticky {
-  max-height: calc(100vh - 6rem);
-  overflow-y: auto;
-}
 
-/* Custom scrollbar for sidebar */
-.sticky::-webkit-scrollbar {
-  width: 4px;
-}
-
-.sticky::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.sticky::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-}
-
-.sticky::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.3);
-}
 </style> 

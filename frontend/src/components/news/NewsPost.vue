@@ -47,17 +47,25 @@
         @addComment="addComment"
       />
     </div>
+
+    <!-- Auth Dialog -->
+    <AuthDialog 
+      v-model="showAuthDialog" 
+      @success="handleAuthSuccess" 
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import PostHeader from '../ui/Post/PostHeader.vue'
 import PostImage from '../ui/Post/PostImage.vue'
 import PostActions from '../ui/Post/PostActions.vue'
 import PostContent from '../ui/Post/PostContent.vue'
 import PostComment from '../ui/Post/PostComment.vue'
+import AuthDialog from '../auth/AuthDialog.vue'
 import { likeService, bookmarkService } from '@/services'
 
 const props = defineProps({
@@ -65,15 +73,20 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const store = useStore()
 
 // Reactive state
-const isLiked = ref(false)
-const isBookmarked = ref(false)
+const isLiked = ref(props.news.isLikedByUser || false)
+const isBookmarked = ref(props.news.isBookmarkedByUser || false)
 const likesCount = ref(props.news.likeCount || 0)
 const commentsCount = ref(props.news.commentCount || 0)
 const showComments = ref(false)
 const loadingLike = ref(false)
 const loadingBookmark = ref(false)
+const showAuthDialog = ref(false)
+
+// Auth state
+const isAuthenticated = computed(() => store.getters['user/isAuthenticated'])
 
 const sampleComments = ref([
   { id: 1, author: 'Ahmet Yılmaz', text: 'Çok önemli bir gelişme! 👍' },
@@ -93,6 +106,12 @@ const getAuthorName = () => {
 }
 
 const toggleLike = async () => {
+  // Check if user is authenticated
+  if (!isAuthenticated.value) {
+    showAuthDialog.value = true
+    return
+  }
+
   if (loadingLike.value) return
 
   try {
@@ -109,7 +128,7 @@ const toggleLike = async () => {
     console.error('Like toggle error:', error)
     
     if (error.response?.status === 401) {
-      console.error('Bu işlem için giriş yapmanız gerekiyor.')
+      showAuthDialog.value = true
     } else {
       console.error('Bir hata oluştu. Lütfen tekrar deneyin.')
     }
@@ -137,6 +156,12 @@ const sharePost = () => {
 }
 
 const bookmarkPost = async () => {
+  // Check if user is authenticated
+  if (!isAuthenticated.value) {
+    showAuthDialog.value = true
+    return
+  }
+
   if (loadingBookmark.value) return
 
   try {
@@ -152,7 +177,7 @@ const bookmarkPost = async () => {
     console.error('Bookmark toggle error:', error)
     
     if (error.response?.status === 401) {
-      console.error('Bu işlem için giriş yapmanız gerekiyor.')
+      showAuthDialog.value = true
     } else {
       console.error('Bir hata oluştu. Lütfen tekrar deneyin.')
     }
@@ -181,6 +206,25 @@ const handleMenuClick = () => {
   // Handle post menu (report, etc.)
   console.log('Post menu clicked')
 }
+
+const handleAuthSuccess = (type) => {
+  // Auth dialog'dan başarılı giriş/kayıt bilgisi geldiğinde
+  showAuthDialog.value = false
+  console.log('Auth success:', type)
+  // Başarılı giriş bildirimi gösterilebilir
+  
+  // Sayfayı yenile - backend'den user-specific data gelecek
+  window.location.reload()
+}
+
+// Auth durumu değiştiğinde beğeni durumunu sıfırla
+watch(isAuthenticated, (newVal) => {
+  if (!newVal) {
+    // Logout olduğunda beğeni durumunu sıfırla
+    isLiked.value = false
+    isBookmarked.value = false
+  }
+})
 </script>
 
 <style scoped>

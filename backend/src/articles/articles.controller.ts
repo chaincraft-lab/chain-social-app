@@ -26,6 +26,7 @@ import { ArticleResponseDto } from './dto/article-response.dto';
 import { ArticleFilterDto } from './dto/article-filter.dto';
 import { PaginatedResponse } from '../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../common/guards/optional-jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -73,9 +74,11 @@ export class ArticlesController {
   }
 
   @Get()
+  @UseGuards(OptionalJwtAuthGuard)
+  @ApiBearerAuth('access-token')
   @ApiOperation({ 
     summary: 'Makaleleri listele',
-    description: 'Aktif makaleleri filtreli ve sayfalı olarak listeler.'
+    description: 'Aktif makaleleri filtreli ve sayfalı olarak listeler. Kullanıcı giriş yapmışsa beğeni ve bookmark durumunu da döner.'
   })
   @ApiResponse({ 
     status: 200, 
@@ -98,8 +101,11 @@ export class ArticlesController {
   @ApiQuery({ name: 'endDate', required: false, description: 'Bitiş tarihi' })
   async findAll(
     @Query() filterDto: ArticleFilterDto,
+    @CurrentUser() user?: CurrentUserType,
   ): Promise<PaginatedResponse<ArticleResponseDto>> {
-    return this.articlesService.findAll(filterDto);
+    console.log('user:', user);
+    const userId = user?.userId || null;
+    return this.articlesService.findAll(filterDto, userId);
   }
 
   @Get('admin')
@@ -139,9 +145,11 @@ export class ArticlesController {
   }
 
   @Get('featured')
+  @UseGuards(OptionalJwtAuthGuard)
+  @ApiBearerAuth('access-token')
   @ApiOperation({ 
     summary: 'Öne çıkan makaleleri getir',
-    description: 'Öne çıkan makaleleri listeler.'
+    description: 'Öne çıkan makaleleri listeler. Kullanıcı giriş yapmışsa beğeni ve bookmark durumunu da döner.'
   })
   @ApiResponse({ 
     status: 200, 
@@ -150,14 +158,18 @@ export class ArticlesController {
   })
   async findFeatured(
     @Query() filterDto: ArticleFilterDto,
+    @CurrentUser() user?: CurrentUserType,
   ): Promise<PaginatedResponse<ArticleResponseDto>> {
-    return this.articlesService.findAll({ ...filterDto, isFeatured: true });
+    const userId = user?.userId || null;
+    return this.articlesService.findAll({ ...filterDto, isFeatured: true }, userId);
   }
 
   @Get('breaking')
+  @UseGuards(OptionalJwtAuthGuard)
+  @ApiBearerAuth('access-token')
   @ApiOperation({ 
     summary: 'Son dakika haberlerini getir',
-    description: 'Son dakika haberlerini listeler.'
+    description: 'Son dakika haberlerini listeler. Kullanıcı giriş yapmışsa beğeni ve bookmark durumunu da döner.'
   })
   @ApiResponse({ 
     status: 200, 
@@ -166,8 +178,10 @@ export class ArticlesController {
   })
   async findBreaking(
     @Query() filterDto: ArticleFilterDto,
+    @CurrentUser() user?: CurrentUserType,
   ): Promise<PaginatedResponse<ArticleResponseDto>> {
-    return this.articlesService.findAll({ ...filterDto, isBreaking: true });
+    const userId = user?.userId || null;
+    return this.articlesService.findAll({ ...filterDto, isBreaking: true }, userId);
   }
 
   @Get(':id')

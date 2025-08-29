@@ -20,6 +20,8 @@
           :key="news.id"
           :news="news"
           :index="index"
+          :title-size="titleSize"
+          :max-title-length="maxTitleLength"
         />
       </ul>
 
@@ -42,7 +44,16 @@ import NewsItem from './News/NewsItem.vue'
 import EmptyState from '../common/EmptyState.vue'
 
 const props = defineProps({
-  showPopular: { type: Boolean, default: true }
+  showPopular: { type: Boolean, default: true },
+  titleSize: { 
+    type: String, 
+    default: 'sm',
+    validator: value => ['xs', 'sm', 'base', 'lg'].includes(value)
+  },
+  maxTitleLength: {
+    type: Number,
+    default: 60
+  }
 })
 
 const store = useStore()
