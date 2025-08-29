@@ -1,6 +1,8 @@
 <template>
   <!-- Top navbar with logo, search, auth -->
-  <div class="flex items-center justify-between py-4 px-6 border-b theme-border-primary">
+  <div class="border-b theme-border-primary">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between py-4">
     <!-- Logo -->
     <router-link to="/" class="flex items-center">
       <img src="@/assets/logo.png" alt="Logo" class="h-12" />
@@ -44,10 +46,12 @@
       />
     </div>
 
-    <!-- Auth Dialog - Teleport to body to avoid z-index issues -->
-    <Teleport to="body">
-      <AuthDialog v-model="showAuthDialog" @success="handleAuthSuccess" />
-    </Teleport>
+        <!-- Auth Dialog - Teleport to body to avoid z-index issues -->
+        <Teleport to="body">
+          <AuthDialog v-model="showAuthDialog" @success="handleAuthSuccess" />
+        </Teleport>
+      </div>
+    </div>
   </div>
 </template>
 

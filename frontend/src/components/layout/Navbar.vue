@@ -9,17 +9,17 @@
     />
 
     <!-- Menu Section -->
-    <NavbarMenu
+    <!-- <NavbarMenu
       :is-mobile-menu-open="isMobileMenuOpen"
       @closeMobile="handleCloseMobile"
-    />
+    /> -->
   </nav>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import NavbarTop from './NavbarTop.vue'
-import NavbarMenu from './NavbarMenu.vue'
+// import NavbarMenu from './NavbarMenu.vue'
 
 // State
 const isMobileMenuOpen = ref(false)
