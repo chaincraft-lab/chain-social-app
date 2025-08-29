@@ -165,7 +165,7 @@ export class ArticlesService {
     return this.formatArticleResponse(article);
   }
 
-  async findAll(filterDto: ArticleFilterDto): Promise<PaginatedResponse<ArticleResponseDto>> {
+  async findAll(filterDto: ArticleFilterDto, userId?: number): Promise<PaginatedResponse<ArticleResponseDto>> {
     const { 
       page = 1, 
       limit = 10, 
@@ -286,13 +286,23 @@ export class ArticlesService {
               articleLikes: true,
               comments: { where: { status: CommentStatus.APPROVED } },
             }
-          }
+          },
+          ...(userId ? {
+            articleLikes: {
+              where: { userId },
+              select: { id: true }
+            },
+            bookmarks: {
+              where: { userId },
+              select: { id: true }
+            }
+          } : {})
         }
       }),
       this.prisma.article.count({ where })
     ]);
 
-    const formattedArticles = articles.map(article => this.formatArticleResponse(article));
+    const formattedArticles = articles.map(article => this.formatArticleResponse(article, userId));
 
     const totalPages = Math.ceil(total / limit);
     const hasNext = page < totalPages;
@@ -849,7 +859,7 @@ export class ArticlesService {
     };
   }
 
-  private formatArticleResponse(article: any): ArticleResponseDto {
+  private formatArticleResponse(article: any, userId?: number): ArticleResponseDto {
     return {
       id: article.id,
       title: article.title,
@@ -869,6 +879,8 @@ export class ArticlesService {
       viewCount: article.views,
       likeCount: article._count?.articleLikes || 0,
       commentCount: article._count?.comments || 0,
+      isLikedByUser: userId ? (article.articleLikes?.length > 0) : false,
+      isBookmarkedByUser: userId ? (article.bookmarks?.length > 0) : false,
     };
   }
 }

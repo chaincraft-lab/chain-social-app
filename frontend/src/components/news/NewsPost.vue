@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import PostHeader from '../ui/Post/PostHeader.vue'
@@ -76,8 +76,8 @@ const router = useRouter()
 const store = useStore()
 
 // Reactive state
-const isLiked = ref(false)
-const isBookmarked = ref(false)
+const isLiked = ref(props.news.isLikedByUser || false)
+const isBookmarked = ref(props.news.isBookmarkedByUser || false)
 const likesCount = ref(props.news.likeCount || 0)
 const commentsCount = ref(props.news.commentCount || 0)
 const showComments = ref(false)
@@ -212,7 +212,19 @@ const handleAuthSuccess = (type) => {
   showAuthDialog.value = false
   console.log('Auth success:', type)
   // Başarılı giriş bildirimi gösterilebilir
+  
+  // Sayfayı yenile - backend'den user-specific data gelecek
+  window.location.reload()
 }
+
+// Auth durumu değiştiğinde beğeni durumunu sıfırla
+watch(isAuthenticated, (newVal) => {
+  if (!newVal) {
+    // Logout olduğunda beğeni durumunu sıfırla
+    isLiked.value = false
+    isBookmarked.value = false
+  }
+})
 </script>
 
 <style scoped>
