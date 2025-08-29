@@ -1,6 +1,6 @@
 <template>
   <!-- New Clean & Modern Navbar -->
-  <nav class="sticky top-0 z-[9999] theme-navbar ">
+  <nav class="sticky top-0 z-[9998] theme-navbar relative ">
     <!-- Top Section -->
     <NavbarTop
       :is-mobile-menu-open="isMobileMenuOpen"
@@ -37,5 +37,4 @@ const toggleMobileMenu = () => {
 </script>
 
 <style scoped>
-/* Clean minimal styles for new navbar */
 </style>

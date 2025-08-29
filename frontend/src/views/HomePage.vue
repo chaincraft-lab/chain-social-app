@@ -1,5 +1,5 @@
 <template>
-  <div class="homepage-feed theme-bg-secondary theme-text-primary">
+  <div class="homepage-feed  theme-text-primary">
     <!-- News Header with Filter Panel -->
     <NewsHeader 
       title="Son Haberler"

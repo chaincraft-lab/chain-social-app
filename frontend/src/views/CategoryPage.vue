@@ -1,5 +1,5 @@
 <template>
-  <div class="category-page theme-bg-secondary theme-text-primary">
+  <div class="category-page  theme-text-primary">
     <!-- Posts Feed -->
     <div class="posts-feed">
       <!-- Category Header -->

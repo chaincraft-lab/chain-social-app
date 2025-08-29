@@ -21,7 +21,7 @@
     <Teleport to="body">
       <div
         v-if="isMobileMenuOpen"
-        class="fixed inset-0 z-50 md:hidden"
+        class="fixed inset-0 z-[10000] md:hidden"
         @click="closeMobileMenu"
       >
         <!-- Backdrop -->

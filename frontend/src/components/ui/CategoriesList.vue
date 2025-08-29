@@ -44,3 +44,7 @@ defineProps({
   isLoading: { type: Boolean, default: false }
 })
 </script>
+
+
+<style scoped>
+</style>
