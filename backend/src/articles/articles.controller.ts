@@ -69,7 +69,6 @@ export class ArticlesController {
     @Body() createArticleDto: CreateArticleDto,
     @CurrentUser() user: CurrentUserType,
   ): Promise<ArticleResponseDto> {
-    console.log('Creating article with data:', createArticleDto, 'by user:', user);
     return this.articlesService.create(createArticleDto, user.userId);
   }
 
@@ -103,7 +102,6 @@ export class ArticlesController {
     @Query() filterDto: ArticleFilterDto,
     @CurrentUser() user?: CurrentUserType,
   ): Promise<PaginatedResponse<ArticleResponseDto>> {
-    console.log('user:', user);
     const userId = user?.userId || null;
     return this.articlesService.findAll(filterDto, userId);
   }

@@ -16,8 +16,15 @@ class LikeService extends ApiService {
   }
 
   // Kullanıcının beğendikleri
-  async getMyLikes(limit = 50) {
-    return this.get(`/likes/my-likes?limit=${limit}`);
+  async getMyLikes(filters = {}) {
+    const params = new URLSearchParams({
+      page: filters.page || 1,
+      limit: filters.limit || 10,
+      sortBy: filters.sortBy || 'createdAt',
+      sortOrder: filters.sortOrder || 'desc'
+    });
+    
+    return this.get(`/likes/my-likes?${params.toString()}`);
   }
 
   // En çok beğenilen makaleler

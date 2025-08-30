@@ -120,21 +120,23 @@ export class LikesController {
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Kendi beğendiklerimi getir',
-    description: 'Giriş yapmış kullanıcının beğendiği makaleleri getirir.'
+    description: 'Giriş yapmış kullanıcının beğendiği makaleleri sayfalı olarak getirir.'
   })
   @ApiResponse({
     status: 200,
     description: 'Beğenilenler başarıyla getirildi',
-    type: [LikeResponseDto]
+    type: 'PaginatedResponse<LikeResponseDto>'
   })
   @ApiResponse({ status: 401, description: 'Yetkilendirme gerekli' })
-  @ApiQuery({ name: 'limit', required: false, description: 'Maksimum beğeni sayısı (varsayılan: 50)' })
+  @ApiQuery({ name: 'page', required: false, description: 'Sayfa numarası (varsayılan: 1)' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Sayfa başına öğe sayısı (varsayılan: 10)' })
+  @ApiQuery({ name: 'sortBy', required: false, description: 'Sıralama alanı (varsayılan: createdAt)' })
+  @ApiQuery({ name: 'sortOrder', required: false, description: 'Sıralama yönü (varsayılan: desc)' })
   async getMyLikes(
     @CurrentUser() user: CurrentUserType,
-    @Query('limit') limit?: string,
-  ): Promise<LikeResponseDto[]> {
-    const parsedLimit = limit ? parseInt(limit) : 50;
-    return this.likesService.getUserLikes(user.userId, parsedLimit);
+    @Query() filterDto: LikeFilterDto,
+  ): Promise<PaginatedResponse<LikeResponseDto>> {
+    return this.likesService.getUserLikesPaginated(user.userId, filterDto);
   }
 
   @Get('article/:articleId/stats')

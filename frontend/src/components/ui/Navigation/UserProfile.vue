@@ -5,7 +5,9 @@
       @click="toggleDropdown"
       class="flex items-center space-x-2 px-3 py-2 rounded-lg theme-bg-tertiary hover:theme-bg-secondary transition-colors theme-text-primary"
     >
-      <div class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center">
+      <div
+        class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center"
+      >
         <Icon icon="heroicons:user" class="w-5 h-5 text-white" />
       </div>
       <span v-if="showName" class="text-sm font-medium hidden md:block">
@@ -21,13 +23,15 @@
     <!-- Profile Dropdown Menu -->
     <div
       v-if="showDropdown"
-      class="absolute right-0 top-full mt-2  theme-card rounded-lg shadow-lg py-2 z-[10000]"
+      class="absolute right-0 top-full mt-2 theme-card rounded-lg shadow-lg py-2 z-[10000]"
       @mouseleave="hideDropdown"
     >
       <!-- User Info -->
       <div v-if="showUserInfo" class="px-4 py-3 border-b theme-border-primary">
         <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center">
+          <div
+            class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center"
+          >
             <Icon icon="heroicons:user" class="w-6 h-6 text-white" />
           </div>
           <div>
@@ -50,10 +54,7 @@
           @click="hideDropdown"
           class="flex items-center px-4 py-2 text-sm theme-text-secondary hover:theme-bg-secondary transition-colors"
         >
-          <Icon
-            :icon="item.icon"
-            class="w-4 h-4 mr-3"
-          />
+          <Icon :icon="item.icon" class="w-4 h-4 mr-3" />
           {{ item.label }}
         </router-link>
       </div>
@@ -76,7 +77,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
 defineProps({
   user: { type: Object, default: () => ({}) },
@@ -86,36 +87,36 @@ defineProps({
     type: Array,
     default: () => [
       {
-        path: '/profile',
-        label: 'Profilim',
-        icon: 'heroicons:user'
+        path: "/profile",
+        label: "Profilim",
+        icon: "heroicons:user",
       },
       {
-        path: '/bookmarks',
-        label: 'Kaydettiklerim',
-        icon: 'heroicons:bookmark'
+        path: "/bookmarks",
+        label: "Kaydettiklerim",
+        icon: "heroicons:bookmark",
       },
       {
-        path: '/likes',
-        label: 'Beğendiklerim',
-        icon: 'heroicons:heart'
-      }
-    ]
-  }
-})
+        path: "/likes",
+        label: "Beğendiklerim",
+        icon: "heroicons:heart",
+      },
+    ],
+  },
+});
 
-defineEmits(['logout'])
+defineEmits(["logout"]);
 
-const showDropdown = ref(false)
-let dropdownTimeout = null
+const showDropdown = ref(false);
+let dropdownTimeout = null;
 
 const toggleDropdown = () => {
-  showDropdown.value = !showDropdown.value
-}
+  showDropdown.value = !showDropdown.value;
+};
 
 const hideDropdown = () => {
   dropdownTimeout = setTimeout(() => {
-    showDropdown.value = false
-  }, 150)
-}
+    showDropdown.value = false;
+  }, 150);
+};
 </script>
