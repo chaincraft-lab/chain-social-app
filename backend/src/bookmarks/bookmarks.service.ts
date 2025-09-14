@@ -221,6 +221,84 @@ export class BookmarksService {
     return bookmarks.map(bookmark => this.formatBookmarkResponse(bookmark));
   }
 
+  async getUserBookmarksPaginated(userId: number, filterDto: BookmarkFilterDto): Promise<PaginatedResponse<BookmarkResponseDto>> {
+    const { 
+      page = 1, 
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'desc'
+    } = filterDto;
+
+    const skip = (page - 1) * limit;
+
+    const [bookmarks, total] = await Promise.all([
+      this.prisma.bookmark.findMany({
+        where: { userId },
+        include: {
+          user: {
+            select: {
+              id: true,
+              uuid: true,
+              name: true,
+              surname: true,
+              username: true,
+              avatar: true,
+            }
+          },
+          article: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              excerpt: true,
+              image: true,
+              publishedAt: true,
+              views: true,
+              category: {
+                select: {
+                  name: true,
+                  slug: true,
+                }
+              },
+              author: {
+                select: {
+                  name: true,
+                  surname: true,
+                }
+              },
+              _count: {
+                select: {
+                  articleLikes: true,
+                  comments: true,
+                }
+              }
+            }
+          }
+        },
+        orderBy: { [sortBy]: sortOrder },
+        skip,
+        take: limit,
+      }),
+      this.prisma.bookmark.count({ where: { userId } })
+    ]);
+
+    const formattedBookmarks = bookmarks.map(bookmark => this.formatBookmarkResponse(bookmark));
+
+    const totalPages = Math.ceil(total / limit);
+    const hasNext = page < totalPages;
+    const hasPrevious = page > 1;
+
+    return {
+      data: formattedBookmarks,
+      total,
+      page,
+      limit,
+      totalPages,
+      hasNext,
+      hasPrevious,
+    };
+  }
+
   async removeBookmark(articleId: number, userId: number): Promise<{ message: string }> {
     const existingBookmark = await this.prisma.bookmark.findUnique({
       where: {

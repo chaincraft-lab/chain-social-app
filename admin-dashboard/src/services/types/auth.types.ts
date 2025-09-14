@@ -10,11 +10,13 @@ export interface LoginResponse {
 
 export interface UserResponse {
   id: number;
+  uuid: string;
   email: string;
   name: string;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
+  surname?: string;
+  username?: string;
+  role: 'SUPER_ADMIN' | 'ADMIN' | 'USER';
+  access_token?: string;
 }
 
 export interface RefreshTokenResponse {

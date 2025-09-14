@@ -54,9 +54,9 @@ export class ApiService {
       },
       (error: AxiosError) => {
         if (error.response?.status === 401) {
-          // Token expired, redirect to login
+          // Token expired veya invalid, sadece login sayfasında değilsek yönlendir
           this.clearToken();
-          if (typeof window !== 'undefined') {
+          if (typeof window !== 'undefined' && !window.location.pathname.includes('/auth/login')) {
             window.location.href = '/auth/login';
           }
         }

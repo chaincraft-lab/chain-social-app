@@ -1,12 +1,16 @@
 <template>
   <div class="tag-page theme-text-primary">
+    <!-- Tag Navigation -->
+    <CategoriesSlider 
+      :categories="[]"
+      :is-loading="isLoading"
+      mode="back"
+      :back-title="currentTag ? `#${currentTag.name}` : 'Tag'"
+      @back="goBack"
+    />
+
     <!-- Posts Feed -->
     <div class="posts-feed">
-      <!-- Tag Header -->
-        <NewsHeader 
-          :title="`#${currentTag.name}`"
-          :results-count="tagNews.length"
-        />
 
       <!-- Loading State -->
       <div v-if="isLoading" class="space-y-4 mt-4">
@@ -48,12 +52,12 @@
 <script>
 import { computed, onMounted, watch, ref } from "vue";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import NewsPost from "@/components/news/NewsPost.vue";
 import StateMessage from "@/components/common/StateMessage.vue";
 import SkeletonLoader from "@/components/common/SkeletonLoader.vue";
 import LoadMoreButton from "@/components/common/LoadMoreButton.vue";
-import NewsHeader from "@/components/ui/News/NewsHeader.vue";
+import CategoriesSlider from "@/components/ui/Categories/CategoriesSlider.vue";
 
 export default {
   name: "TagPage",
@@ -62,11 +66,12 @@ export default {
     StateMessage,
     SkeletonLoader,
     LoadMoreButton,
-    NewsHeader,
+    CategoriesSlider,
   },
   setup() {
     const store = useStore();
     const route = useRoute();
+    const router = useRouter();
 
     const displayedPostsCount = ref(10);
     const loadingMore = ref(false);
@@ -127,6 +132,10 @@ export default {
       });
     };
 
+    const goBack = () => {
+      router.go(-1); // Go back to previous page
+    };
+
     onMounted(() => {
       loadTagNews();
     });
@@ -147,6 +156,7 @@ export default {
       loadingMore,
       loadMorePosts,
       formatDate,
+      goBack,
     };
   },
 };

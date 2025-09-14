@@ -207,6 +207,84 @@ export class LikesService {
     return likes.map(like => this.formatLikeResponse(like));
   }
 
+  async getUserLikesPaginated(userId: number, filterDto: LikeFilterDto): Promise<PaginatedResponse<LikeResponseDto>> {
+    const { 
+      page = 1, 
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'desc'
+    } = filterDto;
+
+    const skip = (page - 1) * limit;
+
+    const [likes, total] = await Promise.all([
+      this.prisma.like.findMany({
+        where: { userId },
+        include: {
+          user: {
+            select: {
+              id: true,
+              uuid: true,
+              name: true,
+              surname: true,
+              username: true,
+              avatar: true,
+            }
+          },
+          article: {
+            select: {
+              id: true,
+              title: true,
+              slug: true,
+              excerpt: true,
+              image: true,
+              publishedAt: true,
+              views: true,
+              category: {
+                select: {
+                  name: true,
+                  slug: true,
+                }
+              },
+              author: {
+                select: {
+                  name: true,
+                  surname: true,
+                }
+              },
+              _count: {
+                select: {
+                  articleLikes: true,
+                  comments: true,
+                }
+              }
+            }
+          }
+        },
+        orderBy: { [sortBy]: sortOrder },
+        skip,
+        take: limit,
+      }),
+      this.prisma.like.count({ where: { userId } })
+    ]);
+
+    const formattedLikes = likes.map(like => this.formatLikeResponse(like));
+
+    const totalPages = Math.ceil(total / limit);
+    const hasNext = page < totalPages;
+    const hasPrevious = page > 1;
+
+    return {
+      data: formattedLikes,
+      total,
+      page,
+      limit,
+      totalPages,
+      hasNext,
+      hasPrevious,
+    };
+  }
+
   async getArticleLikeStats(articleId: number, userId?: number): Promise<ArticleLikeStatsDto> {
     const article = await this.prisma.article.findUnique({
       where: { id: articleId }

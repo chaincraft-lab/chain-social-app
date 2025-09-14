@@ -16,8 +16,15 @@ class BookmarkService extends ApiService {
   }
 
   // Kullanıcının kaydettiği makaleler
-  async getMyBookmarks(limit = 50) {
-    return this.get(`/bookmarks/my-bookmarks?limit=${limit}`);
+  async getMyBookmarks(filters = {}) {
+    const params = new URLSearchParams({
+      page: filters.page || 1,
+      limit: filters.limit || 10,
+      sortBy: filters.sortBy || 'createdAt',
+      sortOrder: filters.sortOrder || 'desc'
+    });
+    
+    return this.get(`/bookmarks/my-bookmarks?${params.toString()}`);
   }
 
   // En çok kaydedilen makaleler

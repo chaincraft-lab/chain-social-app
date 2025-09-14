@@ -2,7 +2,7 @@
   <Modal 
     :is-open="isOpen" 
     size="md" 
-    custom-class="p-8"
+    custom-class="p-4 sm:p-8"
     @close="closeDialog"
   >
     <!-- Header -->

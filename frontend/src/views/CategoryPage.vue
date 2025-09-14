@@ -1,12 +1,17 @@
 <template>
   <div class="category-page  theme-text-primary">
+    <!-- Tags Navigation -->
+    <CategoriesSlider 
+      :categories="categoryTags"
+      :is-loading="isLoading"
+      mode="back"
+      :back-title="currentCategory ? currentCategory.name : 'Kategori'"
+      link-type="tag"
+      @back="goBack"
+    />
+
     <!-- Posts Feed -->
     <div class="posts-feed">
-      <!-- Category Header -->
-        <NewsHeader 
-          :title="currentCategory ? `${currentCategory.name}` : 'Kategori Haberleri'"
-          :results-count="categoryNews.length"
-        />
 
       <!-- Loading State -->
       <div v-if="isLoading" class="space-y-4 mt-4">
@@ -48,12 +53,12 @@
 <script>
 import { computed, onMounted, watch, ref } from "vue";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import NewsPost from "@/components/news/NewsPost.vue";
 import StateMessage from "@/components/common/StateMessage.vue";
 import SkeletonLoader from "@/components/common/SkeletonLoader.vue";
 import LoadMoreButton from "@/components/common/LoadMoreButton.vue";
-import NewsHeader from "@/components/ui/News/NewsHeader.vue";
+import CategoriesSlider from "@/components/ui/Categories/CategoriesSlider.vue";
 
 export default {
   name: "CategoryPage",
@@ -62,11 +67,12 @@ export default {
     StateMessage,
     SkeletonLoader,
     LoadMoreButton,
-    NewsHeader,
+    CategoriesSlider,
   },
   setup() {
     const store = useStore();
     const route = useRoute();
+    const router = useRouter();
 
     const displayedPostsCount = ref(10);
     const loadingMore = ref(false);
@@ -76,6 +82,32 @@ export default {
       const cats = categories.value;
       if (!Array.isArray(cats)) return null;
       return cats.find((c) => c && c.slug === route.params.slug) || null;
+    });
+
+    const categoryTags = computed(() => {
+      // Get all tags from posts in this category
+      const categoryPosts = allCategoryNews.value || [];
+      const tagMap = new Map();
+      
+      categoryPosts.forEach(post => {
+        if (post.tags && Array.isArray(post.tags)) {
+          post.tags.forEach(tag => {
+            if (tag && tag.slug) {
+              if (!tagMap.has(tag.slug)) {
+                tagMap.set(tag.slug, {
+                  id: tag.id,
+                  name: tag.name,
+                  slug: tag.slug,
+                  articleCount: 0
+                });
+              }
+              tagMap.get(tag.slug).articleCount++;
+            }
+          });
+        }
+      });
+      
+      return Array.from(tagMap.values()).sort((a, b) => b.articleCount - a.articleCount);
     });
 
     const allCategoryNews = computed(() => {
@@ -134,6 +166,10 @@ export default {
       });
     };
 
+    const goBack = () => {
+      router.push({ name: 'home' });
+    };
+
     onMounted(() => {
       loadCategoryNews();
     });
@@ -147,13 +183,16 @@ export default {
     );
 
     return {
+      categories,
       currentCategory,
+      categoryTags,
       categoryNews,
       hasMorePosts,
       isLoading,
       loadingMore,
       loadMorePosts,
       formatDate,
+      goBack,
     };
   },
 };

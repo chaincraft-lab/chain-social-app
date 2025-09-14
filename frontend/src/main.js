@@ -14,6 +14,8 @@ import CategoryPage from './views/CategoryPage.vue'
 import TagPage from './views/TagPage.vue'
 import SearchPage from './views/SearchPage.vue'
 import ArticlePage from './views/ArticlePage.vue'
+import BookmarksPage from './views/BookmarksPage.vue'
+import LikesPage from './views/LikesPage.vue'
 
 // Create router
 const router = createRouter({
@@ -28,9 +30,40 @@ const router = createRouter({
         { path: '/tag/:slug', component: TagPage, name: 'tag' },
         { path: '/search', component: SearchPage, name: 'search' },
         { path: '/article/:slug', component: ArticlePage, name: 'article' },
+        { 
+          path: '/bookmarks', 
+          component: BookmarksPage, 
+          name: 'bookmarks',
+          meta: { requiresAuth: true }
+        },
+        { 
+          path: '/likes', 
+          component: LikesPage, 
+          name: 'likes',
+          meta: { requiresAuth: true }
+        },
       ]
     }
   ]
+})
+
+// Add navigation guard for protected routes
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // Check if user is authenticated
+    if (store.getters['user/isAuthenticated']) {
+      next()
+    } else {
+      // Redirect to home with a message
+      store.dispatch('notifications/addNotification', {
+        type: 'warning',
+        message: 'Bu sayfaya erişmek için giriş yapmalısınız'
+      })
+      next('/')
+    }
+  } else {
+    next()
+  }
 })
 
 // Create app

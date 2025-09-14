@@ -119,21 +119,23 @@ export class BookmarksController {
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Kendi kaydettiğim makaleleri getir',
-    description: 'Giriş yapmış kullanıcının kaydettiği makaleleri getirir.'
+    description: 'Giriş yapmış kullanıcının kaydettiği makaleleri sayfalı olarak getirir.'
   })
   @ApiResponse({
     status: 200,
     description: 'Kaydedilenler başarıyla getirildi',
-    type: [BookmarkResponseDto]
+    type: 'PaginatedResponse<BookmarkResponseDto>'
   })
   @ApiResponse({ status: 401, description: 'Yetkilendirme gerekli' })
-  @ApiQuery({ name: 'limit', required: false, description: 'Maksimum bookmark sayısı (varsayılan: 50)' })
+  @ApiQuery({ name: 'page', required: false, description: 'Sayfa numarası (varsayılan: 1)' })
+  @ApiQuery({ name: 'limit', required: false, description: 'Sayfa başına öğe sayısı (varsayılan: 10)' })
+  @ApiQuery({ name: 'sortBy', required: false, description: 'Sıralama alanı (varsayılan: createdAt)' })
+  @ApiQuery({ name: 'sortOrder', required: false, description: 'Sıralama yönü (varsayılan: desc)' })
   async getMyBookmarks(
     @CurrentUser() user: CurrentUserType,
-    @Query('limit') limit?: string,
-  ): Promise<BookmarkResponseDto[]> {
-    const parsedLimit = limit ? parseInt(limit) : 50;
-    return this.bookmarksService.getUserBookmarks(user.userId, parsedLimit);
+    @Query() filterDto: BookmarkFilterDto,
+  ): Promise<PaginatedResponse<BookmarkResponseDto>> {
+    return this.bookmarksService.getUserBookmarksPaginated(user.userId, filterDto);
   }
 
   @Get('article/:articleId/check')

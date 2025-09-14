@@ -6,23 +6,24 @@ class AuthService extends ApiService {
     super();
   }
 
-  async login(credentials: LoginRequest): Promise<LoginResponse> {
-    const response = await this.post<LoginResponse>('/auth/login', credentials);
-    if (response.token) {
-      this.setToken(response.token);
+  async login(credentials: LoginRequest): Promise<any> {
+    try {
+      const response = await this.post<any>('/auth/login', credentials);
+      // API response yapısına göre token'ı al
+      const token = response.data?.data?.access_token || response.data?.access_token || response.access_token;
+      if (token) {
+        this.setToken(token);
+      }
+      return response;
+    } catch (error: any) {
+      // Hata nesnesini olduğu gibi fırlat, böylece status code korunur
+      throw error;
     }
-    return response;
   }
 
   async logout(): Promise<void> {
-    try {
-      await this.post('/auth/logout');
-    } catch (error) {
-      // Logout hatası varsa da token'ı temizle
-      console.warn('Logout request failed:', error);
-    } finally {
-      this.clearToken();
-    }
+    // Sadece token'ı temizle, API isteği gönderme
+    this.clearToken();
   }
 
   async refreshToken(): Promise<RefreshTokenResponse> {
@@ -33,9 +34,6 @@ class AuthService extends ApiService {
     return response;
   }
 
-  async getCurrentUser() {
-    return this.get('/auth/me');
-  }
 
   isAuthenticated(): boolean {
     return !!this.getToken();

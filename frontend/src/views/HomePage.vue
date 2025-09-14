@@ -1,10 +1,9 @@
 <template>
   <div class="homepage-feed  theme-text-primary">
-    <!-- News Header with Filter Panel -->
-    <NewsHeader 
-      title="Son Haberler"
-      :results-count="filteredNews.length"
-      @filter-change="handleFilterChange"
+    <!-- Categories Slider -->
+    <CategoriesSlider 
+      :categories="categories"
+      :is-loading="isLoading"
     />
 
     <!-- News Feed Posts -->
@@ -53,7 +52,7 @@ import NewsPost from "@/components/news/NewsPost.vue";
 import StateMessage from "@/components/common/StateMessage.vue";
 import SkeletonLoader from "@/components/common/SkeletonLoader.vue";
 import LoadMoreButton from "@/components/common/LoadMoreButton.vue";
-import NewsHeader from "@/components/ui/News/NewsHeader.vue";
+import CategoriesSlider from "@/components/ui/Categories/CategoriesSlider.vue";
 
 export default {
   name: "HomePage",
@@ -62,7 +61,7 @@ export default {
     StateMessage,
     SkeletonLoader,
     LoadMoreButton,
-    NewsHeader,
+    CategoriesSlider,
   },
   data() {
     return {
@@ -70,13 +69,6 @@ export default {
       loadingMore: false,
       hasMorePosts: true,
       displayedPostsCount: 10,
-      activeFilters: {
-        search: '',
-        category: '',
-        tag: '',
-        dateRange: '',
-        sort: 'newest'
-      },
     };
   },
   async mounted() {
@@ -154,31 +146,6 @@ export default {
       });
     },
 
-    handleFilterChange(filters) {
-      this.activeFilters = { ...filters };
-      this.displayedPostsCount = 10;
-      this.hasMorePosts = true;
-      
-      // Backend'den filtrelenmiş veri çek
-      this.fetchFilteredNews();
-    },
-
-    async fetchFilteredNews() {
-      try {
-        const params = {
-          search: this.activeFilters.search,
-          category: this.activeFilters.category,
-          tag: this.activeFilters.tag,
-          dateRange: this.activeFilters.dateRange,
-          sort: this.activeFilters.sort,
-          limit: this.displayedPostsCount
-        };
-
-        await this.$store.dispatch('news/fetchFilteredNews', params);
-      } catch (error) {
-        console.error('Error fetching filtered news:', error);
-      }
-    },
 
     async loadMorePosts() {
       if (this.loadingMore || !this.hasMorePosts) return;

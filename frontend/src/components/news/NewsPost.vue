@@ -1,6 +1,6 @@
 <template>
-  <div class="news-post mb-6">
-    <div class="theme-card rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
+  <div class="news-post">
+    <div class="overflow-hidden">
       <!-- Post Header -->
       <PostHeader
         :author="news.author || { name: 'Editör' }"
@@ -231,18 +231,24 @@ watch(isAuthenticated, (newVal) => {
 .news-post {
   max-width: 700px;
   margin: 0 auto;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.news-post:last-child {
+  border-bottom: none;
 }
 
 /* Mobile responsive */
 @media (max-width: 768px) {
   .news-post {
-    margin-bottom: 1.5rem;
+    padding: 1.25rem 0;
   }
 }
 
 @media (max-width: 480px) {
   .news-post {
-    margin-bottom: 1rem;
+    padding: 1rem 0;
   }
 }
 </style>
