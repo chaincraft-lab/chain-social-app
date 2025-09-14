@@ -57,12 +57,13 @@
     />
 
     <!-- Items List -->
-    <div v-else class="space-y-6">
+    <div v-else class="space-y-0">
       <!-- Content Item with Remove Option -->
       <div 
         v-for="(item, index) in sortedItems" 
         :key="item.id"
-        class="theme-card rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 group"
+        class="group py-6 first:pt-0 last:border-b-0"
+        style="border-bottom: 1px solid var(--color-border-primary);"
       >
         <div class="relative">
           <!-- Remove Button -->
@@ -292,6 +293,15 @@ onMounted(() => {
   max-width: 800px;
   margin: 0 auto;
   padding: 0 1rem;
+}
+
+/* Remove list markers/bullets */
+.user-content-list-page ul,
+.user-content-list-page ol,
+.user-content-list-page li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 @media (max-width: 768px) {
