@@ -1,5 +1,2 @@
 Plan:
-1- Sitenin font, color template(#459c98, #f28f80, #ffffff, #2e3d3c, #d9e3e2), application layout, theme gibi özelliklerin belirlenmesi
-2- Folder structure ayarlanması
-3- Siteyi tümüyle dinamik olarak kullanmak statik verilerden kaçınılması
-4- Componentleri belirlemek.
+REKLAM TARAFINA ÇALIŞ( MAKALELER, POPULAR HABERLER ARASINA REKLAMLAR SIKIŞTIRALIM)
