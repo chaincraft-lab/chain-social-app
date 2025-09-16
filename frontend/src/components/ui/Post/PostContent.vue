@@ -2,7 +2,7 @@
   <div class="px-4 pb-3">
     <!-- Engagement Stats -->
     <div v-if="likesCount > 0" class="mb-2">
-      <span class="text-sm font-semibold text-gray-900"
+      <span class="text-sm font-semibold text-white"
         >{{ formatCount(likesCount) }} beğeni</span
       >
     </div>
@@ -10,11 +10,11 @@
     <!-- Post Title and Content -->
     <div class="cursor-pointer" @click="$emit('contentClick')">
       <div class="text-sm mb-1">
-        <span class="font-semibold text-gray-900">{{ authorName }}</span>
-        <span class="text-gray-900 ml-1">{{ title }}</span>
+        <span class="font-semibold text-white">{{ authorName }}</span>
+        <span class="text-white ml-1">{{ title }}</span>
       </div>
 
-      <div v-if="excerpt" class="text-sm text-gray-600 mb-2">
+      <div v-if="excerpt" class="text-sm text-gray-300 mb-2">
         {{ excerpt }}
       </div>
     </div>
@@ -24,7 +24,7 @@
       <span
         v-for="tag in tags.slice(0, 3)"
         :key="tag.id || tag"
-        class="text-sm text-primary hover:underline transition-colors"
+        class="text-sm text-blue-400 hover:text-blue-300 hover:underline transition-colors cursor-pointer"
       >
         #{{ tag.name || tag }}
       </span>

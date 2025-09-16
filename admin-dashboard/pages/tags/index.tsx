@@ -1,8 +1,6 @@
 import { useState, useEffect, ChangeEvent, useMemo } from 'react';
 import Head from 'next/head';
 import SidebarLayout from 'src/layouts/SidebarLayout';
-import PageTitle from 'src/components/PageTitle';
-import PageTitleWrapper from 'src/components/PageTitleWrapper';
 import {
   Container,
   Grid,
@@ -253,14 +251,7 @@ function TagsPage() {
       <Head>
         <title>Etiketler - Haber Sitesi Admin</title>
       </Head>
-      <PageTitleWrapper>
-        <PageTitle
-          heading="Etiketler"
-          subHeading="Haber etiketlerini yönetin"
-          docs="https://example.com"
-        />
-      </PageTitleWrapper>
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ pt: 4 }}>
         <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={3}>
           <Grid item xs={12}>
             {error && (

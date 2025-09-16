@@ -34,6 +34,22 @@ class AuthService extends ApiService {
     return response;
   }
 
+  async changePassword(passwordData: {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }): Promise<any> {
+    try {
+      console.log('AuthService - Sending password change request:', passwordData);
+      console.log('AuthService - Request URL:', '/users/change-password');
+      
+      const response = await this.patch<any>('/users/change-password', passwordData);
+      return response;
+    } catch (error: any) {
+      console.error('AuthService - Password change error:', error.response?.data || error);
+      throw error;
+    }
+  }
 
   isAuthenticated(): boolean {
     return !!this.getToken();

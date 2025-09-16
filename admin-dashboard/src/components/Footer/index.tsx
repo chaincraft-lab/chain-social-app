@@ -18,7 +18,7 @@ function Footer() {
       >
         <Box>
           <Typography variant="subtitle1">
-            &copy; 2025 - Admin Dashboard  Next.js Typescript Admin Dashboard
+            &copy; 2025 - Admin Dashboard
           </Typography>
         </Box>
         <Typography
@@ -29,11 +29,11 @@ function Footer() {
         >
           Crafted by{' '}
           <Link
-            href="https://bloomui.com"
+            href="https://github.com/ozknsmz"
             target="_blank"
             rel="noopener noreferrer"
           >
-            BloomUI.com
+            ozknsmz
           </Link>
         </Typography>
       </Box>

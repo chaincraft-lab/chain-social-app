@@ -230,7 +230,6 @@ export default {
 .homepage-feed {
   max-width: 700px;
   margin: 0 auto;
-  padding: 0 1rem;
 }
 
 
@@ -262,7 +261,7 @@ export default {
 
 
 /* Mobile Responsive */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .homepage-feed {
     padding: 0 0.5rem;
   }
@@ -274,7 +273,7 @@ export default {
     padding: 0 0.25rem;
   }
 
-}
+} */
 
 
 

@@ -6,12 +6,14 @@ import {
   Grid,
   CardContent,
   CardHeader,
-  styled
+  styled,
+  Alert,
+  CircularProgress
 } from '@mui/material';
 import type { ReactElement } from 'react';
+import { useState, useEffect } from 'react';
 import SidebarLayout from 'src/layouts/SidebarLayout';
-import PageTitle from 'src/components/PageTitle';
-import PageTitleWrapper from 'src/components/PageTitleWrapper';
+import dashboardService, { DashboardStats } from 'src/services/dashboard/DashboardService';
 
 import Head from 'next/head';
 import ArticleTwoToneIcon from '@mui/icons-material/ArticleTwoTone';
@@ -23,6 +25,17 @@ const StatsCard = styled(Card)(
   ({ theme }) => `
     text-align: center;
     padding: ${theme.spacing(2)};
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    
+    .MuiCardContent-root {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: ${theme.spacing(3)} !important;
+    }
     
     .stats-icon {
       font-size: 3rem;
@@ -43,28 +56,55 @@ const StatsCard = styled(Card)(
 );
 
 function Dashboard() {
-  // Dummy data - replace with actual API calls
-  const stats = {
-    totalArticles: 127,
-    totalCategories: 8,
-    totalUsers: 45,
-    pendingComments: 12
-  };
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDashboardStats = async () => {
+      try {
+        setLoading(true);
+        const data = await dashboardService.getDashboardStats();
+        setStats(data);
+        setError(null);
+      } catch (err: any) {
+        console.error('Dashboard stats fetch error:', err);
+        setError('Dashboard verileri yüklenirken bir hata oluştu');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardStats();
+  }, []);
+
+  if (loading) {
+    return (
+      <Container maxWidth="xl" sx={{ pt: 4, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="xl" sx={{ pt: 4 }}>
+        <Alert severity="error">{error}</Alert>
+      </Container>
+    );
+  }
+
+  if (!stats) {
+    return null;
+  }
 
   return (
     <>
       <Head>
         <title>Dashboard - Haber Sitesi Admin</title>
       </Head>
-      <PageTitleWrapper>
-        <PageTitle
-          heading="Dashboard"
-          subHeading="Haber sitenizin genel durumunu takip edin"
-          docs="https://example.com"
-        />
-      </PageTitleWrapper>
-      <Container maxWidth="xl">
-        <Grid container spacing={3}>
+      <Container maxWidth="xl" sx={{ pt: 4 }}>
+        <Grid container spacing={3} alignItems="stretch">
           {/* Stats Cards */}
           <Grid item xs={12} sm={6} md={3}>
             <StatsCard>
@@ -75,6 +115,9 @@ function Dashboard() {
                 </Typography>
                 <Typography className="stats-label">
                   Toplam Makale
+                </Typography>
+                <Typography variant="caption" color="textSecondary" sx={{ display: 'block', mt: 1 }}>
+                  Bugün: +{stats.todayStats.articlesCreated}
                 </Typography>
               </CardContent>
             </StatsCard>
@@ -104,6 +147,9 @@ function Dashboard() {
                 <Typography className="stats-label">
                   Kullanıcı
                 </Typography>
+                <Typography variant="caption" color="textSecondary" sx={{ display: 'block', mt: 1 }}>
+                  Bugün: +{stats.todayStats.newUsers}
+                </Typography>
               </CardContent>
             </StatsCard>
           </Grid>
@@ -118,6 +164,9 @@ function Dashboard() {
                 <Typography className="stats-label">
                   Bekleyen Yorum
                 </Typography>
+                <Typography variant="caption" color="textSecondary" sx={{ display: 'block', mt: 1 }}>
+                  Bugün: +{stats.todayStats.commentsReceived}
+                </Typography>
               </CardContent>
             </StatsCard>
           </Grid>
@@ -128,21 +177,20 @@ function Dashboard() {
               <CardHeader title="Son Makaleler" />
               <CardContent>
                 <Box>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    • Teknoloji Dünyasındaki Son Gelişmeler
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    • Yapay Zeka ve Gelecek
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    • Sporda Bu Hafta
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    • Ekonomik Gündem
-                  </Typography>
-                  <Typography variant="body2">
-                    • Sağlık Haberleri
-                  </Typography>
+                  {stats.recentArticles.length > 0 ? (
+                    stats.recentArticles.map((article) => (
+                      <Typography key={article.id} variant="body2" sx={{ mb: 1 }}>
+                        • {article.title}
+                        <Typography component="span" variant="caption" color="textSecondary" sx={{ ml: 1 }}>
+                          ({new Date(article.createdAt).toLocaleDateString('tr-TR')})
+                        </Typography>
+                      </Typography>
+                    ))
+                  ) : (
+                    <Typography variant="body2" color="textSecondary">
+                      Henüz makale yok
+                    </Typography>
+                  )}
                 </Box>
               </CardContent>
             </Card>
@@ -150,23 +198,23 @@ function Dashboard() {
 
           <Grid item xs={12} md={6}>
             <Card>
-              <CardHeader title="Bekleyen İşlemler" />
+              <CardHeader title="Bugünün Özeti" />
               <CardContent>
                 <Box>
                   <Typography variant="body2" sx={{ mb: 1 }}>
-                    • 5 makale onay bekliyor
+                    • {stats.todayStats.articlesCreated} yeni makale oluşturuldu
                   </Typography>
                   <Typography variant="body2" sx={{ mb: 1 }}>
-                    • 12 yorum modere edilmeyi bekliyor
+                    • {stats.pendingComments} yorum modere edilmeyi bekliyor
                   </Typography>
                   <Typography variant="body2" sx={{ mb: 1 }}>
-                    • 3 yeni kullanıcı kaydı
+                    • {stats.todayStats.newUsers} yeni kullanıcı kaydı
                   </Typography>
                   <Typography variant="body2" sx={{ mb: 1 }}>
-                    • 2 spam raporu
+                    • {stats.todayStats.commentsReceived} yeni yorum alındı
                   </Typography>
                   <Typography variant="body2">
-                    • 1 kategori güncelleme talebi
+                    • Toplam {stats.totalCategories} kategori mevcut
                   </Typography>
                 </Box>
               </CardContent>

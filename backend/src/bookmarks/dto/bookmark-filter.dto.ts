@@ -1,4 +1,4 @@
-import { IsOptional, IsInt, Min } from 'class-validator';
+import { IsOptional, IsInt, Min, IsString, IsIn } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationDto } from '../../common/dto/pagination.dto';
@@ -23,4 +23,21 @@ export class BookmarkFilterDto extends PaginationDto {
   @IsInt({ message: 'Makale ID sayı olmalıdır' })
   @Min(1, { message: 'Makale ID pozitif bir sayı olmalıdır' })
   articleId?: number;
+
+  @ApiPropertyOptional({
+    description: 'Sıralama alanı',
+    example: 'createdAt',
+  })
+  @IsOptional()
+  @IsString()
+  sortBy?: string;
+
+  @ApiPropertyOptional({
+    description: 'Sıralama yönü',
+    example: 'desc',
+    enum: ['asc', 'desc'],
+  })
+  @IsOptional()
+  @IsIn(['asc', 'desc'])
+  sortOrder?: 'asc' | 'desc';
 }
