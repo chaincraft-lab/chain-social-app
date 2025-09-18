@@ -1,7 +1,7 @@
 <template>
   <div class="homepage-feed  theme-text-primary">
-    <!-- Categories Slider -->
-    <CategoriesSlider 
+    <!-- Category Stories -->
+    <CategoryStories 
       :categories="categories"
       :is-loading="isLoading"
     />
@@ -52,7 +52,7 @@ import NewsPost from "@/components/news/NewsPost.vue";
 import StateMessage from "@/components/common/StateMessage.vue";
 import SkeletonLoader from "@/components/common/SkeletonLoader.vue";
 import LoadMoreButton from "@/components/common/LoadMoreButton.vue";
-import CategoriesSlider from "@/components/ui/Categories/CategoriesSlider.vue";
+import CategoryStories from "@/components/stories/CategoryStories.vue";
 
 export default {
   name: "HomePage",
@@ -61,7 +61,7 @@ export default {
     StateMessage,
     SkeletonLoader,
     LoadMoreButton,
-    CategoriesSlider,
+    CategoryStories,
   },
   data() {
     return {
