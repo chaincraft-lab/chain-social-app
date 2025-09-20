@@ -6,7 +6,7 @@
       'inline-flex items-center justify-center transition-colors duration-200',
       sizeClasses,
       colorClasses,
-      disabled || loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'
+      disabled || loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-700 rounded-full'
     ]"
   >
     <div v-if="loading" class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
@@ -43,9 +43,9 @@ const sizeClasses = computed(() => {
 
 const colorClasses = computed(() => {
   const colors = {
-    gray: 'text-gray-600',
-    red: props.filled ? 'text-red-500' : 'text-gray-600',
-    primary: props.filled ? 'text-primary' : 'text-gray-600'
+    gray: 'text-gray-300',
+    red: props.filled ? 'text-red-400' : 'text-gray-300',
+    primary: props.filled ? 'text-blue-400' : 'text-gray-300'
   }
   return colors[props.color] || colors.gray
 })

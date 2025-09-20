@@ -49,10 +49,12 @@
     </div>
 
     <!-- Auth Dialog -->
-    <AuthDialog 
-      v-model="showAuthDialog" 
-      @success="handleAuthSuccess" 
-    />
+    <Teleport to="body">
+      <AuthDialog 
+        v-model="showAuthDialog" 
+        @success="handleAuthSuccess" 
+      />
+    </Teleport>
   </div>
 </template>
 
@@ -229,10 +231,18 @@ watch(isAuthenticated, (newVal) => {
 
 <style scoped>
 .news-post {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 1.5rem 0;
+  width: 100%;
   border-bottom: 1px solid var(--color-border-primary);
+  background-color: var(--color-bg-secondary);
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.news-post:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
 }
 
 .news-post:last-child {

@@ -1,9 +1,9 @@
 <template>
-  <div class="relative cursor-pointer px-4" @click="$emit('imageClick')">
+  <div class="relative cursor-pointer" @click="$emit('imageClick')">
     <img
       :src="imageUrl"
       :alt="alt"
-      class="w-full h-96 object-cover rounded-2xl"
+      class="w-full h-96 object-cover "
       @error="handleImageError"
     />
     

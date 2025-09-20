@@ -4,9 +4,9 @@
     <Navbar />
 
     <!-- Main Content -->
-    <main class="flex-1 theme-bg-primary">
-      <div class="container mx-auto px-1">
-        <div class="grid grid-cols-12 gap-6 py-6">
+    <main class="flex-1 theme-bg-primary pb-16 md:pb-0">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="grid grid-cols-12 gap-6 py-8">
           <!-- Left Sidebar - Hidden on Mobile -->
           <div class="col-span-12 lg:col-span-3 hidden lg:block">
               <Sidebar
@@ -39,6 +39,9 @@
 
     <!-- Footer -->
     <Footer />
+    
+    <!-- Bottom Navigation - Mobile Only -->
+    <BottomNavigation />
   </div>
 </template>
 
@@ -46,6 +49,7 @@
 import Navbar from "@/components/layout/Navbar.vue";
 import Sidebar from "@/components/layout/Sidebar.vue";
 import Footer from "@/components/layout/Footer.vue";
+import BottomNavigation from "@/components/layout/BottomNavigation.vue";
 
 export default {
   name: "MainLayout",
@@ -53,6 +57,7 @@ export default {
     Navbar,
     Sidebar,
     Footer,
+    BottomNavigation,
   },
   mounted() {
     // Fetch initial data when layout is mounted

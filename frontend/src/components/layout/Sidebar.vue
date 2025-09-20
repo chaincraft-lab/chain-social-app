@@ -5,12 +5,12 @@
       :categories="categories"
     />
 
-    <!-- Popular News Component -->
-     <PopularNews 
+    <!-- Popular News Component - Moved to Stories -->
+    <!-- <PopularNews 
        :show-popular="showPopular" 
        title-size="sm"
        :max-title-length="60"
-     /> 
+     /> --> 
 
     <!-- Defense Info Cards (Right Sidebar Only) -->
     <template v-if="position === 'right'">

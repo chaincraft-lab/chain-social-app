@@ -1,14 +1,13 @@
 <template>
   <div class="homepage-feed  theme-text-primary">
-    <!-- Categories Slider -->
-    <CategoriesSlider 
+    <!-- Category Stories -->
+    <CategoryStories 
       :categories="categories"
       :is-loading="isLoading"
     />
 
     <!-- News Feed Posts -->
     <section class="news-feed">
-
       <!-- Post Feed -->
       <div class="posts-container">
         <!-- Loading State -->
@@ -52,7 +51,7 @@ import NewsPost from "@/components/news/NewsPost.vue";
 import StateMessage from "@/components/common/StateMessage.vue";
 import SkeletonLoader from "@/components/common/SkeletonLoader.vue";
 import LoadMoreButton from "@/components/common/LoadMoreButton.vue";
-import CategoriesSlider from "@/components/ui/Categories/CategoriesSlider.vue";
+import CategoryStories from "@/components/stories/CategoryStories.vue";
 
 export default {
   name: "HomePage",
@@ -61,7 +60,7 @@ export default {
     StateMessage,
     SkeletonLoader,
     LoadMoreButton,
-    CategoriesSlider,
+    CategoryStories,
   },
   data() {
     return {
@@ -228,9 +227,8 @@ export default {
 <style scoped>
 /* Homepage Feed Layout */
 .homepage-feed {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  width: 100%;
+  padding: 0;
 }
 
 
@@ -244,7 +242,7 @@ export default {
 .posts-container {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 1rem;
   min-height: 100vh; /* Prevent layout shift */
   transition: opacity 0.3s ease;
 }
@@ -257,23 +255,15 @@ export default {
 .news-posts-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 1rem;
 }
 
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  .homepage-feed {
-    padding: 0 0.5rem;
-  }
-
 }
 
 @media (max-width: 480px) {
-  .homepage-feed {
-    padding: 0 0.25rem;
-  }
-
 }
 
 

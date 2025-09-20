@@ -80,7 +80,7 @@ function Sidebar() {
         />
         <Box p={2}>
           <Button
-            href="https://bloomui.com"
+            href="https://github.com/ozknsmz"
             target="_blank"
             rel="noopener noreferrer"
             variant="contained"
@@ -88,7 +88,7 @@ function Sidebar() {
             size="small"
             fullWidth
           >
-            CONTACT
+            ozknsmz
           </Button>
         </Box>
       </SidebarWrapper>
