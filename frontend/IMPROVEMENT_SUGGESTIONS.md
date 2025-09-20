@@ -97,4 +97,13 @@
 - Offline capability
 
 ---
-*Son güncelleme: 2025-09-20*
+
+[11:47, 20.09.2025] | Admin panele 2 factor authentication koymamız lazım
+[11:47, 20.09.2025] | Sms veya mailler ama sms daha güvenli
+[11:47, 20.09.2025] | Admin ve site paneli farklı domainlerde ıp lerde olacak
+[11:48, 20.09.2025] | Site yatafında admin paneli adresleyen bir admin paneli deşifre edecek bir kod bulunmayacak
+[11:49, 20.09.2025] | Orada encript edilmiş bir yapı ile sadece admin panelden gelen içerikleri kabul edecek bir hashleme yapabiliriz
+[11:49, 20.09.2025] | Genel siyeye CloudFlare kuracağız 20usd lik versiyon yeterli
+[11:49, 20.09.2025] | Comodo vb biyerden sub domain kabul eden nir ssl sertifikası alacağız
+[11:50, 20.09.2025] | Fileserverı sub domainden yönetebiliriz
+[11:50, 20.09.2025] | Farklı sub domainler açarız ama admin panel domaini apayrı olur
