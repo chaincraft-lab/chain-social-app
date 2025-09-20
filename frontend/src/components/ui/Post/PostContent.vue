@@ -9,9 +9,9 @@
 
     <!-- Post Title and Content -->
     <div class="cursor-pointer" @click="$emit('contentClick')">
-      <div class="text-sm mb-1">
-        <span class="font-semibold text-white">{{ authorName }}</span>
-        <span class="text-white ml-1">{{ title }}</span>
+      <div class="text-2xl mb-2">
+        <!-- <span class="font-semibold text-white">{{ authorName }}</span> -->
+        <span class="text-white">{{ title }}</span>
       </div>
 
       <div v-if="excerpt" class="text-sm text-gray-300 mb-2">

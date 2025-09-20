@@ -38,10 +38,7 @@
               </div>
             </div>
             
-            <!-- Viewed indicator -->
-            <div v-if="isViewed(article.id)" class="viewed-indicator">
-              <Icon icon="heroicons:check-circle" />
-            </div>
+
           </div>
         </div>
       </div>
@@ -331,13 +328,13 @@ onUnmounted(() => {
 <style scoped>
 /* Magazine Stories Container */
 .category-stories {
-  padding: 20px 0;
+  width: 100%;
+  padding: 8px 0;
   background: var(--color-bg-primary);
 }
 
 .magazine-stories-container {
   overflow-x: auto;
-  padding: 0 16px;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -443,10 +440,10 @@ onUnmounted(() => {
 
 .magazine-title {
   color: var(--color-light);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
-  margin: 0 0 4px 0;
-  line-height: 1.2;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -463,7 +460,7 @@ onUnmounted(() => {
 
 .magazine-subtitle {
   color: var(--color-light-100);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   margin: 0;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
@@ -477,15 +474,15 @@ onUnmounted(() => {
 }
 
 .view-count-icon {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   color: var(--color-light-100);
   opacity: 0.8;
 }
 
 .view-count-text {
   color: var(--color-light-100);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   opacity: 0.9;
@@ -787,22 +784,36 @@ onUnmounted(() => {
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
+  .category-stories {
+    padding: 6px 0;
+  }
+  
   .story-viewer {
     max-width: 100%;
   }
   
-  .stories-wrapper {
-    gap: 12px;
+  .magazine-stories-wrapper {
+    gap: 10px;
   }
   
-  .story-ring {
-    width: 60px;
-    height: 60px;
+  .magazine-card {
+    width: 120px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-stories {
+    padding: 4px 0;
   }
   
-  .story-label {
-    font-size: 11px;
-    max-width: 70px;
+  .magazine-stories-wrapper {
+    gap: 8px;
+  }
+  
+  .magazine-card {
+    width: 110px;
+    height: 160px;
   }
 }
 </style>

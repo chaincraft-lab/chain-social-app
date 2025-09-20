@@ -8,7 +8,6 @@
 
     <!-- News Feed Posts -->
     <section class="news-feed">
-
       <!-- Post Feed -->
       <div class="posts-container">
         <!-- Loading State -->
@@ -228,8 +227,8 @@ export default {
 <style scoped>
 /* Homepage Feed Layout */
 .homepage-feed {
-  max-width: 700px;
-  margin: 0 auto;
+  width: 100%;
+  padding: 0;
 }
 
 
@@ -243,7 +242,7 @@ export default {
 .posts-container {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 1rem;
   min-height: 100vh; /* Prevent layout shift */
   transition: opacity 0.3s ease;
 }
@@ -256,24 +255,16 @@ export default {
 .news-posts-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 1rem;
 }
 
 
 /* Mobile Responsive */
-/* @media (max-width: 768px) {
-  .homepage-feed {
-    padding: 0 0.5rem;
-  }
-
+@media (max-width: 768px) {
 }
 
 @media (max-width: 480px) {
-  .homepage-feed {
-    padding: 0 0.25rem;
-  }
-
-} */
+}
 
 
 

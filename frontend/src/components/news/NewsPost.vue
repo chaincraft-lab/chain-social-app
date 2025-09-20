@@ -231,8 +231,7 @@ watch(isAuthenticated, (newVal) => {
 
 <style scoped>
 .news-post {
-  max-width: 700px;
-  margin: 0 auto;
+  width: 100%;
   border-bottom: 1px solid var(--color-border-primary);
   background-color: var(--color-bg-secondary);
   margin-bottom: 1rem;

@@ -5,8 +5,8 @@
 
     <!-- Main Content -->
     <main class="flex-1 theme-bg-primary pb-16 md:pb-0">
-      <div class="container mx-auto px-1">
-        <div class="grid grid-cols-12 gap-6 py-6">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="grid grid-cols-12 gap-6 py-8">
           <!-- Left Sidebar - Hidden on Mobile -->
           <div class="col-span-12 lg:col-span-3 hidden lg:block">
               <Sidebar
