@@ -3,35 +3,43 @@
     <!-- Magazine Stories Container -->
     <div class="magazine-stories-container">
       <div class="magazine-stories-wrapper">
-        <!-- Magazine Cover Cards -->
+        <!-- Popular Stories Cards -->
         <div 
-          v-for="category in categoriesWithStories" 
-          :key="category.id"
+          v-for="article in storiesWithArticles" 
+          :key="article.id"
           class="magazine-card"
-          @click="openCategoryStories(category)"
+          @click="openStory(article)"
         >
           <!-- Background Image -->
           <div class="magazine-background">
             <img 
-              v-if="getCategoryMainArticle(category)?.imageUrl" 
-              :src="getCategoryMainArticle(category).imageUrl" 
-              :alt="category.name"
+              v-if="article.image" 
+              :src="article.image" 
+              :alt="article.title"
               class="magazine-bg-image"
             />
             <div v-else class="magazine-placeholder">
-              <Icon :icon="getCategoryIcon(category.name)" class="magazine-placeholder-icon" />
+              <div class="magazine-no-image">
+                <span class="magazine-no-image-text">{{ article.category?.name || 'Haber' }}</span>
+              </div>
             </div>
           </div>
           
           <!-- Overlay Content -->
           <div class="magazine-overlay">
             <div class="magazine-content">
-              <h3 class="magazine-title">{{ category.name }}</h3>
-              <p class="magazine-subtitle">{{ getCategoryArticleCount(category) }} haber</p>
+              <h3 class="magazine-title">{{ article.title }}</h3>
+              <div class="magazine-subtitle-wrapper">
+                <p class="magazine-subtitle">{{ article.category?.name || 'Popüler' }}</p>
+                <div class="magazine-view-count">
+                  <Icon icon="heroicons:eye" class="view-count-icon" />
+                  <span class="view-count-text">{{ getStoryViewCount(article) }}</span>
+                </div>
+              </div>
             </div>
             
             <!-- Viewed indicator -->
-            <div v-if="isViewed(category.id)" class="viewed-indicator">
+            <div v-if="isViewed(article.id)" class="viewed-indicator">
               <Icon icon="heroicons:check-circle" />
             </div>
           </div>
@@ -52,13 +60,7 @@
             <!-- Progress bars -->
             <div class="story-progress">
               <div 
-                v-for="(article, index) in currentCategoryArticles"
-                :key="article.id"
-                class="progress-bar"
-                :class="{ 
-                  'progress-bar--active': index === currentStoryIndex,
-                  'progress-bar--completed': index < currentStoryIndex 
-                }"
+                class="progress-bar progress-bar--active"
               >
                 <div class="progress-fill"></div>
               </div>
@@ -67,18 +69,13 @@
             <!-- Story info -->
             <div class="story-info">
               <div class="category-avatar">
-                <img 
-                  v-if="currentCategory?.image" 
-                  :src="currentCategory.image" 
-                  :alt="currentCategory.name"
-                />
-                <div v-else class="avatar-placeholder">
-                  <Icon :icon="getCategoryIcon(currentCategory?.name)" />
+                <div class="avatar-placeholder">
+                  <span class="avatar-text">{{ currentArticle?.category?.name?.charAt(0) || 'P' }}</span>
                 </div>
               </div>
               <div class="story-details">
-                <h3 class="category-name">{{ currentCategory?.name }}</h3>
-                <span class="story-time">{{ formatTime(currentArticle?.createdAt) }}</span>
+                <h3 class="category-name">{{ currentArticle?.category?.name || 'Popüler Haber' }}</h3>
+                <span class="story-time">{{ formatTime(currentArticle?.publishedAt) }}</span>
               </div>
               <button class="close-button" @click="closeStories">
                 <Icon icon="heroicons:x-mark" />
@@ -89,9 +86,9 @@
           <!-- Story Content -->
           <div class="story-content" v-if="currentArticle">
             <!-- Article Image with Title Overlay -->
-            <div class="story-image-container" v-if="currentArticle.imageUrl">
+            <div class="story-image-container" v-if="currentArticle.image">
               <img 
-                :src="currentArticle.imageUrl" 
+                :src="currentArticle.image" 
                 :alt="currentArticle.title"
                 class="story-main-image"
               />
@@ -99,12 +96,12 @@
               <!-- Title Overlay on Image -->
               <div class="story-title-overlay">
                 <h2 class="story-overlay-title">{{ currentArticle.title }}</h2>
-                <p class="story-overlay-category">{{ currentCategory?.name }}</p>
+                <p class="story-overlay-category">{{ currentArticle.category?.name || 'Popüler Haber' }}</p>
               </div>
             </div>
 
             <!-- Article Content (fallback if no image) -->
-            <div class="story-text-content" v-if="!currentArticle.imageUrl">
+            <div class="story-text-content" v-if="!currentArticle.image">
               <h2 class="article-title">{{ currentArticle.title }}</h2>
               <p class="article-excerpt" v-if="currentArticle.excerpt">
                 {{ currentArticle.excerpt }}
@@ -137,7 +134,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({
-  categories: { type: Array, default: () => [] },
+  categories: { type: Array, default: () => [] }, // Keep for compatibility but not used
   isLoading: { type: Boolean, default: false }
 })
 
@@ -146,158 +143,86 @@ const router = useRouter()
 
 // Reactive state
 const showStoryViewer = ref(false)
-const currentCategory = ref(null)
+const currentStory = ref(null)
 const currentStoryIndex = ref(0)
-const viewedCategories = ref(new Set())
-const categoryArticles = ref({})
+const viewedStories = ref(new Set())
+const popularArticles = ref([])
 
 // Auto-progress timer
 let storyTimer = null
 const STORY_DURATION = 5000 // 5 seconds per story
 
 // Computed
-const categoriesWithStories = computed(() => {
-  // Show all categories, not just ones with articles loaded
-  // This allows users to see and click categories immediately
-  return props.categories || []
+const storiesWithArticles = computed(() => {
+  // Show popular news as stories
+  return popularArticles.value || []
 })
 
-const currentCategoryArticles = computed(() => {
-  return currentCategory.value ? 
-    categoryArticles.value[currentCategory.value.slug] || [] : []
+const currentStoryArticles = computed(() => {
+  // For popular news, each article is its own story
+  return currentStory.value ? [currentStory.value] : []
 })
 
 const currentArticle = computed(() => {
-  return currentCategoryArticles.value[currentStoryIndex.value]
+  return currentStory.value
 })
 
 // Methods
-const getCategoryIcon = (categoryName) => {
-  const iconMap = {
-    'Spor': 'heroicons:trophy',
-    'Teknoloji': 'heroicons:cpu-chip',
-    'Siyaset': 'heroicons:building-office',
-    'Ekonomi': 'heroicons:chart-bar',
-    'Kültür': 'heroicons:academic-cap',
-    'Sağlık': 'heroicons:heart',
-    'Dünya': 'heroicons:globe-alt',
-    'Magazin': 'heroicons:star'
-  }
-  return iconMap[categoryName] || 'heroicons:newspaper'
+
+const getStoryArticle = (article) => {
+  return article
 }
 
-const getCategoryMainArticle = (category) => {
-  const articles = categoryArticles.value[category.slug]
-  return articles && articles.length > 0 ? articles[0] : null
+const getStoryViewCount = (article) => {
+  return article.viewCount || 0
 }
 
-const getCategoryArticleCount = (category) => {
-  const articles = categoryArticles.value[category.slug]
-  return articles ? articles.length : category.articleCount || 0
+const isViewed = (articleId) => {
+  return viewedStories.value.has(articleId)
 }
 
-const isViewed = (categoryId) => {
-  return viewedCategories.value.has(categoryId)
-}
-
-const openCategoryStories = async (category) => {
-  // Fetch articles for this category on click using slug
-  await fetchCategoryArticles(category.slug)
-  
-  // Check if we have articles to show
-  if (!categoryArticles.value[category.slug] || categoryArticles.value[category.slug].length === 0) {
-    console.log('No articles found for category:', category.name)
-    return
-  }
-  
-  currentCategory.value = category
+const openStory = async (article) => {
+  // Open story directly with the article
+  currentStory.value = article
   currentStoryIndex.value = 0
   showStoryViewer.value = true
   
   // Mark as viewed
-  viewedCategories.value.add(category.id)
+  viewedStories.value.add(article.id)
   
   startStoryTimer()
 }
 
 const closeStories = () => {
   showStoryViewer.value = false
-  currentCategory.value = null
+  currentStory.value = null
   currentStoryIndex.value = 0
   stopStoryTimer()
 }
 
 const nextStory = async () => {
-  if (currentStoryIndex.value < currentCategoryArticles.value.length - 1) {
-    currentStoryIndex.value++
-    resetStoryTimer()
+  // Move to next popular article or close
+  const currentArticleIndex = storiesWithArticles.value.findIndex(
+    article => article.id === currentStory.value.id
+  )
+  
+  if (currentArticleIndex < storiesWithArticles.value.length - 1) {
+    const nextArticle = storiesWithArticles.value[currentArticleIndex + 1]
+    await openStory(nextArticle)
   } else {
-    // Move to next category or close
-    console.log('Current category finished, moving to next...')
-    const currentCategoryIndex = categoriesWithStories.value.findIndex(
-      cat => cat.id === currentCategory.value.id
-    )
-    console.log('Current category index:', currentCategoryIndex, 'Total categories:', categoriesWithStories.value.length)
-    
-    if (currentCategoryIndex < categoriesWithStories.value.length - 1) {
-      const nextCategory = categoriesWithStories.value[currentCategoryIndex + 1]
-      console.log('Moving to next category:', nextCategory.name)
-      
-      // Try to open next category stories, if it fails try the next one
-      let success = false
-      let nextIndex = currentCategoryIndex + 1
-      
-      while (nextIndex < categoriesWithStories.value.length && !success) {
-        const categoryToTry = categoriesWithStories.value[nextIndex]
-        console.log('Trying category:', categoryToTry.name)
-        
-        // Fetch articles for this category
-        await fetchCategoryArticles(categoryToTry.slug)
-        
-        // Check if we have articles to show
-        if (categoryArticles.value[categoryToTry.slug] && categoryArticles.value[categoryToTry.slug].length > 0) {
-          currentCategory.value = categoryToTry
-          currentStoryIndex.value = 0
-          viewedCategories.value.add(categoryToTry.id)
-          startStoryTimer()
-          success = true
-          console.log('Successfully moved to category:', categoryToTry.name)
-        } else {
-          console.log('No articles in category:', categoryToTry.name, 'trying next...')
-          nextIndex++
-        }
-      }
-      
-      if (!success) {
-        console.log('No more categories with articles, closing stories')
-        closeStories()
-      }
-    } else {
-      console.log('No more categories, closing stories')
-      closeStories()
-    }
+    closeStories()
   }
 }
 
 const previousStory = async () => {
-  if (currentStoryIndex.value > 0) {
-    currentStoryIndex.value--
-    resetStoryTimer()
-  } else {
-    // Move to previous category
-    const currentCategoryIndex = categoriesWithStories.value.findIndex(
-      cat => cat.id === currentCategory.value.id
-    )
-    if (currentCategoryIndex > 0) {
-      const prevCategory = categoriesWithStories.value[currentCategoryIndex - 1]
-      // First fetch articles for previous category if not already loaded
-      if (!categoryArticles.value[prevCategory.slug] || categoryArticles.value[prevCategory.slug].length === 0) {
-        await fetchCategoryArticles(prevCategory.slug)
-      }
-      currentCategory.value = prevCategory
-      currentStoryIndex.value = (categoryArticles.value[prevCategory.slug]?.length || 1) - 1
-      resetStoryTimer()
-    }
+  // Move to previous popular article
+  const currentArticleIndex = storiesWithArticles.value.findIndex(
+    article => article.id === currentStory.value.id
+  )
+  
+  if (currentArticleIndex > 0) {
+    const prevArticle = storiesWithArticles.value[currentArticleIndex - 1]
+    await openStory(prevArticle)
   }
 }
 
@@ -319,26 +244,23 @@ const resetStoryTimer = () => {
   startStoryTimer()
 }
 
-const fetchCategoryArticles = async (categorySlug, limit = 50) => {
+const fetchPopularArticles = async (limit = 10) => {
   try {
-    console.log(`Fetching ${limit} articles for category ${categorySlug}`)
+    console.log(`Fetching ${limit} popular articles for stories`)
     
-    // Use the same API logic as CategoryPage - through Vuex store
-    const articles = await store.dispatch('news/fetchCategoryNews', {
-      categorySlug: categorySlug,
-      limit: limit
-    })
+    // Fetch popular news through Vuex store
+    await store.dispatch('news/fetchPopularNews', limit)
     
     // Get articles from store after dispatch
-    const storeArticles = store.getters['news/getCategoryNews'](categorySlug) || []
+    const storeArticles = store.state.news.popularNews || []
     
-    categoryArticles.value[categorySlug] = storeArticles
-    console.log(`Fetched ${storeArticles.length} articles for category ${categorySlug}`)
+    popularArticles.value = storeArticles
+    console.log(`Fetched ${storeArticles.length} popular articles for stories`)
     
     return storeArticles
   } catch (error) {
-    console.error('Failed to fetch category articles:', error)
-    categoryArticles.value[categorySlug] = []
+    console.error('Failed to fetch popular articles:', error)
+    popularArticles.value = []
     return []
   }
 }
@@ -362,30 +284,15 @@ const goToArticle = (article) => {
   })
 }
 
-// Initialize articles when categories are loaded - fetch just the first article for each category for preview
-const initializeCategoryPreviews = async () => {
-  if (!props.categories || props.categories.length === 0) return
-  
-  console.log('Initializing category previews for:', props.categories)
-  
-  // Load just 1 article per category for magazine cover preview
-  for (const category of props.categories.slice(0, 8)) {
-    if (category.slug) {
-      await fetchCategoryArticles(category.slug, 1) // Just 1 article for preview
-    }
-  }
+// Initialize popular articles for stories
+const initializePopularStories = async () => {
+  console.log('Initializing popular stories')
+  await fetchPopularArticles(10) // Fetch 10 popular articles
 }
 
-// Watch for categories changes
-watch(() => props.categories, async (newCategories) => {
-  if (newCategories && newCategories.length > 0) {
-    await initializeCategoryPreviews()
-  }
-}, { immediate: true })
-
 onMounted(async () => {
-  // If categories are already loaded on mount
-  await initializeCategoryPreviews()
+  // Load popular articles on mount
+  await initializePopularStories()
 })
 
 // Cleanup
@@ -478,6 +385,7 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
   transition: transform 0.3s ease;
 }
 
@@ -494,11 +402,22 @@ onUnmounted(() => {
   justify-content: center;
 }
 
-.magazine-placeholder-icon {
-  width: 48px;
-  height: 48px;
-  color: white;
-  opacity: 0.8;
+.magazine-no-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+.magazine-no-image-text {
+  color: var(--color-light);
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.9;
+  padding: 12px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 /* Magazine Overlay */
@@ -523,20 +442,53 @@ onUnmounted(() => {
 }
 
 .magazine-title {
-  color: white;
-  font-size: 16px;
+  color: var(--color-light);
+  font-size: 14px;
   font-weight: 700;
   margin: 0 0 4px 0;
   line-height: 1.2;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.magazine-subtitle-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .magazine-subtitle {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 12px;
+  color: var(--color-light-100);
+  font-size: 11px;
   font-weight: 500;
   margin: 0;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  opacity: 0.9;
+}
+
+.magazine-view-count {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.view-count-icon {
+  width: 12px;
+  height: 12px;
+  color: var(--color-light-100);
+  opacity: 0.8;
+}
+
+.view-count-text {
+  color: var(--color-light-100);
+  font-size: 10px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  opacity: 0.9;
 }
 
 /* Viewed Indicator */
@@ -546,18 +498,19 @@ onUnmounted(() => {
   right: 8px;
   width: 24px;
   height: 24px;
-  background: rgba(34, 197, 94, 0.9);
+  background: var(--color-success-500);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(4px);
+  opacity: 0.9;
 }
 
 .viewed-indicator svg {
   width: 14px;
   height: 14px;
-  color: white;
+  color: var(--color-light);
 }
 
 /* Story Viewer Overlay */
@@ -576,7 +529,7 @@ onUnmounted(() => {
   width: 100%;
   max-width: 400px;
   height: 100vh;
-  background: #000;
+  background: var(--color-dark-950);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -610,7 +563,7 @@ onUnmounted(() => {
 
 .progress-fill {
   height: 100%;
-  background: #fff;
+  background: var(--color-light);
   width: 0%;
   transition: width 0.1s linear;
 }
@@ -639,7 +592,7 @@ onUnmounted(() => {
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid #fff;
+  border: 2px solid var(--color-light);
 }
 
 .category-avatar img {
@@ -657,10 +610,11 @@ onUnmounted(() => {
   justify-content: center;
 }
 
-.avatar-placeholder svg {
-  width: 20px;
-  height: 20px;
-  color: #fff;
+.avatar-text {
+  color: var(--color-light);
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .story-details {
@@ -668,21 +622,21 @@ onUnmounted(() => {
 }
 
 .category-name {
-  color: #fff;
+  color: var(--color-light);
   font-size: 14px;
   font-weight: 600;
   margin: 0;
 }
 
 .story-time {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--color-light-200);
   font-size: 12px;
 }
 
 .close-button {
   background: none;
   border: none;
-  color: #fff;
+  color: var(--color-light);
   cursor: pointer;
   padding: 4px;
   border-radius: 50%;
@@ -714,14 +668,15 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #000;
+  background: var(--color-dark-950);
   position: relative;
 }
 
 .story-main-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
 }
 
 /* Title Overlay on Image */
@@ -730,7 +685,7 @@ onUnmounted(() => {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 24px;
+  padding: 40px 24px 80px 24px;
   background: linear-gradient(
     transparent 0%, 
     rgba(0, 0, 0, 0.3) 40%, 
@@ -747,13 +702,14 @@ onUnmounted(() => {
   margin: 0 0 8px 0;
   line-height: 1.3;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  color: var(--color-light);
 }
 
 .story-overlay-category {
   font-size: 14px;
   font-weight: 500;
   margin: 0;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-light-100);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
@@ -791,8 +747,8 @@ onUnmounted(() => {
 }
 
 .read-more-btn {
-  background: rgba(255, 255, 255, 0.95);
-  color: #000;
+  background: var(--color-accent-500);
+  color: var(--color-light);
   border: none;
   padding: 12px 24px;
   border-radius: 25px;
@@ -805,7 +761,7 @@ onUnmounted(() => {
 }
 
 .read-more-btn:hover {
-  background: rgba(255, 255, 255, 1);
+  background: var(--color-accent-600);
   transform: scale(1.05);
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
 }
