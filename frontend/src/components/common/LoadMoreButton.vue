@@ -1,5 +1,5 @@
 <template>
-  <div class="load-more-section py-8">
+  <div class="load-more-section py-2">
     <div v-if="hasMore && !showSkeleton" class="text-center">
       <div class="theme-card rounded-xl shadow-sm theme-border inline-block overflow-hidden">
         <button
