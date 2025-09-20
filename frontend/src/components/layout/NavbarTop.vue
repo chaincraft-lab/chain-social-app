@@ -5,7 +5,9 @@
       <div class="flex items-center justify-between py-4">
     <!-- Logo -->
     <router-link to="/" class="flex items-center">
-      <img src="@/assets/logo.png" alt="Logo" class="h-12" />
+      <div class="logo-container">
+        <Icon icon="heroicons:fire" class="logo-icon" />
+      </div>
     </router-link>
 
     <!-- Search Box - Desktop -->
@@ -109,3 +111,28 @@ const handleLogout = async () => {
 }
 
 </script>
+
+<style scoped>
+.logo-container {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.logo-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.logo-icon {
+  width: 28px;
+  height: 28px;
+  color: white;
+}
+</style>
