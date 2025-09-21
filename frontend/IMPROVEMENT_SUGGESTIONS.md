@@ -107,3 +107,12 @@
 [11:49, 20.09.2025] | Comodo vb biyerden sub domain kabul eden nir ssl sertifikası alacağız
 [11:50, 20.09.2025] | Fileserverı sub domainden yönetebiliriz
 [11:50, 20.09.2025] | Farklı sub domainler açarız ama admin panel domaini apayrı olur
+
+
+
+https://www.globalfirepower.com/countries-listing.php
+
+https://finance.yahoo.com/quote/SDTTR.IS/
+
+hava durumunu uçuralım, bu iki bilgiyi oraya ekleyelim
+

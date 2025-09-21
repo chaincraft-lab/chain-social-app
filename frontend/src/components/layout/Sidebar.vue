@@ -15,13 +15,27 @@
     <!-- Defense Info Cards (Right Sidebar Only) -->
     <template v-if="position === 'right'">
       <!-- Weather Card -->
-      <WeatherWidget 
+      <!-- <WeatherWidget 
         v-if="showWeather"
         city="Ankara"
         :latitude="39.9334"
         :longitude="32.8597"
         :auto-refresh="true"
         :refresh-interval="300000"
+      /> -->
+      
+      <!-- Defense Stocks Widget -->
+      <DefenseStocksWidget 
+        v-if="showDefenseStocks"
+        :auto-refresh="true"
+        :refresh-interval="300000"
+      />
+      
+      <!-- Military Ranking Widget -->
+      <MilitaryRankingWidget 
+        v-if="showMilitaryRanking"
+        :show-top="10"
+        highlight-country="Türkiye"
       />
       
       <!-- Market Widget -->
@@ -50,6 +64,8 @@ import PopularNews from "../ui/PopularNews.vue";
 import PopularTags from "../ui/PopularTags.vue";
 import WeatherWidget from "../widgets/WeatherWidget.vue";
 import MarketWidget from "../widgets/MarketWidget.vue";
+import DefenseStocksWidget from "../widgets/DefenseStocksWidget.vue";
+import MilitaryRankingWidget from "../widgets/MilitaryRankingWidget.vue";
 
 export default {
   name: "SiteSidebar",
@@ -59,6 +75,8 @@ export default {
     PopularTags,
     WeatherWidget,
     MarketWidget,
+    DefenseStocksWidget,
+    MilitaryRankingWidget,
   },
   props: {
     showCategories: {
@@ -91,6 +109,14 @@ export default {
       default: true,
     },
     showMarket: {
+      type: Boolean,
+      default: true,
+    },
+    showDefenseStocks: {
+      type: Boolean,
+      default: true,
+    },
+    showMilitaryRanking: {
       type: Boolean,
       default: true,
     },
