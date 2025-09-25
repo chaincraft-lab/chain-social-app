@@ -5,7 +5,13 @@
 
     <!-- Main Content -->
     <main class="flex-1 theme-bg-primary pb-2 md:pb-0">
-      <div class="container mx-auto px-4 md:px-6">
+      <!-- Full Width Layout for Profile Page -->
+      <div v-if="isProfilePage" class="w-full">
+        <router-view />
+      </div>
+      
+      <!-- Standard Layout with Sidebars -->
+      <div v-else class="container mx-auto px-4 md:px-6">
         <div class="grid grid-cols-12 gap-6 py-8">
           <!-- Left Sidebar - Hidden on Mobile -->
           <div class="col-span-12 lg:col-span-3 hidden lg:block">
@@ -58,6 +64,11 @@ export default {
     Sidebar,
     Footer,
     BottomNavigation,
+  },
+  computed: {
+    isProfilePage() {
+      return this.$route.name === 'profile'
+    }
   },
   mounted() {
     // Fetch initial data when layout is mounted

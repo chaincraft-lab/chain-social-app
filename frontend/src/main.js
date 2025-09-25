@@ -16,6 +16,7 @@ import SearchPage from './views/SearchPage.vue'
 import ArticlePage from './views/ArticlePage.vue'
 import BookmarksPage from './views/BookmarksPage.vue'
 import LikesPage from './views/LikesPage.vue'
+import ProfilePage from './views/ProfilePage.vue'
 
 // Create router
 const router = createRouter({
@@ -40,6 +41,12 @@ const router = createRouter({
           path: '/likes', 
           component: LikesPage, 
           name: 'likes',
+          meta: { requiresAuth: true }
+        },
+        { 
+          path: '/profile', 
+          component: ProfilePage, 
+          name: 'profile',
           meta: { requiresAuth: true }
         },
       ]

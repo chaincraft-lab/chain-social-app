@@ -3,8 +3,8 @@
     <div class="flex items-center gap-3">
       <UserAvatar :name="authorName" size="md" color="primary" />
       <div class="flex flex-col">
-        <div class="text-sm font-semibold text-white">{{ authorName }}</div>
-        <div class="text-xs text-gray-300">{{ formattedDate }}</div>
+        <div class="text-sm font-semibold text-text-primary">{{ authorName }}</div>
+        <div class="text-xs text-text-secondary">{{ formattedDate }}</div>
       </div>
     </div>
     <ActionButton icon="dots" size="sm" @click="$emit('menuClick')" />

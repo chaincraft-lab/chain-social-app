@@ -1,7 +1,7 @@
 <template>
   <div 
     :class="[
-      'flex items-center justify-center rounded-full text-white font-semibold',
+      'flex items-center justify-center rounded-full text-text-inverse font-semibold',
       sizeClasses,
       backgroundColor
     ]"
@@ -50,10 +50,10 @@ const backgroundColor = computed(() => {
   const colors = {
     primary: 'bg-primary',
     gray: 'bg-gray-500',
-    blue: 'bg-blue-500',
-    green: 'bg-green-500',
-    red: 'bg-red-500',
-    purple: 'bg-purple-500'
+    blue: 'bg-info',
+    green: 'bg-success',
+    red: 'bg-error',
+    purple: 'bg-accent'
   }
   return colors[props.color] || colors.primary
 })
