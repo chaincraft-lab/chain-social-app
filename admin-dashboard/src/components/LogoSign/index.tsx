@@ -99,7 +99,7 @@ function Logo() {
 
   return (
     <TooltipWrapper
-      title="Haber Sitesi Next.js Typescript Admin Dashboard"
+      title="ChainSocial Next.js Typescript Admin Dashboard"
       arrow
     >
       <LogoWrapper href="/">

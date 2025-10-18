@@ -5,7 +5,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: haber-sitesi-frontend
+    container_name: chainsocial-frontend
     ports:
       - '8080:8080'
     volumes:
@@ -13,14 +13,16 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
+      - VUE_APP_API_URL=http://localhost:8020/api/v1
     depends_on:
       - backend
+    restart: unless-stopped
 
   admin-dashboard:
     build:
       context: ./admin-dashboard
       dockerfile: Dockerfile
-    container_name: haber-sitesi-admin
+    container_name: chainsocial-admin
     ports:
       - '3000:3000'
     volumes:
@@ -30,7 +32,7 @@ services:
       - NODE_ENV=development
       - NEXT_PUBLIC_API_URL=http://localhost:8020/api/v1
       - NEXT_PUBLIC_API_VERSION=v1
-      - NEXT_PUBLIC_APP_NAME=Haber Sitesi Admin
+      - NEXT_PUBLIC_APP_NAME=ChainSocial Admin
     depends_on:
       - backend
     restart: unless-stopped
@@ -39,17 +41,24 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: haber-sitesi-backend
+    container_name: chainsocial-backend
     ports:
       - '8020:3000'
-    env_file:
-      - ./backend/.env
+    environment:
+      - PROJECT_VERSION=v1
+      - BASE_ENDPOINT_URL=api/
+      - DATABASE_URL=postgresql://postgres:habersitesipass@postgres_db:5432/habersitesidb?schema=public
+      - IS_PRODUCTION=development
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - JWT_EXPIRES_IN=7d
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
+      - backend_seed_flag:/usr/src/app/.seed_flags
     depends_on:
-      - db
-    command: npm run start:dev
+      db:
+        condition: service_started
+    restart: unless-stopped
 
   db:
     image: postgres:13
@@ -65,3 +74,4 @@ services:
 
 volumes:
   postgres_data:
+  backend_seed_flag:

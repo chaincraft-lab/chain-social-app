@@ -11,7 +11,7 @@ export class CategoriesService {
   constructor(private prisma: PrismaService) {}
 
   async create(createCategoryDto: CreateCategoryDto): Promise<CategoryResponseDto> {
-    const { name, description, color, icon } = createCategoryDto;
+    const { name, description, color, icon, website, tokenSymbol, blockchain } = createCategoryDto;
 
     // Generate slug from name
     const baseSlug = generateSlug(name);
@@ -40,6 +40,9 @@ export class CategoriesService {
         description,
         color,
         icon,
+        website,
+        tokenSymbol,
+        blockchain,
       },
     });
 
@@ -142,7 +145,7 @@ export class CategoriesService {
       throw new NotFoundException('Kategori bulunamadı');
     }
 
-    const { name, description, color, icon } = updateCategoryDto;
+    const { name, description, color, icon, website, tokenSymbol, blockchain } = updateCategoryDto;
 
     // If name is being updated, generate new slug
     let slug = existingCategory.slug;
@@ -177,6 +180,9 @@ export class CategoriesService {
         description,
         color,
         icon,
+        website,
+        tokenSymbol,
+        blockchain,
       },
     });
 
@@ -231,6 +237,9 @@ export class CategoriesService {
       description: category.description,
       color: category.color,
       icon: category.icon,
+      website: category.website,
+      tokenSymbol: category.tokenSymbol,
+      blockchain: category.blockchain,
       isActive: category.isActive,
       createdAt: category.createdAt,
       updatedAt: category.updatedAt,

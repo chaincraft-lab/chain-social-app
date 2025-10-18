@@ -118,7 +118,7 @@ function Logo() {
           <Tooltip title="Version 1.0" arrow placement="right">
             <VersionBadge>1.0</VersionBadge>
           </Tooltip>
-          <LogoText>Haber Sitesi</LogoText>
+          <LogoText>ChainSocial</LogoText>
         </LogoTextWrapper>
       </Box>
     </LogoWrapper>

@@ -3,61 +3,69 @@ const bcrypt = require('bcrypt');
 
 const prisma = new PrismaClient();
 
-// Savunma sanayi ile ilgili başlıklar
-const defenseNewsHeadlines = [
-  'Türk Savunma Sanayisi Yeni Teknolojilerle Güçleniyor',
-  'Milli İHA Projeleri Dünya Standartlarında',
-  'Savunma Sanayii Başkanlığı Yeni Yatırımları Açıkladı',
-  'TUSAŞ\'tan Yerli Uçak Motoru Atılımı',
-  'Aselsan\'dan Elektronik Harp Sistemlerinde Büyük Başarı',
-  'Roketsan\'ın Yeni Füze Sistemleri Test Edildi',
-  'Baykar\'ın İHA Teknolojileri Uluslararası Arenada',
-  'Havelsan\'dan Siber Güvenlik Alanında Yenilik',
-  'STM\'den Denizcilik Teknolojilerinde Atılım',
-  'TAI Yeni Nesil Savaş Uçağı Geliştiriyor',
-  'Milli Radar Sistemleri Projesi Başlatıldı',
-  'Yerli Tank Modernizasyonu Tamamlandı',
-  'Savunma Sanayinde Yerlilik Oranı Yükseliyor',
-  'Askeri Haberleşme Sistemlerinde Teknolojik Gelişme',
-  'Deniz Kuvvetleri İçin Yeni Fırkateyn Projesi',
-  'Hava Savunma Sistemlerinde Milli Çözümler',
-  'Sınır Güvenliği Teknolojilerinde İnovasyonlar',
-  'Elektronik Harp Kabiliyetlerinde Gelişmeler',
-  'Muhabere Uydu Projesi\'nde Son Durum',
-  'Savunma Sanayii İhracatında Rekor Artış',
-  'Askeri Simülatör Teknolojilerinde Yerli Üretim',
-  'Taktik Füze Sistemlerinde Yerlilik Hedefi',
-  'Silahlı İnsansız Araçlar Geliştiriliyor',
-  'Savunma Sanayinde Yapay Zeka Uygulamaları',
-  'Milli Güvenlik Ekosistemi Güçleniyor',
+// Blockchain ile ilgili başlıklar
+const blockchainNewsHeadlines = [
+  'Bitcoin Yeni Rekor Seviyelere Ulaştı',
+  'Ethereum 2.0 Stake Edilen Miktar Artıyor',
+  'DeFi Protokolleri TVL\'de Büyük Artış Yaşıyor',
+  'Layer 2 Çözümleri Ethereum Ağını Rahatlatıyor',
+  'NFT Pazarında Yeni Trendler Ortaya Çıkıyor',
+  'Merkez Bankası Dijital Para Birimleri Yaygınlaşıyor',
+  'Blockchain Teknolojisi Tedarik Zincirini Dönüştürüyor',
+  'Web3 Projeleri Venture Capital İlgisini Çekiyor',
+  'Kripto Para Düzenlemeleri Netlik Kazanıyor',
+  'Metaverse Projeleri Blockchain Altyapısı Kuruyor',
+  'Staking Rewards Kripto Yatırımcıları Cezbediyor',
+  'Lightning Network Bitcoin Ödemelerini Hızlandırıyor',
+  'Polygon zkEVM Mainnet Beta Yayınlandı',
+  'Chainlink Oracle Ağı Yeni Entegrasyonlar Kazanıyor',
+  'Uniswap V4 Hooks Sistemi Geliştiriliyor',
+  'Arbitrum One TVL Milyarlarca Doları Aştı',
+  'Solana Mobile Web3 Telefon Başarısı',
+  'Avalanche Subnet Teknolojisi Yaygınlaşıyor',
+  'Optimism Bedrock Güncellemesi Canlıya Alındı',
+  'Aave V3 Multi-Chain Ekspansyonu Devam Ediyor',
+  'Compound III Risk Yönetimi Yenilikleri',
+  'PancakeSwap V3 BSC\'de Concentrated Liquidity',
+  'Cosmos IBC Protokolü Cross-Chain İletişimi Güçlendiriyor',
+  'Polkadot Parachain Açık Artırmaları Devam Ediyor',
+  'Near Protocol Sharding Teknolojisi İlerliyor',
+  'Cardano Smart Contract Ekosistemi Büyüyor',
+  'Algorand Pure Proof-of-Stake Konsensüsü',
+  'Tezos On-Chain Governance Sistemi',
+  'Blockchain Gaming P2E Modeli Popülerleşiyor',
+  'Decentralized Identity Çözümleri Gelişiyor',
+  'Zero-Knowledge Proof Teknolojisi Yaygınlaşıyor',
+  'Cross-Chain Bridge Güvenlik Standartları',
+  'DAO Governance Token\'ları Değer Kazanıyor',
 ];
 
-// Savunma sanayi ile ilgili içerik örnekleri
-const defenseNewsContents = [
-  'Türk savunma sanayisi, yerli ve milli imkanlarla üretilen yenilikçi teknolojilerle dünya çapında rekabet gücünü artırmaya devam ediyor. Son geliştirilen sistemler, NATO standartlarında kalite ve güvenilirlik sunuyor.',
-  'İnsansız hava araçları teknolojisinde Türkiye\'nin dünya liderleri arasına girdiği bir dönemde, yeni projeler savunma kabiliyetlerini daha da güçlendiriyor.',
-  'Savunma Sanayii Başkanlığı tarafından açıklanan yeni yatırım programı, kritik teknolojilerde yerlilik oranını artırmayı hedefliyor.',
-  'Havacılık sektöründe önemli atılımlar gerçekleştiren TUSAŞ, yerli motor teknolojisi ile uluslararası pazarda söz sahibi olmaya hazırlanıyor.',
-  'Elektronik harp sistemlerinde yakalanan başarı, modern savaş alanlarında Türk Silahlı Kuvvetleri\'nin teknolojik üstünlüğünü pekiştiriyor.',
-  'Roketsan\'ın geliştirdiği yeni nesil füze sistemleri, hassas vuruş kabiliyeti ve uzun menzil özellikleriyle dikkat çekiyor.',
-  'Baykar\'ın ürettiği İHA sistemleri, çeşitli operasyonel görevlerde elde ettiği başarılarla dünya genelinde tanınıyor.',
-  'Siber güvenlik alanında Havelsan\'ın geliştirdiği çözümler, kritik altyapıları korumada önemli rol oynuyor.',
-  'Denizcilik teknolojilerinde STM\'nin öncülük ettiği projeler, Türk Deniz Kuvvetleri\'nin operasyonel kapasitesini artırıyor.',
-  'TAI\'nin yeni nesil savaş uçağı projesi, gelişmiş aviyonik sistemleri ve stealth teknolojisi ile gelecek nesil hava gücünü şekillendirecek.',
+// Blockchain ile ilgili içerik örnekleri
+const blockchainNewsContents = [
+  'Blockchain teknolojisi, merkezi olmayan yapısı ve şeffaflığı ile geleneksel finansal sistemleri dönüştürmeye devam ediyor. Smart contract\'lar, güvenilir aracılara olan ihtiyacı ortadan kaldırarak otomatik işlemler sağlıyor.',
+  'DeFi protokolleri, geleneksel bankacılık hizmetlerini blockchain üzerinde sunarak finansal erişimi demokratikleştiriyor. Yield farming ve liquidity mining yeni gelir modelleri yaratıyor.',
+  'Layer 2 çözümleri, Ethereum\'un ölçeklenebilirlik sorunlarını çözüme kavuşturuyor. Optimistic rollup\'lar ve ZK-rollup\'lar, işlem maliyetlerini dramatik olarak düşürüyor.',
+  'NFT\'ler, dijital sanat ve koleksiyonculuk alanında devrim yaratırken, utility NFT\'ler gerçek dünya faydaları sunmaya başlıyor. Gaming ve metaverse entegrasyonları hız kazanıyor.',
+  'Staking mekanizmaları, kripto para sahiplerinin pasif gelir elde etmesini sağlarken, ağın güvenliğine katkıda bulunuyor. Liquid staking protokolleri likidite sorununu çözüyor.',
+  'Cross-chain bridge\'ler, farklı blockchain ağları arasında asset transferini mümkün kılıyor. Interoperability protokolleri, multi-chain ekosistemin temelini oluşturuyor.',
+  'DAO\'lar, merkezi olmayan yönetişim modeliyle topluluk odaklı karar alma süreçlerini hayata geçiriyor. Governance token\'lar, kullanıcılara söz hakkı veriyor.',
+  'Zero-knowledge proof teknolojisi, gizlilik korunarak doğrulama işlemlerini gerçekleştiriyor. zk-SNARK\'lar ve zk-STARK\'lar, blockchain\'de gizlilik katmanı sağlıyor.',
+  'Web3 altyapısı, kullanıcı merkezli internet deneyimi yaratıyor. Decentralized storage, computing ve identity çözümleri ekosistemi tamamlıyor.',
+  'Institutional adoption, kurumsal yatırımcıların kripto paralara olan ilgisini artırıyor. Bitcoin ETF\'ler ve corporate treasury allocations trend oluşturuyor.',
 ];
 
-// Görsel URL\'leri (Unsplash\'den savunma/teknoloji temalı)
+// Görsel URL\'leri (Unsplash\'den blockchain/kripto temalı)
 const imageUrls = [
-  'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800',
-  'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=800',
-  'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800',
-  'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800',
-  'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
-  'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=800',
-  'https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800',
-  'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800',
-  'https://images.unsplash.com/photo-1569395872688-174d5ca3e82e?w=800',
-  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
+  'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800', // Bitcoin coins
+  'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800', // Ethereum concept
+  'https://images.unsplash.com/photo-1640340434855-6084b1f4901c?w=800', // Crypto trading
+  'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?w=800', // Digital finance
+  'https://images.unsplash.com/photo-1551808525-51a94da548ce?w=800', // Blockchain network
+  'https://images.unsplash.com/photo-1644088379091-d574269d422f?w=800', // NFT concept
+  'https://images.unsplash.com/photo-1638913971332-334f6443c7de?w=800', // DeFi concept
+  'https://images.unsplash.com/photo-1642104704074-907c0698cbd9?w=800', // Web3 concept
+  'https://images.unsplash.com/photo-1640826925778-4513ba4da049?w=800', // Cryptocurrency
+  'https://images.unsplash.com/photo-1621504450181-5d356f61d307?w=800', // Digital assets
 ];
 
 // Kullanıcı isimleri
@@ -135,7 +143,7 @@ async function main() {
           email,
           password: hashedPassword,
           avatar: i <= 20 ? `https://randomuser.me/api/portraits/${i % 2 === 0 ? 'men' : 'women'}/${i}.jpg` : null,
-          bio: i <= 50 ? `${name} ${surname} - Savunma sanayi uzmanı ve teknoloji takipçisi` : null,
+          bio: i <= 50 ? `${name} ${surname} - Blockchain uzmanı ve kripto para analisti` : null,
           role: i <= 5 ? 'ADMIN' : i <= 15 ? 'AUTHOR' : i <= 25 ? 'EDITOR' : 'USER',
           lastLogin: getRandomDate(new Date(2024, 0, 1), new Date()),
           createdAt: getRandomDate(new Date(2023, 0, 1), new Date()),
@@ -144,11 +152,11 @@ async function main() {
       users.push(user);
     }
 
-    // Kategoriler (mevcut ID\'ler: 36,37,39,40,41,42,43)
-    const categoryIds = [36, 37, 39, 40, 41, 42, 43];
+    // Kategoriler (mevcut ID\'ler: 1-10)
+    const categoryIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     
-    // Etiketler (mevcut ID\'ler: 5,6,8,9,10,11,12,13)
-    const tagIds = [5, 6, 8, 9, 10, 11, 12, 13];
+    // Etiketler (varsayılan - boş çünkü hiç tag yok)
+    const tagIds = [];
 
     // 100 makale oluştur
     console.log('📰 100 makale oluşturuluyor...');
@@ -157,8 +165,8 @@ async function main() {
     const endDate = new Date();
 
     for (let i = 1; i <= 100; i++) {
-      const title = getRandomItem(defenseNewsHeadlines) + ` - ${i}`;
-      const content = getRandomItem(defenseNewsContents) + ' ' + getRandomItem(defenseNewsContents);
+      const title = getRandomItem(blockchainNewsHeadlines) + ` - ${i}`;
+      const content = getRandomItem(blockchainNewsContents) + ' ' + getRandomItem(blockchainNewsContents);
       const excerpt = content.substring(0, 150) + '...';
       const slug = createSlug(title);
       
@@ -173,7 +181,7 @@ async function main() {
           title,
           slug: `${slug}-${i}`,
           excerpt,
-          content: content + '\\n\\n' + getRandomItem(defenseNewsContents) + '\\n\\n' + getRandomItem(defenseNewsContents),
+          content: content + '\\n\\n' + getRandomItem(blockchainNewsContents) + '\\n\\n' + getRandomItem(blockchainNewsContents),
           image: getRandomItem(imageUrls),
           status: 'PUBLISHED',
           isFeatured: Math.random() > 0.8, // %20 öne çıkan
@@ -189,25 +197,29 @@ async function main() {
       articles.push(article);
     }
 
-    // Makale-etiket ilişkileri oluştur
-    console.log('🏷️ Makale-etiket ilişkileri oluşturuluyor...');
-    for (const article of articles) {
-      // Her makale için 1-4 arası random etiket
-      const numTags = getRandomNumber(1, 4);
-      const selectedTagIds = [];
-      
-      for (let i = 0; i < numTags; i++) {
-        const tagId = getRandomItem(tagIds);
-        if (!selectedTagIds.includes(tagId)) {
-          selectedTagIds.push(tagId);
-          await prisma.articleTag.create({
-            data: {
-              articleId: article.id,
-              tagId: tagId,
-            },
-          });
+    // Makale-etiket ilişkileri oluştur (tag'ler yok, atlanıyor)
+    if (tagIds.length > 0) {
+      console.log('🏷️ Makale-etiket ilişkileri oluşturuluyor...');
+      for (const article of articles) {
+        // Her makale için 1-4 arası random etiket
+        const numTags = getRandomNumber(1, 4);
+        const selectedTagIds = [];
+        
+        for (let i = 0; i < numTags; i++) {
+          const tagId = getRandomItem(tagIds);
+          if (!selectedTagIds.includes(tagId)) {
+            selectedTagIds.push(tagId);
+            await prisma.articleTag.create({
+              data: {
+                articleId: article.id,
+                tagId: tagId,
+              },
+            });
+          }
         }
       }
+    } else {
+      console.log('🏷️ Tag yok, makale-etiket ilişkileri atlanıyor...');
     }
 
     // Beğeniler oluştur
@@ -256,15 +268,20 @@ async function main() {
     console.log('💬 Yorumlar oluşturuluyor...');
     const commentTexts = [
       'Çok bilgilendirici bir makale. Teşekkürler.',
-      'Savunma sanayiimizde gerçekten büyük ilerlemeler var.',
-      'Bu gelişmeler ülkemiz için çok önemli.',
-      'Milli teknoloji projeleri takdire şayan.',
-      'Yerli ve milli imkanlarla üretim harika.',
+      'Blockchain teknolojisinde gerçekten büyük ilerlemeler var.',
+      'Bu gelişmeler kripto ekosistemi için çok önemli.',
+      'DeFi protokolleri takdire şayan.',
+      'Web3 teknolojileri harika bir gelecek vaat ediyor.',
       'Detaylı analiz için teşekkürler.',
       'Bu konuda daha fazla bilgi alabilir miyiz?',
-      'Türk mühendislerinin başarısı gururlandırıcı.',
+      'Blockchain geliştiricilerinin başarısı gururlandırıcı.',
       'İnovasyona dayalı bu projeler umut verici.',
-      'Savunma teknolojilerinde özgüven artıyor.',
+      'Kripto para teknolojilerinde özgüven artıyor.',
+      'Layer 2 çözümleri game changer olacak.',
+      'NFT alanındaki gelişmeler çok heyecan verici.',
+      'Staking rewards konusunda daha fazla bilgi istiyorum.',
+      'DAO governance modeli çok demokratik.',
+      'Cross-chain bridge\'ler güvenlik açısından nasıl?',
     ];
 
     for (const article of articles) {

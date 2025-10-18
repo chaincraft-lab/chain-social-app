@@ -24,19 +24,13 @@
         :refresh-interval="300000"
       /> -->
       
-      <!-- Defense Stocks Widget -->
-      <DefenseStocksWidget 
-        v-if="showDefenseStocks"
+      <!-- Crypto Protocols Widget -->
+      <CryptoProtocolsWidget 
+        v-if="showCryptoProtocols"
         :auto-refresh="true"
         :refresh-interval="300000"
       />
       
-      <!-- Military Ranking Widget -->
-      <MilitaryRankingWidget 
-        v-if="showMilitaryRanking"
-        :show-top="10"
-        highlight-country="Türkiye"
-      />
       
       <!-- Market Widget -->
       <MarketWidget 
@@ -64,8 +58,7 @@ import PopularNews from "../ui/PopularNews.vue";
 import PopularTags from "../ui/PopularTags.vue";
 import WeatherWidget from "../widgets/WeatherWidget.vue";
 import MarketWidget from "../widgets/MarketWidget.vue";
-import DefenseStocksWidget from "../widgets/DefenseStocksWidget.vue";
-import MilitaryRankingWidget from "../widgets/MilitaryRankingWidget.vue";
+import CryptoProtocolsWidget from "../widgets/CryptoProtocolsWidget.vue";
 
 export default {
   name: "SiteSidebar",
@@ -75,8 +68,7 @@ export default {
     PopularTags,
     WeatherWidget,
     MarketWidget,
-    DefenseStocksWidget,
-    MilitaryRankingWidget,
+    CryptoProtocolsWidget,
   },
   props: {
     showCategories: {
@@ -112,11 +104,7 @@ export default {
       type: Boolean,
       default: true,
     },
-    showDefenseStocks: {
-      type: Boolean,
-      default: true,
-    },
-    showMilitaryRanking: {
+    showCryptoProtocols: {
       type: Boolean,
       default: true,
     },

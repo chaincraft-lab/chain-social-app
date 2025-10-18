@@ -30,7 +30,10 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
     name: '',
     description: '',
     color: '#007bff',
-    icon: ''
+    icon: '',
+    website: '',
+    tokenSymbol: '',
+    blockchain: ''
   });
   
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -46,14 +49,20 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
           name: category.name,
           description: category.description || '',
           color: category.color || '#007bff',
-          icon: category.icon || ''
+          icon: category.icon || '',
+          website: category.website || '',
+          tokenSymbol: category.tokenSymbol || '',
+          blockchain: category.blockchain || ''
         });
       } else {
         setFormData({
           name: '',
           description: '',
           color: '#007bff',
-          icon: ''
+          icon: '',
+          website: '',
+          tokenSymbol: '',
+          blockchain: ''
         });
       }
       setErrors({});
@@ -77,6 +86,18 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
 
     if (formData.icon && formData.icon.length > 50) {
       newErrors.icon = 'İkon adı en fazla 50 karakter olabilir';
+    }
+
+    if (formData.website && formData.website.length > 255) {
+      newErrors.website = 'Website URL en fazla 255 karakter olabilir';
+    }
+
+    if (formData.tokenSymbol && formData.tokenSymbol.length > 10) {
+      newErrors.tokenSymbol = 'Token sembolü en fazla 10 karakter olabilir';
+    }
+
+    if (formData.blockchain && formData.blockchain.length > 50) {
+      newErrors.blockchain = 'Blockchain adı en fazla 50 karakter olabilir';
     }
 
     setErrors(newErrors);
@@ -132,7 +153,7 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
       aria-labelledby="category-modal-title"
     >
       <DialogTitle id="category-modal-title">
-        {mode === 'create' ? 'Yeni Kategori Oluştur' : 'Kategoriyi Düzenle'}
+        {mode === 'create' ? 'Yeni Protokol Oluştur' : 'Protokolü Düzenle'}
       </DialogTitle>
       
       <DialogContent dividers>
@@ -213,6 +234,44 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
             helperText={errors.icon || 'Material Design Icons (mdi-laptop, mdi-sports gibi)'}
             fullWidth
             placeholder="mdi-laptop"
+          />
+
+          {/* Blockchain Protocol Alanları */}
+          <Typography variant="h6" sx={{ mt: 2, mb: 1, color: 'primary.main' }}>
+            Blockchain Protocol Bilgileri
+          </Typography>
+
+          {/* Website */}
+          <TextField
+            label="Website URL"
+            value={formData.website}
+            onChange={handleInputChange('website')}
+            error={!!errors.website}
+            helperText={errors.website || 'Protokolün resmi websitesi'}
+            fullWidth
+            placeholder="https://arbitrum.io"
+          />
+
+          {/* Token Symbol */}
+          <TextField
+            label="Token Sembolü"
+            value={formData.tokenSymbol}
+            onChange={handleInputChange('tokenSymbol')}
+            error={!!errors.tokenSymbol}
+            helperText={errors.tokenSymbol || 'Protokolün token sembolü (ARB, AVAX, etc.)'}
+            fullWidth
+            placeholder="ARB"
+          />
+
+          {/* Blockchain */}
+          <TextField
+            label="Ana Blockchain"
+            value={formData.blockchain}
+            onChange={handleInputChange('blockchain')}
+            error={!!errors.blockchain}
+            helperText={errors.blockchain || 'Protokolün çalıştığı ana blockchain'}
+            fullWidth
+            placeholder="Ethereum"
           />
         </Box>
       </DialogContent>

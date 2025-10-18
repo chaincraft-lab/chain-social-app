@@ -1,6 +1,3 @@
-// Haber Sitesi için Prisma Veritabanı Şeması
-// Geliştirme notları: Frontend analizi temelinde oluşturulmuştur
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,220 +7,174 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Kullanıcı Modeli
 model User {
-  id        Int      @id @default(autoincrement())
-  uuid      String   @unique @default(uuid())
+  id        Int        @id @default(autoincrement())
+  uuid      String     @unique @default(uuid())
   name      String
   surname   String?
-  username  String?   @unique
-  email     String   @unique
+  username  String?    @unique
+  email     String     @unique
   password  String?
   avatar    String?
   bio       String?
-  role      UserRole @default(USER)
-  
-  isActive  Boolean   @default(true)
-  isDeleted Boolean   @default(false)
-  isBlocked Boolean   @default(false)
+  role      UserRole   @default(USER)
+  isActive  Boolean    @default(true)
+  isBlocked Boolean    @default(false)
+  isDeleted Boolean    @default(false)
   lastLogin DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  
-  // İlişkiler
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   articles  Article[]
+  bookmarks Bookmark[]
   comments  Comment[]
   likes     Like[]
-  bookmarks Bookmark[]
-  
+
   @@map("users")
 }
 
-// Kategori Modeli
 model Category {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
-  slug        String   @unique
-  description String?
-  color       String?
-  icon        String?
-  
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  // İlişkiler
-  articles    Article[]
+  id           Int           @id @default(autoincrement())
+  name         String        @unique
+  slug         String        @unique
+  description  String?
+  color        String?
+  icon         String?
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  website      String?
+  tokenSymbol  String?
+  blockchain   String?
+  articles     Article[]
   galleryItems GalleryItem[]
-  
+
   @@map("categories")
 }
 
-// Etiket Modeli
 model Tag {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  slug      String   @unique
-  
-  createdAt DateTime @default(now())
-  
-  // İlişkiler - Many-to-Many
+  id        Int          @id @default(autoincrement())
+  name      String       @unique
+  slug      String       @unique
+  createdAt DateTime     @default(now())
   articles  ArticleTag[]
-  
+
   @@map("tags")
 }
 
-// Makale/Haber Modeli
 model Article {
-  id          Int         @id @default(autoincrement())
-  title       String
-  slug        String      @unique
-  excerpt     String      // Özet
-  content     String      // Ana içerik
-  image       String?     // Ana görsel URL
-  
-  // Durum bilgileri
-  status      ArticleStatus @default(DRAFT)
-  isFeatured  Boolean       @default(false)
-  isBreaking  Boolean       @default(false)
-  
-  // Metrikler
-  views       Int           @default(0)
-  likes       Int           @default(0)
-  
-  // Tarih bilgileri
-  publishedAt DateTime?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  
-  // İlişkiler
-  author      User          @relation(fields: [authorId], references: [id])
-  authorId    Int
-  
-  category    Category      @relation(fields: [categoryId], references: [id])
-  categoryId  Int
-  
-  tags        ArticleTag[]
-  comments    Comment[]
+  id           Int           @id @default(autoincrement())
+  title        String
+  slug         String        @unique
+  excerpt      String
+  content      String
+  image        String?
+  status       ArticleStatus @default(DRAFT)
+  isFeatured   Boolean       @default(false)
+  isBreaking   Boolean       @default(false)
+  views        Int           @default(0)
+  likes        Int           @default(0)
+  publishedAt  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  authorId     Int
+  categoryId   Int
+  contentType  String?       @default("NEWS")
+  tags         ArticleTag[]
+  author       User          @relation(fields: [authorId], references: [id])
+  category     Category      @relation(fields: [categoryId], references: [id])
+  bookmarks    Bookmark[]
+  comments     Comment[]
+  gallery      GalleryItem[]
   articleLikes Like[]
-  bookmarks   Bookmark[]
-  gallery     GalleryItem[]
-  
+
   @@map("articles")
 }
 
-// Makale-Etiket İlişki Tablosu (Many-to-Many)
 model ArticleTag {
-  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId Int
-  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId     Int
-  
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
   @@id([articleId, tagId])
   @@map("article_tags")
 }
 
-// Yorum Modeli
 model Comment {
   id        Int           @id @default(autoincrement())
   content   String
   status    CommentStatus @default(PENDING)
-  
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
-  
-  // İlişkiler
-  user      User          @relation(fields: [userId], references: [id])
   userId    Int
-  
-  article   Article       @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId Int
-  
-  // Alt yorumlar için self-reference
-  parent    Comment?      @relation("CommentReplies", fields: [parentId], references: [id])
   parentId  Int?
+  article   Article       @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  parent    Comment?      @relation("CommentReplies", fields: [parentId], references: [id])
   replies   Comment[]     @relation("CommentReplies")
-  
+  user      User          @relation(fields: [userId], references: [id])
+
   @@map("comments")
 }
 
-// Beğeni Modeli
 model Like {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  
-  // İlişkiler
-  user      User     @relation(fields: [userId], references: [id])
   userId    Int
-  
-  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId Int
-  
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+
   @@unique([userId, articleId])
   @@map("likes")
 }
 
-// Bookmark/Kaydetme Modeli
 model Bookmark {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  
-  // İlişkiler
-  user      User     @relation(fields: [userId], references: [id])
   userId    Int
-  
-  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
   articleId Int
-  
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+
   @@unique([userId, articleId])
   @@map("bookmarks")
 }
 
-// Reklam Modeli
 model Advertisement {
-  id          Int      @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   title       String
   description String?
-  image       String   // Reklam görseli URL
-  url         String   // Yönlendirilecek URL
+  image       String
+  url         String
   position    AdPosition
-  
-  // Durum ve tarih bilgileri
-  isActive    Boolean  @default(true)
+  isActive    Boolean    @default(true)
   startDate   DateTime?
   endDate     DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  // Metrikler
-  views       Int      @default(0)
-  clicks      Int      @default(0)
-  
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  views       Int        @default(0)
+  clicks      Int        @default(0)
+
   @@map("advertisements")
 }
 
-// Galeri Öğesi Modeli
 model GalleryItem {
-  id          Int         @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
   description String?
-  url         String      // Resim/Video URL
+  url         String
   type        MediaType
-  
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  
-  // İlişkiler
-  article     Article?    @relation(fields: [articleId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   articleId   Int?
-  
-  category    Category?   @relation(fields: [categoryId], references: [id])
   categoryId  Int?
-  
+  article     Article?  @relation(fields: [articleId], references: [id])
+  category    Category? @relation(fields: [categoryId], references: [id])
+
   @@map("gallery_items")
 }
 
-// Enum Tanımlamaları
 enum UserRole {
   USER
   AUTHOR

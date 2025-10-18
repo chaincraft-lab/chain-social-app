@@ -5,6 +5,9 @@ export interface CategoryResponse {
   description?: string;
   color?: string;
   icon?: string;
+  website?: string;
+  tokenSymbol?: string;
+  blockchain?: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -16,6 +19,9 @@ export interface CreateCategoryRequest {
   description?: string;
   color?: string;
   icon?: string;
+  website?: string;
+  tokenSymbol?: string;
+  blockchain?: string;
 }
 
 export interface UpdateCategoryRequest extends Partial<CreateCategoryRequest> {}

@@ -7,7 +7,7 @@
         <div>
           <h3 class="text-xl font-semibold mb-4 theme-text-primary">Hakkımızda</h3>
           <p class="text-light-200 mb-4">
-            En güncel haberleri, en hızlı şekilde size ulaştırmak için çalışıyoruz. Tarafsız ve güvenilir habercilik anlayışımızla her zaman yanınızdayız.
+            Blockchain ve kripto dünyasının en güncel haberlerini sosyal medya tarzında paylaşıyoruz. Web3 topluluğunun merkezi burada!
           </p>
           <div class="flex space-x-3 mt-4">
             <a href="#" class="text-light-200 hover:text-primary transition-colors">
@@ -81,7 +81,7 @@
         <div>
           <h3 class="text-xl font-semibold mb-4 theme-text-primary">Bülten</h3>
           <p class="text-light-200 mb-4">
-            En son haberlerden haberdar olmak için bültenimize abone olun.
+            En son blockchain haberlerinden haberdar olmak için bültenimize abone olun.
           </p>
           <form @submit.prevent="subscribeNewsletter" class="mt-4">
             <div class="flex">
@@ -105,7 +105,7 @@
       
       <!-- Bottom Footer -->
       <div class="py-4 border-t theme-border-primary text-center theme-text-muted text-sm">
-        <p>© {{ new Date().getFullYear() }} Haber Sitesi. Tüm hakları saklıdır.</p>
+        <p>© {{ new Date().getFullYear() }} ChainSocial. Tüm hakları saklıdır.</p>
       </div>
     </div>
   </footer>

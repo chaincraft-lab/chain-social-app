@@ -19,10 +19,33 @@ news-site/
 
 ## Quick Start
 
+### 🚀 One-Command Setup (Recommended)
+
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd blockhain-protokols-news
+
+# Start all services with automatic setup
+docker compose up --build -d
+
+# Wait for all services to be ready (2-3 minutes)
+# Check logs if needed:
+docker compose logs -f backend
+```
+
+**What happens automatically:**
+- ✅ PostgreSQL database setup
+- ✅ Database migrations applied
+- ✅ 10 blockchain protocols seeded
+- ✅ 5 sample users created  
+- ✅ 10 blockchain news articles added
+- ✅ All services started
+
 ### Development Environment
 
 ```bash
-# Start all services
+# Start development mode with hot reload
 docker compose -f docker-compose.dev.yml up --build
 
 # Or use helper script
@@ -43,11 +66,36 @@ docker compose up --build -d
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| **Frontend** | http://localhost:8080 | Vue.js news website |
+| **Frontend** | http://localhost:8080 | Vue.js blockchain news website |
 | **Admin Dashboard** | http://localhost:3000 | Next.js admin panel |
 | **Backend API** | http://localhost:8020 | NestJS REST API |
 | **Database** | localhost:5001 | PostgreSQL database |
 | **API Docs** | http://localhost:8020/api | Swagger documentation |
+
+### 🔑 Default Login Credentials
+
+**Admin Panel Access:**
+- Email: `admin@blockchainews.com`
+- Password: `admin123`
+
+**Sample Authors:**
+- Ali Blockchain: `ali@blockchainews.com` / `password123`
+- Fatma Crypto: `fatma@blockchainews.com` / `password123`
+
+### 🧹 Reset/Clean Setup
+
+To reset everything and re-run seeding:
+```bash
+# Stop containers
+docker compose down
+
+# Remove volumes (this will reset database and seeding flags)
+docker volume rm blockhain-protokols-news_postgres_data
+docker volume rm blockhain-protokols-news_backend_seed_flag
+
+# Start fresh
+docker compose up --build -d
+```
 
 ## Technologies
 
@@ -120,5 +168,5 @@ NEXT_PUBLIC_API_VERSION=v1
 
 ---
 
-**Developer**: ozknsmz  
+**Developer**: chaincraft-lab  
 **Version**: 1.0.0
