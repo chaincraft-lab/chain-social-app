@@ -4,10 +4,10 @@
       <div class="nav-content">
         <!-- Left side items -->
         <div class="nav-side">
-          <router-link
+          <div
             v-for="item in leftItems"
             :key="item.name"
-            :to="item.route"
+            @click="handleNavClick(item)"
             class="nav-item"
             :class="{ 'nav-item--active': $route.name === item.routeName || isActiveRoute(item) }"
           >
@@ -15,8 +15,7 @@
               :icon="item.icon" 
               class="nav-item__icon"
             />
-            <span class="nav-item__label">{{ item.label }}</span>
-          </router-link>
+          </div>
         </div>
 
         <!-- Center logo button -->
@@ -32,10 +31,10 @@
 
         <!-- Right side items -->
         <div class="nav-side">
-          <router-link
+          <div
             v-for="item in rightItems"
             :key="item.name"
-            :to="item.route"
+            @click="handleNavClick(item)"
             class="nav-item"
             :class="{ 'nav-item--active': $route.name === item.routeName || isActiveRoute(item) }"
           >
@@ -43,8 +42,7 @@
               :icon="item.icon" 
               class="nav-item__icon"
             />
-            <span class="nav-item__label">{{ item.label }}</span>
-          </router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -53,9 +51,10 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
 
 // Left side navigation items
 const leftItems = [
@@ -102,6 +101,21 @@ const isActiveRoute = (item) => {
     return true
   }
   return false
+}
+
+const handleNavClick = (item) => {
+  if (item.name === 'home') {
+    if (route.name === 'home') {
+      // Anasayfadaysak sayfanın en üstüne çık
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      // Anasayfada değilsek anasayfaya git
+      router.push(item.route)
+    }
+  } else {
+    // Diğer navigation itemlar için normal router navigation
+    router.push(item.route)
+  }
 }
 </script>
 
@@ -180,8 +194,8 @@ const isActiveRoute = (item) => {
 }
 
 .nav-item__icon {
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   color: #6B7280;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   margin-bottom: 2px;
@@ -382,8 +396,8 @@ const isActiveRoute = (item) => {
   }
 
   .nav-item__icon {
-    width: 18px;
-    height: 18px;
+    width: 24px;
+    height: 24px;
   }
 
   .nav-item__label {

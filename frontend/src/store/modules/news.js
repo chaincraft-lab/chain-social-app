@@ -1,4 +1,4 @@
-import { articleService } from '@/services'
+import { articleService, searchService } from '@/services'
 
 const state = () => ({
   latestNews: [],
@@ -132,13 +132,52 @@ const actions = {
     commit('SET_LOADING', { type: 'search', status: true })
     commit('CLEAR_ERROR')
     try {
-      const response = await articleService.searchArticles(query, filters)
-      const articles = response.data?.data || response.data || response
-      return articles
+      // Yeni search service'i kullan
+      const response = await searchService.search({
+        query,
+        type: 'article',
+        page: filters.page || 1,
+        limit: filters.limit || 10,
+        sortBy: filters.sortBy || 'relevance',
+        sortOrder: filters.sortOrder || 'desc',
+        filters: {
+          categoryIds: filters.categoryIds,
+          tagIds: filters.tagIds,
+          authorIds: filters.authorIds,
+          dateFrom: filters.dateFrom,
+          dateTo: filters.dateTo,
+          isFeatured: filters.isFeatured,
+          isBreaking: filters.isBreaking
+        }
+      })
+      
+      // Yeni response formatını handle et
+      const searchData = response.data || response
+      return {
+        items: searchData.items || [],
+        total: searchData.total || 0,
+        page: searchData.page || 1,
+        totalPages: searchData.totalPages || 0,
+        hasNext: searchData.hasNext || false,
+        hasPrevious: searchData.hasPrevious || false,
+        searchTime: searchData.searchTime || 0,
+        suggestions: searchData.suggestions || [],
+        aggregations: searchData.aggregations || {}
+      }
     } catch (error) {
       console.error('Error searching news:', error)
       commit('SET_ERROR', error.response?.data?.message || error.message)
-      return []
+      return {
+        items: [],
+        total: 0,
+        page: 1,
+        totalPages: 0,
+        hasNext: false,
+        hasPrevious: false,
+        searchTime: 0,
+        suggestions: [],
+        aggregations: {}
+      }
     } finally {
       commit('SET_LOADING', { type: 'search', status: false })
     }

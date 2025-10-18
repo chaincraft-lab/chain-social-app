@@ -32,8 +32,8 @@ async function bootstrap() {
 
   // Swagger documentation
   const config = new DocumentBuilder()
-    .setTitle('Haber Sitesi API')
-    .setDescription('Haber sitesi backend API dokümantasyonu')
+    .setTitle('ChainSocial API')
+    .setDescription('ChainSocial blockchain social media backend API dokümantasyonu')
     .setVersion('1.0')
     .addBearerAuth(
       {

@@ -39,4 +39,31 @@ export class CreateCategoryDto {
   @IsString({ message: 'İkon adı metin olmalıdır' })
   @MaxLength(50, { message: 'İkon adı en fazla 50 karakter olabilir' })
   icon?: string;
+
+  @ApiPropertyOptional({
+    description: 'Protokol resmi websitesi',
+    example: 'https://arbitrum.io',
+  })
+  @IsOptional()
+  @IsString({ message: 'Website URL metin olmalıdır' })
+  @MaxLength(255, { message: 'Website URL en fazla 255 karakter olabilir' })
+  website?: string;
+
+  @ApiPropertyOptional({
+    description: 'Token sembolü',
+    example: 'ARB',
+  })
+  @IsOptional()
+  @IsString({ message: 'Token sembolü metin olmalıdır' })
+  @MaxLength(10, { message: 'Token sembolü en fazla 10 karakter olabilir' })
+  tokenSymbol?: string;
+
+  @ApiPropertyOptional({
+    description: 'Ana blockchain',
+    example: 'Ethereum',
+  })
+  @IsOptional()
+  @IsString({ message: 'Blockchain adı metin olmalıdır' })
+  @MaxLength(50, { message: 'Blockchain adı en fazla 50 karakter olabilir' })
+  blockchain?: string;
 }

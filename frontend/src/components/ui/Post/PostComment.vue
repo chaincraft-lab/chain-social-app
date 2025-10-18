@@ -4,40 +4,40 @@
     <div v-if="commentsCount > 0 && !showComments" class="px-4 pb-3">
       <button
         @click="$emit('toggleComments')"
-        class="text-sm text-gray-500 hover:underline"
+        class="text-sm text-text-secondary hover:underline"
       >
         {{ commentsCount }} yorumun tümünü gör
       </button>
     </div>
 
     <!-- Comments List -->
-    <div v-if="showComments" class="border-t border-gray-200 px-4 py-3">
+    <div v-if="showComments" class="border-t border-border-primary px-4 py-3">
       <div
         v-for="comment in comments"
         :key="comment.id"
         class="flex items-start gap-3 mb-3"
       >
-        <UserAvatar :name="comment.author" size="sm" color="gray" />
+        <UserAvatar :name="comment.author" size="sm" color="primary" />
         <div class="flex-1 text-sm">
-          <span class="font-semibold text-gray-900">{{ comment.author }}</span>
-          <span class="text-gray-900 ml-1">{{ comment.text }}</span>
+          <span class="font-semibold text-text-primary">{{ comment.author }}</span>
+          <span class="text-text-primary ml-1">{{ comment.text }}</span>
         </div>
       </div>
 
       <!-- Add Comment -->
-      <div class="mt-3 pt-3 border-t border-gray-100">
+      <div class="mt-3 pt-3 border-t border-border-muted">
         <div class="flex items-center gap-3">
           <input
             v-model="newComment"
             type="text"
             placeholder="Yorum ekle..."
-            class="flex-1 text-sm border-none outline-none placeholder-gray-500"
+            class="flex-1 text-sm border-none outline-none bg-transparent text-text-primary placeholder:text-text-muted"
             @keyup.enter="handleAddComment"
           />
           <button
             v-if="newComment.trim()"
             @click="handleAddComment"
-            class="text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+            class="text-sm font-semibold text-primary hover:text-primary-600 transition-colors"
           >
             Gönder
           </button>

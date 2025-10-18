@@ -64,8 +64,8 @@ Swagger: http://localhost:3000/api
 ## Stay in touch
 
 - Authors:
-	- Özkan Semiz
-- Website - https://github.com/ozknsmz
+	- chaincraft-lab
+- Website - https://github.com/chaincraft-lab
 
 ## License
 

@@ -95,7 +95,7 @@ export default {
     const isLoading = computed(() => store.getters['news/isLoading']('search'))
     
     const hasMoreResults = computed(() => {
-      return searchResults.value.length < totalResults.value
+      return searchResults.value.length < totalResults.value && totalResults.value > 0
     })
     
     const performSearch = async (page = 1) => {
@@ -119,14 +119,35 @@ export default {
           }
         })
         
+        // Yeni response formatını handle et ve search results'ları news format'ına çevir
+        const articles = (response.items || []).map(item => ({
+          id: item.id,
+          title: item.title,
+          excerpt: item.excerpt,
+          slug: item.url.replace('/articles/', ''), // URL'den slug'ı çıkar
+          image: item.image,
+          publishedAt: item.publishedAt,
+          category: item.category,
+          author: item.author,
+          tags: item.tags || [],
+          viewCount: item.metadata?.viewCount || 0,
+          likeCount: item.metadata?.likeCount || 0,
+          commentCount: item.metadata?.commentCount || 0,
+          isFeatured: item.metadata?.isFeatured || false,
+          isBreaking: item.metadata?.isBreaking || false,
+          isLikedByUser: item.metadata?.isLikedByUser || false,
+          isBookmarkedByUser: item.metadata?.isBookmarkedByUser || false,
+          score: item.score // Search relevance score
+        }))
+        
         if (page === 1) {
-          searchResults.value = response || []
+          searchResults.value = articles
         } else {
-          searchResults.value = [...searchResults.value, ...(response || [])]
+          searchResults.value = [...searchResults.value, ...articles]
         }
         
-        // Backend'den total count alınabilirse
-        totalResults.value = response?.length || searchResults.value.length
+        // Backend'den total count ve diğer bilgileri al
+        totalResults.value = response.total || 0
         currentPage.value = page
         
         // URL'yi güncelle

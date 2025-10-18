@@ -49,7 +49,7 @@
       <div class="space-y-3 pt-3 border-t theme-border-primary">
         <h4 class="text-sm font-semibold theme-text-primary mb-2 flex items-center">
           <Icon icon="heroicons:wrench-screwdriver" class="w-4 h-4 mr-1" />
-          Savunma Sektörü
+          Piyasa Göstergeleri
         </h4>
         
         <div class="grid grid-cols-2 gap-2">

@@ -1,7 +1,7 @@
 <template>
   <router-link
     :to="{ name: 'category', params: { slug: category.slug } }"
-    class="flex items-center justify-between px-4 py-3 mx-2 my-1 rounded-lg text-gray-700 transition-all duration-200 hover:bg-gray-50"
+    class="flex items-center justify-between py-2 mx-2 my-1 rounded-lg text-gray-700 transition-all duration-200 hover:bg-gray-50"
   >
     <span class="text-base font-medium">{{ category.name }}</span>
     <span 

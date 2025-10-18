@@ -5,6 +5,7 @@ export { default as tagService } from './tag/TagService';
 export { default as likeService } from './like/LikeService';
 export { default as bookmarkService } from './bookmark/BookmarkService';
 export { default as userService } from './user/UserService';
+export { default as searchService } from './search/SearchService';
 
 // Base service
 export { default as ApiService } from './base/ApiService';

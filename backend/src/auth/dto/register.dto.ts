@@ -38,6 +38,16 @@ export class RegisterDto {
   @IsString()
   public name: string;
 
+  @ApiProperty({ description: 'User surname', example: "Doe", required: false })
+  @IsOptional()
+  @IsString()
+  public surname?: string;
+
+  @ApiProperty({ description: 'Username', example: "johndoe", required: false })
+  @IsOptional()
+  @IsString()
+  public username?: string;
+
   @ApiProperty({ description: 'User bio', example: "Savunma teknolojileri uzmanı", required: false })
   @IsOptional()
   @IsString()

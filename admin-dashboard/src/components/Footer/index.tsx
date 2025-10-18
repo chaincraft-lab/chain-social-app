@@ -29,11 +29,11 @@ function Footer() {
         >
           Crafted by{' '}
           <Link
-            href="https://github.com/ozknsmz"
+            href="https://github.com/chaincraft-lab"
             target="_blank"
             rel="noopener noreferrer"
           >
-            ozknsmz
+            chaincraft-lab
           </Link>
         </Typography>
       </Box>

@@ -15,14 +15,22 @@
     <!-- Defense Info Cards (Right Sidebar Only) -->
     <template v-if="position === 'right'">
       <!-- Weather Card -->
-      <WeatherWidget 
+      <!-- <WeatherWidget 
         v-if="showWeather"
         city="Ankara"
         :latitude="39.9334"
         :longitude="32.8597"
         :auto-refresh="true"
         :refresh-interval="300000"
+      /> -->
+      
+      <!-- Crypto Protocols Widget -->
+      <CryptoProtocolsWidget 
+        v-if="showCryptoProtocols"
+        :auto-refresh="true"
+        :refresh-interval="300000"
       />
+      
       
       <!-- Market Widget -->
       <MarketWidget 
@@ -50,6 +58,7 @@ import PopularNews from "../ui/PopularNews.vue";
 import PopularTags from "../ui/PopularTags.vue";
 import WeatherWidget from "../widgets/WeatherWidget.vue";
 import MarketWidget from "../widgets/MarketWidget.vue";
+import CryptoProtocolsWidget from "../widgets/CryptoProtocolsWidget.vue";
 
 export default {
   name: "SiteSidebar",
@@ -59,6 +68,7 @@ export default {
     PopularTags,
     WeatherWidget,
     MarketWidget,
+    CryptoProtocolsWidget,
   },
   props: {
     showCategories: {
@@ -91,6 +101,10 @@ export default {
       default: true,
     },
     showMarket: {
+      type: Boolean,
+      default: true,
+    },
+    showCryptoProtocols: {
       type: Boolean,
       default: true,
     },

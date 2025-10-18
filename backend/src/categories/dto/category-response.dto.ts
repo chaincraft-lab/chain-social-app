@@ -19,6 +19,15 @@ export class CategoryResponseDto {
   @ApiPropertyOptional({ description: 'Kategori ikonu', example: 'mdi-laptop' })
   icon?: string;
 
+  @ApiPropertyOptional({ description: 'Protokol resmi websitesi', example: 'https://arbitrum.io' })
+  website?: string;
+
+  @ApiPropertyOptional({ description: 'Token sembolü', example: 'ARB' })
+  tokenSymbol?: string;
+
+  @ApiPropertyOptional({ description: 'Ana blockchain', example: 'Ethereum' })
+  blockchain?: string;
+
   @ApiProperty({ description: 'Aktif mi?', example: true })
   isActive: boolean;
 

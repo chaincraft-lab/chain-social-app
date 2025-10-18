@@ -4,8 +4,8 @@
   "title": "News Site Admin Dashboard",
   "description": "Modern admin dashboard for news website management built with Next.js and Material-UI",
   "author": {
-    "name": "ozknsmz",
-    "url": "https://github.com/ozknsmz"
+    "name": "chaincraft-lab",
+    "url": "https://github.com/chaincraft-lab"
   },
   "private": false,
   "dependencies": {
