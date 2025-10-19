@@ -28,6 +28,7 @@ const router = createRouter({
       children: [
         { path: '', component: HomePage, name: 'home' },
         { path: '/category/:slug', component: CategoryPage, name: 'category' },
+        { path: '/category/:categorySlug/:subSlug', component: CategoryPage, name: 'subcategory' },
         { path: '/tag/:slug', component: TagPage, name: 'tag' },
         { path: '/search', component: SearchPage, name: 'search' },
         { path: '/article/:slug', component: ArticlePage, name: 'article' },

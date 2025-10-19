@@ -10,6 +10,28 @@
         <router-view />
       </div>
       
+      <!-- Category Page Layout (No Right Sidebar) -->
+      <div v-else-if="isCategoryPage" class="container mx-auto px-4 md:px-6">
+        <div class="grid grid-cols-12 gap-6 py-8">
+          <!-- Left Sidebar - Hidden on Mobile -->
+          <div class="col-span-12 lg:col-span-3 hidden lg:block">
+              <Sidebar
+                position="left"
+                :showPopular="false"
+                :showAds="false"
+                :showNewsletter="false"
+                :show-sub-categories="true"
+                :current-category-slug="$route.params.categorySlug || $route.params.slug"
+              />
+          </div>
+
+          <!-- Main Content - Wider for category pages -->
+          <div class="col-span-12 lg:col-span-9">
+            <router-view />
+          </div>
+        </div>
+      </div>
+      
       <!-- Standard Layout with Sidebars -->
       <div v-else class="container mx-auto px-4 md:px-6">
         <div class="grid grid-cols-12 gap-6 py-8">
@@ -68,6 +90,9 @@ export default {
   computed: {
     isProfilePage() {
       return this.$route.name === 'profile'
+    },
+    isCategoryPage() {
+      return this.$route.name === 'category' || this.$route.name === 'subcategory'
     }
   },
   mounted() {
