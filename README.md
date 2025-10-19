@@ -79,8 +79,8 @@ docker compose up --build -d
 - Password: `admin123`
 
 **Sample Authors:**
-- Ali Blockchain: `ali@blockchainews.com` / `password123`
-- Fatma Crypto: `fatma@blockchainews.com` / `password123`
+- Admin Blockchain: `admin@blockchainews.com` / `password123`
+- Test Account: `test@blockchainews.com` / `password123`
 
 ### 🧹 Reset/Clean Setup
 

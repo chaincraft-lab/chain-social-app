@@ -68,19 +68,55 @@ const imageUrls = [
   'https://images.unsplash.com/photo-1621504450181-5d356f61d307?w=800', // Digital assets
 ];
 
-// Kullanıcı isimleri
-const userNames = [
-  'Ahmet', 'Mehmet', 'Mustafa', 'Ali', 'Hasan', 'Hüseyin', 'İbrahim', 'Yusuf', 'Ömer', 'Fatma',
-  'Ayşe', 'Hatice', 'Zeynep', 'Elif', 'Emine', 'Meryem', 'Sultan', 'Hanife', 'Rukiye', 'Cemile',
-  'Ahmet', 'Mehmet', 'Mustafa', 'Ali', 'Hasan', 'Hüseyin', 'İbrahim', 'Yusuf', 'Ömer', 'Burak',
-  'Emre', 'Serkan', 'Caner', 'Onur', 'Furkan', 'Gökhan', 'Kerem', 'Murat', 'Deniz', 'Tolga',
+// Blockchain odaklı kullanıcı verileri
+const usersData = [
+  {
+    name: 'Test Account',
+    email: 'test@blockchainews.com',
+    password: 'password123',
+    avatar: '/avatars/1.jpg',
+    bio: 'Blockchain teknolojileri uzmanı ve DeFi araştırmacısı. 5+ yıllık deneyim.',
+    role: 'AUTHOR',
+    isActive: true
+  },
+  {
+    name: 'Ali Crypto',
+    email: 'ali@blockchainews.com',
+    password: 'password123',
+    avatar: '/avatars/2.jpg',
+    bio: 'Kripto para analisti ve Layer 2 protokolleri üzerine uzman.',
+    role: 'AUTHOR',
+    isActive: true
+  },
+  {
+    name: 'Mehmet DeFi',
+    email: 'mehmet@blockchainews.com',
+    password: 'password123',
+    avatar: '/avatars/3.jpg',
+    bio: 'DeFi protokolleri geliştiricisi ve yield farming stratejisti.',
+    role: 'EDITOR',
+    isActive: true
+  },
+  {
+    name: 'Ayşe Web3',
+    email: 'ayse@blockchainews.com',
+    password: 'password123',
+    avatar: '/avatars/4.jpg',
+    bio: 'Web3 teknolojileri ve NFT uzmanı. Blockchain haberciliği 3+ yıl.',
+    role: 'AUTHOR',
+    isActive: true
+  },
+  {
+    name: 'Admin Blockchain',
+    email: 'admin@blockchainews.com',
+    password: 'admin123',
+    avatar: '/avatars/5.jpg',
+    bio: 'Site yöneticisi ve blockchain ekosistemi editörü.',
+    role: 'ADMIN',
+    isActive: true
+  }
 ];
 
-const userSurnames = [
-  'Yılmaz', 'Kaya', 'Demir', 'Şahin', 'Çelik', 'Şen', 'Özkan', 'Arslan', 'Doğan', 'Aslan',
-  'Koç', 'Kara', 'Korkmaz', 'Aydın', 'Özdemir', 'Bulut', 'Güneş', 'Erdoğan', 'Çakır', 'Yıldız',
-  'Öztürk', 'Polat', 'Turan', 'Aktaş', 'Karaca', 'Mutlu', 'Demirtaş', 'Özer', 'Başaran', 'Kurt',
-];
 
 // Random seçim fonksiyonu
 function getRandomItem(array) {
@@ -124,33 +160,41 @@ async function main() {
     await prisma.article.deleteMany();
     await prisma.user.deleteMany();
 
-    // 200 kullanıcı oluştur
-    console.log('👥 200 kullanıcı oluşturuluyor...');
+    // Özel blockchain kullanıcılarını oluştur
+    console.log('👥 Özel blockchain kullanıcıları oluşturuluyor...');
     const users = [];
-    const hashedPassword = await bcrypt.hash('password123', 10);
+    
+    for (const userData of usersData) {
+      const existingUser = await prisma.user.findUnique({
+        where: { email: userData.email }
+      });
 
-    for (let i = 1; i <= 200; i++) {
-      const name = getRandomItem(userNames);
-      const surname = getRandomItem(userSurnames);
-      const username = `${name.toLowerCase()}${surname.toLowerCase()}${i}`;
-      const email = `${username}@example.com`;
+      if (existingUser) {
+        console.log(`⚠️  ${userData.name} zaten mevcut, atlanıyor...`);
+        users.push(existingUser);
+        continue;
+      }
+
+      // Şifreyi hash'le
+      const hashedPassword = await bcrypt.hash(userData.password, 12);
       
+      console.log(`✅ ${userData.name} kullanıcısı ekleniyor...`);
       const user = await prisma.user.create({
         data: {
-          name,
-          surname,
-          username,
-          email,
+          name: userData.name,
+          email: userData.email,
           password: hashedPassword,
-          avatar: i <= 20 ? `https://randomuser.me/api/portraits/${i % 2 === 0 ? 'men' : 'women'}/${i}.jpg` : null,
-          bio: i <= 50 ? `${name} ${surname} - Blockchain uzmanı ve kripto para analisti` : null,
-          role: i <= 5 ? 'ADMIN' : i <= 15 ? 'AUTHOR' : i <= 25 ? 'EDITOR' : 'USER',
-          lastLogin: getRandomDate(new Date(2024, 0, 1), new Date()),
+          avatar: userData.avatar,
+          bio: userData.bio,
+          role: userData.role,
+          isActive: userData.isActive,
           createdAt: getRandomDate(new Date(2023, 0, 1), new Date()),
-        },
+          lastLogin: getRandomDate(new Date(2024, 0, 1), new Date()),
+        }
       });
       users.push(user);
     }
+
 
     // Kategoriler (mevcut ID\'ler: 1-10)
     const categoryIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -303,7 +347,7 @@ async function main() {
 
     console.log('✅ Mock data başarıyla oluşturuldu!');
     console.log('📊 Oluşturulan veriler:');
-    console.log(`   👥 ${users.length} kullanıcı`);
+    console.log(`   👥 ${users.length} kullanıcı (5 özel blockchain kullanıcısı)`);
     console.log(`   📰 ${articles.length} makale`);
     console.log('   🏷️ Makale-etiket ilişkileri');
     console.log('   ❤️ Beğeniler');

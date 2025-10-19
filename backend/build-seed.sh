@@ -19,10 +19,10 @@ else
 fi
 
 # Blockchain data seed script'ini validate et
-if node -c scripts/seedBlockchainMockData.js; then
-  echo "✅ seedBlockchainMockData.js validated successfully"
+if node -c scripts/seedMockData.js; then
+  echo "✅ seedMockData.js validated successfully"
 else
-  echo "❌ seedBlockchainMockData.js validation failed"
+  echo "❌ seedMockData.js validation failed"
   exit 1
 fi
 
