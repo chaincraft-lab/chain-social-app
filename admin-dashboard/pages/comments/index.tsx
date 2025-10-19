@@ -144,7 +144,7 @@ function CommentsPage() {
   return (
     <>
       <Head>
-        <title>Yorumlar - Haber Sitesi Admin</title>
+        <title>Yorumlar - ChainSocial Admin</title>
       </Head>
       <Container maxWidth="xl" sx={{ pt: 4 }}>
         <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={3}>

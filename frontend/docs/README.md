@@ -50,5 +50,5 @@ frontend/docs/
 ---
 
 **Last Updated**: January 2025  
-**Project**: Haber Sitesi - Modern News Website  
+**Project**: ChainSocial - Modern Blockchain Social Media Platform  
 **Frontend Stack**: Vue.js 3 + TailwindCSS + Vuex

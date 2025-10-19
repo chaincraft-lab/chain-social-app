@@ -43,7 +43,7 @@ function AdminProfile() {
   return (
     <>
       <Head>
-        <title>Admin Profili - Haber Sitesi Dashboard</title>
+        <title>Admin Profili - ChainSocial Dashboard</title>
       </Head>
       <Container sx={{ mt: 3 }} maxWidth="lg">
         <Grid container spacing={3}>

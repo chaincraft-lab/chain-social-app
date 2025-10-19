@@ -1,8 +1,8 @@
 {
-  "name": "news-site-admin-dashboard",
+  "name": "chainsocial-admin-dashboard",
   "version": "1.0.0",
-  "title": "News Site Admin Dashboard",
-  "description": "Modern admin dashboard for news website management built with Next.js and Material-UI",
+  "title": "ChainSocial Admin Dashboard",
+  "description": "Modern admin dashboard for ChainSocial blockchain social media platform built with Next.js and Material-UI",
   "author": {
     "name": "chaincraft-lab",
     "url": "https://github.com/chaincraft-lab"

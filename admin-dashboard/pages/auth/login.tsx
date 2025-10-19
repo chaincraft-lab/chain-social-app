@@ -65,7 +65,7 @@ const LoginPage = () => {
   return (
     <>
       <Head>
-        <title>Admin Girişi - Haber Sitesi Dashboard</title>
+        <title>Admin Girişi - ChainSocial Dashboard</title>
         <meta name="description" content="Admin panel girişi" />
       </Head>
       

@@ -397,7 +397,7 @@ function AdminSettings() {
   return (
     <>
       <Head>
-        <title>Admin Ayarları - Haber Sitesi Dashboard</title>
+        <title>Admin Ayarları - ChainSocial Dashboard</title>
       </Head>
       <Container maxWidth="xl" sx={{ pt: 4 }}>
         <Grid

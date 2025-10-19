@@ -5,7 +5,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: haber-sitesi-frontend-dev
+    container_name: chainsocial-frontend-dev
     ports:
       - '8080:8080'
     volumes:
@@ -20,7 +20,7 @@ services:
     build:
       context: ./admin-dashboard
       dockerfile: Dockerfile.dev
-    container_name: haber-sitesi-admin-dev
+    container_name: chainsocial-admin-dev
     ports:
       - '3000:3000'
     volumes:
@@ -30,7 +30,7 @@ services:
       - NODE_ENV=development
       - NEXT_PUBLIC_API_URL=http://localhost:8020
       - NEXT_PUBLIC_API_VERSION=v1
-      - NEXT_PUBLIC_APP_NAME=Haber Sitesi Admin
+      - NEXT_PUBLIC_APP_NAME=ChainSocial Admin
     depends_on:
       - backend
 
@@ -38,7 +38,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: haber-sitesi-backend-dev
+    container_name: chainsocial-backend-dev
     ports:
       - '8020:3000'
     env_file:
@@ -54,9 +54,9 @@ services:
     image: postgres:13
     container_name: postgres_db_dev
     environment:
-      POSTGRES_DB: habersitesidb
+      POSTGRES_DB: chainsocialdb
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: habersitesipass
+      POSTGRES_PASSWORD: chainsocialpass
     ports:
       - '5001:5432'
     volumes:
