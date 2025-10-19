@@ -249,7 +249,7 @@ function TagsPage() {
   return (
     <>
       <Head>
-        <title>Etiketler - Haber Sitesi Admin</title>
+        <title>Etiketler - ChainSocial Admin</title>
       </Head>
       <Container maxWidth="xl" sx={{ pt: 4 }}>
         <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={3}>

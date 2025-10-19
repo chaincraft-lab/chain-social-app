@@ -306,5 +306,5 @@ interface NativeFeatures {
 ---
 
 *Created: January 2025*  
-*Project: Haber Sitesi - News Website*  
+*Project: ChainSocial - Blockchain Social Media Platform*  
 *Author: Development Team*

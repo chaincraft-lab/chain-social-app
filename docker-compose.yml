@@ -47,7 +47,7 @@ services:
     environment:
       - PROJECT_VERSION=v1
       - BASE_ENDPOINT_URL=api/
-      - DATABASE_URL=postgresql://postgres:habersitesipass@postgres_db:5432/habersitesidb?schema=public
+      - DATABASE_URL=postgresql://postgres:chainsocialpass@postgres_db:5432/chainsocialdb?schema=public
       - IS_PRODUCTION=development
       - JWT_SECRET=your-super-secret-jwt-key-change-in-production
       - JWT_EXPIRES_IN=7d
@@ -64,9 +64,9 @@ services:
     image: postgres:13
     container_name: postgres_db
     environment:
-      POSTGRES_DB: habersitesidb
+      POSTGRES_DB: chainsocialdb
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: habersitesipass
+      POSTGRES_PASSWORD: chainsocialpass
     ports:
       - '5001:5432'
     volumes:

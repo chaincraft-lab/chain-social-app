@@ -101,7 +101,7 @@ function Dashboard() {
   return (
     <>
       <Head>
-        <title>Dashboard - Haber Sitesi Admin</title>
+        <title>Dashboard - ChainSocial Admin</title>
       </Head>
       <Container maxWidth="xl" sx={{ pt: 4 }}>
         <Grid container spacing={3} alignItems="stretch">

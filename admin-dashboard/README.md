@@ -1,10 +1,10 @@
-# News Site Admin Dashboard
+# ChainSocial Admin Dashboard
 
-Admin dashboard for news management built with Next.js and Material-UI.
+Admin dashboard for ChainSocial blockchain social media platform built with Next.js and Material-UI.
 
 ## Features
 
-- Article management
+- Post management
 - Category management
 - User management
 - Comment moderation
@@ -39,7 +39,7 @@ Create `.env.local`:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8020
 NEXT_PUBLIC_API_VERSION=v1
-NEXT_PUBLIC_APP_NAME=News Site Admin
+NEXT_PUBLIC_APP_NAME=ChainSocial Admin
 ```
 
 ## Available Scripts

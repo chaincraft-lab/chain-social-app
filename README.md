@@ -1,6 +1,6 @@
-# News Site Project
+# ChainSocial
 
-Modern news website with NestJS backend, Vue.js frontend and Next.js admin dashboard.
+Modern blockchain social media platform with NestJS backend, Vue.js frontend and Next.js admin dashboard.
 
 ![version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![license](https://img.shields.io/badge/license-MIT-blue.svg)
@@ -9,9 +9,9 @@ Modern news website with NestJS backend, Vue.js frontend and Next.js admin dashb
 ## Project Structure
 
 ```
-news-site/
+chain-social-app/
 ├── backend/           # NestJS REST API
-├── frontend/          # Vue.js News Site  
+├── frontend/          # Vue.js ChainSocial Platform  
 ├── admin-dashboard/   # Next.js Admin Panel
 ├── scripts/           # Docker helper scripts
 └── docker-compose.yml # Docker configuration
@@ -24,7 +24,7 @@ news-site/
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd blockhain-protokols-news
+cd chain-social-app
 
 # Start all services with automatic setup
 docker compose up --build -d
@@ -39,7 +39,7 @@ docker compose logs -f backend
 - ✅ Database migrations applied
 - ✅ 10 blockchain protocols seeded
 - ✅ 5 sample users created  
-- ✅ 10 blockchain news articles added
+- ✅ 10 ChainSocial posts added
 - ✅ All services started
 
 ### Development Environment
@@ -66,7 +66,7 @@ docker compose up --build -d
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| **Frontend** | http://localhost:8080 | Vue.js blockchain news website |
+| **Frontend** | http://localhost:8080 | Vue.js ChainSocial platform |
 | **Admin Dashboard** | http://localhost:3000 | Next.js admin panel |
 | **Backend API** | http://localhost:8020 | NestJS REST API |
 | **Database** | localhost:5001 | PostgreSQL database |
@@ -90,8 +90,8 @@ To reset everything and re-run seeding:
 docker compose down
 
 # Remove volumes (this will reset database and seeding flags)
-docker volume rm blockhain-protokols-news_postgres_data
-docker volume rm blockhain-protokols-news_backend_seed_flag
+docker volume rm chain-social-app_postgres_data
+docker volume rm chain-social-app_backend_seed_flag
 
 # Start fresh
 docker compose up --build -d
@@ -155,7 +155,7 @@ npm run dev
 
 ### Backend (.env)
 ```env
-DATABASE_URL="postgresql://postgres:habersitesipass@localhost:5432/habersitesidb"
+DATABASE_URL="postgresql://postgres:chainsocialpass@localhost:5432/chainsocialdb"
 JWT_SECRET="your-jwt-secret"
 JWT_EXPIRES_IN="7d"
 ```

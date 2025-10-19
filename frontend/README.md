@@ -1,13 +1,13 @@
-# Haber Sitesi (News Website)
+# ChainSocial
 
-Modern, responsive news website built with Vue.js and Tailwind CSS.
+Modern, responsive blockchain social media platform built with Vue.js and Tailwind CSS.
 
 ## Features
 
 - Modern component-based architecture using Vue 3
 - Responsive design that works on all devices
 - Custom UI components (buttons, cards, badges, inputs)
-- News display with categories and featured articles
+- Social posts display with categories and featured content
 - Layout components (navbar, footer, sidebar)
 - Mock API services for development
 - Vuex store for state management
@@ -16,7 +16,7 @@ Modern, responsive news website built with Vue.js and Tailwind CSS.
 ## Project Structure
 
 - `/src/components/ui`: Reusable UI components
-- `/src/components/news`: News-specific components
+- `/src/components/social`: Social media specific components
 - `/src/components/layout`: Layout components
 - `/src/views`: Page components
 - `/src/layouts`: Layout templates
@@ -43,7 +43,7 @@ Modern, responsive news website built with Vue.js and Tailwind CSS.
 git clone <repository-url>
 
 # Navigate to project directory
-cd haber-sitesi
+cd chain-social-app
 
 # Install dependencies
 yarn install

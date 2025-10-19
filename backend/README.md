@@ -1,6 +1,6 @@
 ## Description
 
-Haber Sitesi Backend API - NestJS tabanlı haber yönetim sistemi
+ChainSocial Backend API - NestJS tabanlı blockchain sosyal medya sistemi
 
 ## Installation and running the app with docker
 
@@ -16,7 +16,7 @@ $ docker compose up -d
 
 ```bash
 # build
-$ docker exec -ti haber-sitesi-backend sh
+$ docker exec -ti chainsocial-backend sh
 
 # create schema
 $ npx prisma generate

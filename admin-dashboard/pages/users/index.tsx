@@ -219,7 +219,7 @@ function UsersPage() {
   return (
     <>
       <Head>
-        <title>Kullanıcılar - Haber Sitesi Admin</title>
+        <title>Kullanıcılar - ChainSocial Admin</title>
       </Head>
       <Container maxWidth="xl" sx={{ pt: 4 }}>
         <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={3}>
