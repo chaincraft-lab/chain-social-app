@@ -45,7 +45,7 @@
     </template>
 
     <!-- Popular Tags Component -->
-    <PopularTags :show-tags="showTags" />
+    <!-- <PopularTags :show-tags="showTags" /> -->
 
     <slot></slot>
   </aside>
@@ -55,7 +55,7 @@
 import { mapState } from "vuex";
 import CategoriesList from "../ui/CategoriesList.vue";
 import PopularNews from "../ui/PopularNews.vue";
-import PopularTags from "../ui/PopularTags.vue";
+// import PopularTags from "../ui/PopularTags.vue";
 import WeatherWidget from "../widgets/WeatherWidget.vue";
 import MarketWidget from "../widgets/MarketWidget.vue";
 import CryptoProtocolsWidget from "../widgets/CryptoProtocolsWidget.vue";
@@ -65,7 +65,7 @@ export default {
   components: {
     CategoriesList,
     PopularNews,
-    PopularTags,
+    // PopularTags,
     WeatherWidget,
     MarketWidget,
     CryptoProtocolsWidget,
