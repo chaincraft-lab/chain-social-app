@@ -7,7 +7,12 @@ export default {
     lightMode: 'Switch to Light Mode',
     darkMode: 'Switch to Dark Mode'
   },
-  profile: {
+  user: 'User',
+  logout: 'Logout',
+  profile: 'My Profile',
+  bookmarks: 'My Bookmarks',
+  likes: 'My Likes',
+  profileOld: {
     bookmarks: 'My Bookmarks',
     likes: 'My Likes'
   },

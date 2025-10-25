@@ -41,6 +41,8 @@ export default {
     },
     verificationSent: 'Verification email sent!'
   },
+  memberSince: 'member since',
+  unknownSection: 'Unknown Section',
   sidebar: {
     title: 'Profile Menu',
     helpTitle: 'Need help?',
@@ -72,5 +74,11 @@ export default {
     },
     confirm: 'I want to delete my account',
     submit: 'Delete Account'
+  },
+  bookmarks: {
+    description: 'Articles you saved for reading later'
+  },
+  likes: {
+    description: 'Articles and news you liked'
   }
 }

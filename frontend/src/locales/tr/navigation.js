@@ -7,7 +7,12 @@ export default {
     lightMode: 'Light Mode\'a geç',
     darkMode: 'Dark Mode\'a geç'
   },
-  profile: {
+  user: 'Kullanıcı',
+  logout: 'Çıkış Yap',
+  profile: 'Profilim',
+  bookmarks: 'Kaydettiklerim',
+  likes: 'Beğendiklerim',
+  profileOld: {
     bookmarks: 'Kaydettiklerim',
     likes: 'Beğendiklerim'
   },

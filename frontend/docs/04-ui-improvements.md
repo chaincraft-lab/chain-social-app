@@ -201,4 +201,4 @@ Bu öneriler, mevcut projenin güçlü altyapısını kullanarak sidebar'ı daha
 ---
 **Hazırlayan:** AI Assistant  
 **Tarih:** 2025-08-27  
-**Proje:** ChainSocial - Frontend Sidebar Enhancement
+**Proje:** ArbitrumSocial - Frontend Sidebar Enhancement

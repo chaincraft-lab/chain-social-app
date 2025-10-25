@@ -32,7 +32,7 @@ export default {
     or: 'or'
   },
   header: {
-    title: 'ChainSocial',
+    title: 'ArbitrumSocial',
     subtitle: 'Blockchain news dedicated to Arbitrum ecosystem'
   },
   validation: {

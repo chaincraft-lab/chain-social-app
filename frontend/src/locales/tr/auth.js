@@ -32,7 +32,7 @@ export default {
     or: 'veya'
   },
   header: {
-    title: 'ChainSocial',
+    title: 'ArbitrumSocial',
     subtitle: 'Arbitrum ekosistemine özel blockchain haberleri'
   },
   validation: {

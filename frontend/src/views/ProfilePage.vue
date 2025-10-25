@@ -43,11 +43,11 @@
               </div>
               <div class="flex items-center gap-1">
                 <Icon icon="heroicons:heart" class="w-4 h-4" />
-                <span>{{ userStats.likes }} beğeni</span>
+                <span>{{ userStats.likes }} {{ t('profile.overview.stats.likes') }}</span>
               </div>
               <div class="flex items-center gap-1">
                 <Icon icon="heroicons:bookmark" class="w-4 h-4" />
-                <span>{{ userStats.bookmarks }} kayıt</span>
+                <span>{{ userStats.bookmarks }} {{ t('profile.overview.stats.bookmarks') }}</span>
               </div>
             </div>
           </div>
@@ -103,9 +103,14 @@ import ProfileUserInfo from "@/components/ui/Profile/ProfileUserInfo.vue";
 import ProfileChangePassword from "@/components/ui/Profile/ProfileChangePassword.vue";
 import ProfileDeleteAccount from "@/components/ui/Profile/ProfileDeleteAccount.vue";
 import ProfileAvatarUpload from "@/components/ui/Profile/ProfileAvatarUpload.vue";
+import { useI18n } from 'vue-i18n';
 
 export default {
   name: "ProfilePage",
+  setup() {
+    const { t } = useI18n();
+    return { t };
+  },
   components: {
     ProfileSidebar,
     ProfileOverview,
@@ -171,19 +176,19 @@ export default {
         date.toLocaleDateString("tr-TR", {
           year: "numeric",
           month: "long",
-        }) + " tarihinden beri üye"
+        }) + " " + this.t('profile.memberSince')
       );
     },
     getSectionName(section) {
       const sections = {
-        overview: "Genel Bakış",
-        likes: "Beğendiklerim",
-        bookmarks: "Kaydettiklerim",
-        "user-info": "Kişisel Bilgiler",
-        "change-password": "Şifre Değiştir",
-        "delete-account": "Hesabı Sil",
+        overview: this.t('profile.sidebar.overview'),
+        likes: this.t('profile.sidebar.likes'),
+        bookmarks: this.t('profile.sidebar.bookmarks'),
+        "user-info": this.t('profile.sidebar.userInfo'),
+        "change-password": this.t('profile.sidebar.changePassword'),
+        "delete-account": this.t('profile.sidebar.deleteAccount'),
       };
-      return sections[section] || "Bilinmeyen Bölüm";
+      return sections[section] || this.t('profile.unknownSection');
     },
     updateUserInfo(updatedInfo) {
       this.userInfo = { ...this.userInfo, ...updatedInfo };

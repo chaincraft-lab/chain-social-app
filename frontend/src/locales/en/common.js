@@ -24,12 +24,46 @@ export default {
     backToHome: 'Back to Home'
   },
   shareOn: 'Share on {platform}',
+  news: 'News',
+  popular: 'Popular',
+  popularNews: 'Popular News',
+  readNews: 'Read News',
   widgets: {
     cryptoMarket: {
       title: 'Crypto Market',
       loading: 'Loading market data...',
       error: 'Failed to load market data',
       emptyState: 'Loading market data...'
+    },
+    market: {
+      title: 'Markets & Forex',
+      loading: 'Loading ECB rates...',
+      majorCurrencies: 'Major Currencies',
+      marketIndicators: 'Market Indicators',
+      gold: 'Gold (Oz)',
+      silver: 'Silver (Oz)',
+      oil: 'Oil/TRY',
+      dollarIndex: 'Dollar Index',
+      volatility: 'Volatility',
+      riskScore: 'Risk Score',
+      lastUpdate: 'Last update',
+      refresh: 'Refresh',
+      currencies: {
+        usd: 'US Dollar',
+        eur: 'Euro',
+        gbp: 'British Pound',
+        jpy: 'Japanese Yen'
+      },
+      risk: {
+        low: 'LOW',
+        medium: 'MEDIUM',
+        high: 'HIGH'
+      },
+      errors: {
+        fetchFailed: 'Failed to fetch exchange rates',
+        invalidFormat: 'API response not in expected format',
+        general: 'An error occurred'
+      }
     }
   },
   time: {

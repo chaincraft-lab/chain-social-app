@@ -41,6 +41,8 @@ export default {
     },
     verificationSent: 'Doğrulama e-postası gönderildi!'
   },
+  memberSince: 'tarihinden beri üye',
+  unknownSection: 'Bilinmeyen Bölüm',
   sidebar: {
     title: 'Profil Menüsü',
     helpTitle: 'Yardıma mı ihtiyacınız var?',
@@ -72,5 +74,11 @@ export default {
     },
     confirm: 'Hesabımı silmek istiyorum',
     submit: 'Hesabı Sil'
+  },
+  bookmarks: {
+    description: 'Daha sonra okumak için kaydettiğiniz haberler'
+  },
+  likes: {
+    description: 'Beğendiğiniz haberler ve makaleler'
   }
 }

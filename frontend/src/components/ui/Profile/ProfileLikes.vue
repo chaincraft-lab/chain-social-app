@@ -5,9 +5,9 @@
       <div>
         <h2 class="text-2xl font-bold theme-text-primary flex items-center gap-2">
           <Icon icon="heroicons:heart" class="w-6 h-6 text-red-500" />
-          Beğendiklerim
+          {{ $t('profile.sidebar.likes') }}
         </h2>
-        <p class="theme-text-secondary mt-1">Beğendiğiniz haberler ve makaleler</p>
+        <p class="theme-text-secondary mt-1">{{ $t('profile.likes.description') }}</p>
       </div>
       
       <!-- Filter Options -->

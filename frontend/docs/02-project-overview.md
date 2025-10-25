@@ -1,7 +1,7 @@
-# ChainSocial - Project Software Introduction
+# ArbitrumSocial - Project Software Introduction
 
 ## Overview
-**ChainSocial** is a modern, responsive blockchain social media platform focused on cryptocurrency and blockchain technology. Built with Vue.js 3 and styled with Tailwind CSS, it provides a comprehensive platform for sharing blockchain content, crypto updates, and technology analysis.
+**ArbitrumSocial** is a modern, responsive blockchain social media platform focused on cryptocurrency and blockchain technology. Built with Vue.js 3 and styled with Tailwind CSS, it provides a comprehensive platform for sharing blockchain content, crypto updates, and technology analysis.
 
 ## Architecture & Technology Stack
 

@@ -1,9 +1,9 @@
 <template>
   <BaseWidget
-    title="Piyasalar & Döviz"
+    :title="t('common.widgets.market.title')"
     icon="heroicons:currency-dollar"
     :is-loading="isLoading"
-    loading-text="ECB kurları alınıyor..."
+    :loading-text="t('common.widgets.market.loading')"
     :error="error"
     @retry="fetchRates"
   >
@@ -13,7 +13,7 @@
       <div class="space-y-3">
         <h4 class="text-sm font-semibold theme-text-primary mb-2 flex items-center">
           <Icon icon="heroicons:currency-dollar" class="w-4 h-4 mr-1" />
-          Ana Para Birimleri
+          {{ t('common.widgets.market.majorCurrencies') }}
         </h4>
         
         <div class="space-y-2">
@@ -49,25 +49,25 @@
       <div class="space-y-3 pt-3 border-t theme-border-primary">
         <h4 class="text-sm font-semibold theme-text-primary mb-2 flex items-center">
           <Icon icon="heroicons:wrench-screwdriver" class="w-4 h-4 mr-1" />
-          Piyasa Göstergeleri
+          {{ t('common.widgets.market.marketIndicators') }}
         </h4>
         
         <div class="grid grid-cols-2 gap-2">
           <div class="text-center p-2 theme-bg-secondary rounded-lg">
             <Icon icon="heroicons:bolt" class="w-4 h-4 mx-auto mb-1 text-yellow-500" />
-            <p class="text-xs theme-text-secondary mb-1">Altın (Ons)</p>
+            <p class="text-xs theme-text-secondary mb-1">{{ t('common.widgets.market.gold') }}</p>
             <p class="text-sm font-semibold">₺{{ formatRate(marketData?.rates?.XAU, 'gold') }}</p>
           </div>
           
           <div class="text-center p-2 theme-bg-secondary rounded-lg">
             <Icon icon="heroicons:cube" class="w-4 h-4 mx-auto mb-1 text-gray-400" />
-            <p class="text-xs theme-text-secondary mb-1">Gümüş (Ons)</p>
+            <p class="text-xs theme-text-secondary mb-1">{{ t('common.widgets.market.silver') }}</p>
             <p class="text-sm font-semibold">₺{{ formatRate(marketData?.rates?.XAG, 'silver') }}</p>
           </div>
           
           <div class="text-center p-2 theme-bg-secondary rounded-lg">
             <Icon icon="heroicons:fire" class="w-4 h-4 mx-auto mb-1 text-black" />
-            <p class="text-xs theme-text-secondary mb-1">Petrol/TRY</p>
+            <p class="text-xs theme-text-secondary mb-1">{{ t('common.widgets.market.oil') }}</p>
             <p class="text-sm font-semibold">₺{{ calculateOilPrice() }}</p>
           </div>
           
@@ -83,15 +83,15 @@
       <div class="pt-3 border-t theme-border-primary">
         <div class="grid grid-cols-3 gap-2 text-center">
           <div>
-            <p class="text-xs theme-text-secondary">Dolar Endeksi</p>
+            <p class="text-xs theme-text-secondary">{{ t('common.widgets.market.dollarIndex') }}</p>
             <p class="text-sm font-semibold">{{ dollarIndex }}</p>
           </div>
           <div>
-            <p class="text-xs theme-text-secondary">Volatilite</p>
+            <p class="text-xs theme-text-secondary">{{ t('common.widgets.market.volatility') }}</p>
             <p class="text-sm font-semibold">{{ volatilityIndex }}</p>
           </div>
           <div>
-            <p class="text-xs theme-text-secondary">Risk Skoru</p>
+            <p class="text-xs theme-text-secondary">{{ t('common.widgets.market.riskScore') }}</p>
             <p :class="['text-sm font-semibold', getRiskColor()]">{{ riskScore }}</p>
           </div>
         </div>
@@ -101,14 +101,14 @@
     <!-- Actions -->
     <template #actions v-if="marketData">
       <div class="flex justify-between items-center text-xs theme-text-secondary">
-        <span>Son güncelleme: {{ formatTime(lastUpdated) }}</span>
+        <span>{{ t('common.widgets.market.lastUpdate') }}: {{ formatTime(lastUpdated) }}</span>
         <button 
           @click="fetchRates"
           class="flex items-center hover:theme-text-primary transition-colors"
           :disabled="isLoading"
         >
           <Icon icon="heroicons:arrow-path" class="w-3 h-3 mr-1" :class="{ 'animate-spin': isLoading }" />
-          Yenile
+          {{ t('common.widgets.market.refresh') }}
         </button>
       </div>
     </template>
@@ -118,6 +118,9 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import BaseWidget from './base/BaseWidget.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 // Props
 const props = defineProps({
@@ -132,12 +135,19 @@ const isLoading = ref(false)
 const error = ref('')
 const lastUpdated = ref(new Date())
 
-// Market data for Turkish defense industry
-const majorCurrencies = ref([
-  { code: 'USD', name: 'Amerikan Doları', change: 0 },
-  { code: 'EUR', name: 'Euro', change: 0 },
-  { code: 'GBP', name: 'İngiliz Sterlini', change: 0 },
-  { code: 'JPY', name: 'Japon Yeni', change: 0 }
+// Market data for Turkish defense industry  
+const currencyChanges = ref({
+  USD: 0,
+  EUR: 0,
+  GBP: 0,
+  JPY: 0
+})
+
+const majorCurrencies = computed(() => [
+  { code: 'USD', name: t('common.widgets.market.currencies.usd'), change: currencyChanges.value.USD },
+  { code: 'EUR', name: t('common.widgets.market.currencies.eur'), change: currencyChanges.value.EUR },
+  { code: 'GBP', name: t('common.widgets.market.currencies.gbp'), change: currencyChanges.value.GBP },
+  { code: 'JPY', name: t('common.widgets.market.currencies.jpy'), change: currencyChanges.value.JPY }
 ])
 
 // Computed market indicators
@@ -158,9 +168,9 @@ const volatilityIndex = computed(() => {
 
 const riskScore = computed(() => {
   const vix = parseFloat(volatilityIndex.value)
-  if (vix < 20) return 'DÜŞÜK'
-  if (vix < 30) return 'ORTA'
-  return 'YÜKSEK'
+  if (vix < 20) return t('common.widgets.market.risk.low')
+  if (vix < 30) return t('common.widgets.market.risk.medium')
+  return t('common.widgets.market.risk.high')
 })
 
 // Methods
@@ -175,7 +185,7 @@ const fetchRates = async () => {
     )
 
     if (!response.ok) {
-      throw new Error('Döviz kurları alınamadı')
+      throw new Error(t('common.widgets.market.errors.fetchFailed'))
     }
 
     const data = await response.json()
@@ -183,7 +193,7 @@ const fetchRates = async () => {
     
     // Check if data has the expected structure
     if (!data.rates) {
-      throw new Error('API yanıtı beklenen formatta değil')
+      throw new Error(t('common.widgets.market.errors.invalidFormat'))
     }
 
     // Get historical data for change calculation (yesterday)
@@ -225,14 +235,15 @@ const fetchRates = async () => {
     }
 
     // Calculate real daily changes
-    majorCurrencies.value.forEach(currency => {
-      if (historicalRates[currency.code] && data.rates[currency.code]) {
-        const oldRate = historicalRates[currency.code]
-        const newRate = data.rates[currency.code]
-        currency.change = ((newRate - oldRate) / oldRate) * 100
+    const currencies = ['USD', 'EUR', 'GBP', 'JPY']
+    currencies.forEach(code => {
+      if (historicalRates[code] && data.rates[code]) {
+        const oldRate = historicalRates[code]
+        const newRate = data.rates[code]
+        currencyChanges.value[code] = ((newRate - oldRate) / oldRate) * 100
       } else {
         // Fallback to mock change
-        currency.change = (Math.random() - 0.5) * 3
+        currencyChanges.value[code] = (Math.random() - 0.5) * 3
       }
     })
 
@@ -242,7 +253,7 @@ const fetchRates = async () => {
     error.value = ''
   } catch (err) {
     console.error('Market fetch error:', err)
-    error.value = err.message || 'Bir hata oluştu'
+    error.value = err.message || t('common.widgets.market.errors.general')
     marketData.value = null
   } finally {
     isLoading.value = false
@@ -283,8 +294,8 @@ const formatTime = (date) => {
 
 const getRiskColor = () => {
   const risk = riskScore.value
-  if (risk === 'DÜŞÜK') return 'text-green-600'
-  if (risk === 'ORTA') return 'text-yellow-600'
+  if (risk === t('common.widgets.market.risk.low')) return 'text-green-600'
+  if (risk === t('common.widgets.market.risk.medium')) return 'text-yellow-600'
   return 'text-red-600'
 }
 
