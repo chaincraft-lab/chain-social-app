@@ -36,7 +36,6 @@
 </template>
 
 <script setup>
-import SectionHeader from '../common/SectionHeader.vue'
 import CategoryItem from './Categories/CategoryItem.vue'
 import EmptyState from '../common/EmptyState.vue'
 import SkeletonLoader from '../common/SkeletonLoader.vue'

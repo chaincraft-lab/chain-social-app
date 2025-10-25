@@ -6,6 +6,7 @@ import './assets/css/theme.css'
 import store from './store'
 import vuetify from './plugins/vuetify'
 import { Icon } from '@iconify/vue'
+import i18n from './locales/index.js'
 
 // Import layouts and pages
 import MainLayout from './layouts/MainLayout.vue'
@@ -65,7 +66,7 @@ router.beforeEach((to, from, next) => {
       // Redirect to home with a message
       store.dispatch('notifications/addNotification', {
         type: 'warning',
-        message: 'Bu sayfaya erişmek için giriş yapmalısınız'
+        message: 'Bu sayfaya erişmek için giriş yapmalısınız' // TODO: Convert to i18n
       })
       next('/')
     }
@@ -79,6 +80,7 @@ const app = createApp(App)
 app.use(router)
 app.use(store)
 app.use(vuetify)
+app.use(i18n)
 app.component('Icon', Icon)
 
 // Initialize authentication and theme state before mounting
