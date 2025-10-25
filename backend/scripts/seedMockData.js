@@ -202,13 +202,13 @@ async function main() {
     // Etiketler (varsayılan - boş çünkü hiç tag yok)
     const tagIds = [];
 
-    // 100 makale oluştur
-    console.log('📰 100 makale oluşturuluyor...');
+    // 10 makale oluştur
+    console.log('📰 10 makale oluşturuluyor...');
     const articles = [];
     const startDate = new Date(2024, 0, 1);
     const endDate = new Date();
 
-    for (let i = 1; i <= 100; i++) {
+    for (let i = 1; i <= 10; i++) {
       const title = getRandomItem(blockchainNewsHeadlines) + ` - ${i}`;
       const content = getRandomItem(blockchainNewsContents) + ' ' + getRandomItem(blockchainNewsContents);
       const excerpt = content.substring(0, 150) + '...';

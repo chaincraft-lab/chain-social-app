@@ -52,45 +52,48 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { Icon } from '@iconify/vue'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 // Left side navigation items
-const leftItems = [
+const leftItems = computed(() => [
   {
     name: 'home',
-    label: 'Ana Sayfa',
+    label: t('navigation.menu.home'),
     icon: 'heroicons:home',
     route: '/',
     routeName: 'home'
   },
   {
     name: 'search',
-    label: 'Arama',
+    label: t('navigation.search.placeholder'),
     icon: 'heroicons:magnifying-glass',
     route: '/search',
     routeName: 'search'
   }
-]
+])
 
 // Right side navigation items
-const rightItems = [
+const rightItems = computed(() => [
   {
     name: 'categories',
-    label: 'Kategoriler',
+    label: t('navigation.menu.categories'),
     icon: 'heroicons:squares-2x2',
     route: '/categories',
     routeName: 'categories'
   },
   {
     name: 'profile',
-    label: 'Profil',
+    label: t('navigation.menu.profile'),
     icon: 'heroicons:user',
     route: '/profile',
     routeName: 'profile'
   }
-]
+])
 
 const isActiveRoute = (item) => {
   // Özel route kontrolü

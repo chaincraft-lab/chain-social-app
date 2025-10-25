@@ -10,23 +10,18 @@
         <router-view />
       </div>
       
-      <!-- Category Page Layout (No Right Sidebar) -->
+      <!-- Category Page Layout (Custom Layout) -->
       <div v-else-if="isCategoryPage" class="container mx-auto px-4 md:px-6">
         <div class="grid grid-cols-12 gap-6 py-8">
-          <!-- Left Sidebar - Hidden on Mobile -->
-          <div class="col-span-12 lg:col-span-3 hidden lg:block">
-              <Sidebar
-                position="left"
-                :showPopular="false"
-                :showAds="false"
-                :showNewsletter="false"
-                :show-sub-categories="true"
-                :current-category-slug="$route.params.categorySlug || $route.params.slug"
-              />
+          <!-- Left Side - Category Card -->
+          <div class="col-span-12 lg:col-span-4">
+            <div class="sticky top-8">
+              <router-view name="categoryCard" />
+            </div>
           </div>
 
-          <!-- Main Content - Wider for category pages -->
-          <div class="col-span-12 lg:col-span-9">
+          <!-- Right Side - News Feed -->
+          <div class="col-span-12 lg:col-span-8">
             <router-view />
           </div>
         </div>

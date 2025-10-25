@@ -23,8 +23,17 @@ export default {
     noData: 'Veri bulunamadı',
     backToHome: 'Ana Sayfaya Dön'
   },
+  shareOn: '{platform}\'de paylaş',
+  widgets: {
+    cryptoMarket: {
+      title: 'Crypto Piyasası',
+      loading: 'Piyasa verileri alınıyor...',
+      error: 'Piyasa verileri alınamadı',
+      emptyState: 'Piyasa verileri yükleniyor...'
+    }
+  },
   time: {
-    now: 'Şimdi',
+    now: 'Az önce',
     today: 'Bugün',
     yesterday: 'Dün',
     daysAgo: '{count} gün önce',

@@ -2,200 +2,137 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-const protocolsData = [
+// Protocol-specific categories for Arbitrum ecosystem
+const categoriesData = [
   {
-    name: 'Arbitrum',
-    slug: 'arbitrum',
-    description: 'Ethereum üzerinde çalışan Layer 2 çözümü. Hızlı ve düşük maliyetli işlemler sunar.',
-    color: '#28A0F0',
-    icon: 'cryptocurrency:arb',
-    website: 'https://arbitrum.io',
-    tokenSymbol: 'ARB',
-    blockchain: 'Ethereum',
+    name: 'DeFi',
+    slug: 'defi',
+    description: 'Merkezi olmayan finans protokolleri ve uygulamaları. Lending, DEX, yield farming.',
+    color: '#10B981',
+    icon: 'material-symbols:account-balance',
     isActive: true
   },
   {
-    name: 'Optimism',
-    slug: 'optimism',
-    description: 'Ethereum için optimistik rollup teknolojisi kullanan Layer 2 çözümü.',
-    color: '#FF0420',
-    icon: 'cryptocurrency:op',
-    website: 'https://optimism.io',
-    tokenSymbol: 'OP',
-    blockchain: 'Ethereum',
+    name: 'Gaming',
+    slug: 'gaming',
+    description: 'Blockchain oyunları, NFT oyunları ve GameFi projeleri.',
+    color: '#8B5CF6',
+    icon: 'material-symbols:sports-esports',
     isActive: true
   },
   {
-    name: 'Polygon',
-    slug: 'polygon',
-    description: 'Ethereum uyumlu blockchain ağı ve framework. Hızlı ve ölçeklenebilir dApps için.',
-    color: '#8247E5',
-    icon: 'cryptocurrency:matic',
-    website: 'https://polygon.technology',
-    tokenSymbol: 'MATIC',
-    blockchain: 'Ethereum',
+    name: 'NFT',
+    slug: 'nft',
+    description: 'Non-Fungible Token projeleri, marketplace\'ler ve koleksiyonlar.',
+    color: '#F59E0B',
+    icon: 'material-symbols:image',
     isActive: true
   },
   {
-    name: 'Avalanche',
-    slug: 'avalanche',
-    description: 'Yüksek performanslı, ölçeklenebilir ve interoperable blockchain platformu.',
-    color: '#E84142',
-    icon: 'cryptocurrency:avax',
-    website: 'https://avax.network',
-    tokenSymbol: 'AVAX',
-    blockchain: 'Avalanche',
+    name: 'Infrastructure',
+    slug: 'infrastructure',
+    description: 'Altyapı projeleri, bridge\'ler, developer araçları ve node servisleri.',
+    color: '#6B7280',
+    icon: 'material-symbols:settings',
     isActive: true
   },
   {
-    name: 'Solana',
-    slug: 'solana',
-    description: 'Yüksek hızlı, düşük maliyetli blockchain. Web3 uygulamaları için optimize edilmiş.',
-    color: '#9945FF',
-    icon: 'cryptocurrency:sol',
-    website: 'https://solana.com',
-    tokenSymbol: 'SOL',
-    blockchain: 'Solana',
+    name: 'Grants',
+    slug: 'grants',
+    description: 'Hibe programları, funding fırsatları ve ekosistem destekleri.',
+    color: '#EF4444',
+    icon: 'material-symbols:card-giftcard',
     isActive: true
   },
   {
-    name: 'Chainlink',
-    slug: 'chainlink',
-    description: 'Merkezi olmayan oracle ağı. Gerçek dünya verilerini blockchain\'e bağlar.',
-    color: '#375BD2',
-    icon: 'cryptocurrency:link',
-    website: 'https://chain.link',
-    tokenSymbol: 'LINK',
-    blockchain: 'Ethereum',
-    isActive: true
-  },
-  {
-    name: 'Uniswap',
-    slug: 'uniswap',
-    description: 'Merkezi olmayan kripto para birimi borsası. Otomatik market yapıcı (AMM) protokolü.',
-    color: '#FF007A',
-    icon: 'cryptocurrency:uni',
-    website: 'https://uniswap.org',
-    tokenSymbol: 'UNI',
-    blockchain: 'Ethereum',
-    isActive: true
-  },
-  {
-    name: 'Aave',
-    slug: 'aave',
-    description: 'Merkezi olmayan borç verme ve borç alma protokolü. DeFi\'nin öncülerinden.',
-    color: '#B6509E',
-    icon: 'cryptocurrency:aave',
-    website: 'https://aave.com',
-    tokenSymbol: 'AAVE',
-    blockchain: 'Ethereum',
-    isActive: true
-  },
-  {
-    name: 'Compound',
-    slug: 'compound',
-    description: 'Algoritmik para piyasası protokolü. Kripto varlıkların borç verilmesi ve alınması.',
-    color: '#00D395',
-    icon: 'cryptocurrency:comp',
-    website: 'https://compound.finance',
-    tokenSymbol: 'COMP',
-    blockchain: 'Ethereum',
-    isActive: true
-  },
-  {
-    name: 'PancakeSwap',
-    slug: 'pancakeswap',
-    description: 'BNB Smart Chain üzerinde çalışan merkezi olmayan borsa ve yield farming platformu.',
-    color: '#D1884F',
-    icon: 'cryptocurrency:cake',
-    website: 'https://pancakeswap.finance',
-    tokenSymbol: 'CAKE',
-    blockchain: 'BNB Chain',
+    name: 'Finans',
+    slug: 'finans',
+    description: 'Geleneksel finans haberleri, piyasa analizleri ve ekonomik gelişmeler.',
+    color: '#3B82F6',
+    icon: 'material-symbols:trending-up',
     isActive: true
   }
 ];
 
 const sampleArticles = [
   {
-    title: 'Arbitrum Yeni Güncelleme ile Gas Ücretlerini %30 Düşürüyor',
-    slug: 'arbitrum-gas-ucretleri-dusuruyor',
-    excerpt: 'Arbitrum\'un son güncellemesi ile işlem maliyetleri önemli ölçüde azalacak. Kullanıcılar daha ucuz işlem yapabilecek.',
-    content: 'Arbitrum ekibi, platformun son güncellemesiyle gas ücretlerinde %30\'a varan düşüş sağlayacağını duyurdu...',
+    title: 'Arbitrum Nova Gaming Ekosistemi Büyüyor',
+    slug: 'arbitrum-nova-gaming-ekosistemi',
+    excerpt: 'Arbitrum Nova\'da oyun projeleri hızla artıyor. NFT ve GameFi alanında yeni gelişmeler.',
+    content: 'Arbitrum Nova ağında gaming projeleri momentum kazanıyor. Düşük maliyetli işlemler sayesinde oyun geliştiricileri platforma yöneliyor...',
     status: 'PUBLISHED',
     contentType: 'NEWS',
     isFeatured: true,
     isBreaking: false,
     views: 1250,
     likes: 89,
-    publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 gün önce
+    publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
     authorId: 1
   },
   {
-    title: 'Optimism Superchain Vizyonunu Açıkladı',
-    slug: 'optimism-superchain-vizyonu',
-    excerpt: 'Optimism, birbirine bağlı L2 ağları için Superchain vizyonunu paylaştı. Ekosistem genişliyor.',
-    content: 'Optimism Foundation, Superchain adını verdikleri yeni vizyonlarını açıkladı...',
+    title: 'Arbitrum DeFi TVL 2 Milyar Doları Aştı',
+    slug: 'arbitrum-defi-tvl-rekor',
+    excerpt: 'Arbitrum üzerindeki DeFi protokollerinde kilitli değer rekor seviyeye ulaştı.',
+    content: 'Arbitrum ekosistemindeki DeFi protokollerinde toplam kilitli değer (TVL) 2 milyar doları geçti...',
     status: 'PUBLISHED',
     contentType: 'ANNOUNCEMENT',
     isFeatured: false,
     isBreaking: true,
     views: 892,
     likes: 67,
-    publishedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 gün önce
+    publishedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
     authorId: 1
   },
   {
-    title: 'Polygon zkEVM Mainnet Beta Başlatıldı',
-    slug: 'polygon-zkevm-mainnet-beta',
-    excerpt: 'Polygon zkEVM mainnet beta sürümü kullanıma açıldı. Zero-knowledge teknolojisiyle Ethereum uyumluluğu.',
-    content: 'Polygon Labs, uzun zamandır beklenen zkEVM mainnet beta sürümünü kullanıma açtı...',
+    title: 'Arbitrum Foundation Yeni Hibe Programı Duyurdu',
+    slug: 'arbitrum-hibe-programi',
+    excerpt: 'Arbitrum Foundation, ekosistem gelişimi için 50 milyon dolarlık hibe programı başlattı.',
+    content: 'Arbitrum Foundation, ekosistemde yenilikçi projeleri desteklemek için kapsamlı bir hibe programı duyurdu...',
     status: 'PUBLISHED',
     contentType: 'UPDATE',
     isFeatured: true,
     isBreaking: false,
     views: 2140,
     likes: 156,
-    publishedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 gün önce
+    publishedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
     authorId: 1
   }
 ];
 
-async function seedProtocols() {
+async function seedCategories() {
   try {
-    console.log('🌱 Protocol verileri ekleniyor...');
+    console.log('🌱 Kategori verileri ekleniyor...');
 
     // Önce mevcut kategorileri kontrol et
     const existingCategories = await prisma.category.findMany();
     console.log(`📊 Mevcut kategori sayısı: ${existingCategories.length}`);
 
-    // Protokolleri ekle
-    for (const protocolData of protocolsData) {
-      const existingProtocol = await prisma.category.findUnique({
-        where: { slug: protocolData.slug }
+    // Kategorileri ekle
+    for (const categoryData of categoriesData) {
+      const existingCategory = await prisma.category.findUnique({
+        where: { slug: categoryData.slug }
       });
 
-      if (existingProtocol) {
-        console.log(`⚠️  ${protocolData.name} zaten mevcut, güncelleniyor...`);
+      if (existingCategory) {
+        console.log(`⚠️  ${categoryData.name} zaten mevcut, güncelleniyor...`);
         await prisma.category.update({
-          where: { slug: protocolData.slug },
-          data: protocolData
+          where: { slug: categoryData.slug },
+          data: categoryData
         });
       } else {
-        console.log(`✅ ${protocolData.name} ekleniyor...`);
+        console.log(`✅ ${categoryData.name} ekleniyor...`);
         await prisma.category.create({
-          data: protocolData
+          data: categoryData
         });
       }
     }
 
-    console.log('ℹ️  Makale ekleme atlandı - bu demo için sadece protokoller eklendi.');
-
-    console.log('🎉 Protocol verileri başarıyla eklendi!');
+    console.log('🎉 Kategori verileri başarıyla eklendi!');
     
     // İstatistikler
     const totalCategories = await prisma.category.count();
     
-    console.log(`📈 Toplam protokol sayısı: ${totalCategories}`);
+    console.log(`📈 Toplam kategori sayısı: ${totalCategories}`);
 
   } catch (error) {
     console.error('❌ Hata oluştu:', error);
@@ -207,7 +144,7 @@ async function seedProtocols() {
 
 // Script çalıştırma
 if (require.main === module) {
-  seedProtocols()
+  seedCategories()
     .then(() => {
       console.log('✨ Seed işlemi tamamlandı!');
       process.exit(0);
@@ -218,4 +155,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { seedProtocols };
+module.exports = { seedCategories };

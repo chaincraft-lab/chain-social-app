@@ -4,9 +4,9 @@
     <div class="px-4 py-3 border-b border-gray-700">
       <div class="flex items-center">
         <div class="w-6 h-6 bg-teal-500 rounded-md flex items-center justify-center mr-3">
-          <span class="text-white text-xs font-bold">CS</span>
+          <span class="text-white text-xs font-bold">C</span>
         </div>
-        <h3 class="text-white font-medium text-sm">KATEGORİLER</h3>
+        <h3 class="text-white font-medium text-sm">Categories</h3>
       </div>
     </div>
 

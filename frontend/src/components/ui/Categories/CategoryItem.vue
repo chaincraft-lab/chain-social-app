@@ -48,18 +48,14 @@ const getCategoryIcon = (category) => {
     return category.tokenSymbol
   }
   
-  // Basic fallback mapping for known protocols
+  // Arbitrum ecosystem category mapping
   const iconMap = {
-    'bitcoin': '₿',
-    'ethereum': 'Ξ', 
     'defi': '🏦',
-    'nft': '🎨',
-    'layer2': 'L2',
     'gaming': '🎮',
-    'dao': '⚡',
-    'web3': 'W3',
-    'staking': '💰',
-    'metaverse': '🌐'
+    'nft': '🎨',
+    'infrastructure': '⚙️',
+    'grants': '💰',
+    'finans': '📈'
   }
   
   return iconMap[category.slug] || category.name.charAt(0).toUpperCase()

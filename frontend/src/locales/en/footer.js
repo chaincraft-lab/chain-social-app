@@ -20,5 +20,5 @@ export default {
     subscribe: 'Subscribe',
     successMessage: '{email} has been subscribed to the newsletter!'
   },
-  copyright: '© {year} ChainSocial. All rights reserved.'
+  copyright: '© {year} {appName}. All rights reserved.'
 }

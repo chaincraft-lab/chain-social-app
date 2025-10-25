@@ -4,15 +4,15 @@
       <div class="mx-auto flex items-center justify-center w-12 h-12 rounded-full theme-bg-tertiary">
         <Icon icon="heroicons:envelope" class="w-6 h-6 text-primary" />
       </div>
-      <h3 class="mt-4 text-lg font-semibold theme-text-primary">Şifremi Unuttum</h3>
-      <p class="mt-2 text-sm theme-text-secondary">E-posta adresinizi girin, şifre sıfırlama bağlantısını size göndereceğiz.</p>
+      <h3 class="mt-4 text-lg font-semibold theme-text-primary">{{ $t('auth.forgotPassword.title') }}</h3>
+      <p class="mt-2 text-sm theme-text-secondary">{{ $t('auth.forgotPassword.description') }}</p>
     </div>
 
     <form @submit.prevent="$emit('submit')">
       <FormInput
         v-model="formData.email"
         type="email"
-        label="E-posta"
+        :label="$t('auth.forgotPassword.email')"
         autocomplete="email"
         required
         :error="errors.email"
@@ -21,7 +21,7 @@
       <FormButton
         type="submit"
         variant="primary"
-        text="Şifre Sıfırlama Gönder"
+        :text="$t('auth.forgotPassword.submit')"
         :is-loading="isLoading"
         full-width
         class="mt-4"
@@ -30,7 +30,7 @@
       <FormButton
         type="button"
         variant="ghost"
-        text="← Giriş sayfasına dön"
+        :text="$t('auth.forgotPassword.backToLogin')"
         full-width
         class="mt-3"
         @click="$emit('backToLogin')"

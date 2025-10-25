@@ -7,11 +7,13 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import { Icon } from '@iconify/vue'
 import i18n from './locales/index.js'
+import { APP_CONFIG } from './config/app.js'
 
 // Import layouts and pages
 import MainLayout from './layouts/MainLayout.vue'
 import HomePage from './views/HomePage.vue'
 import CategoryPage from './views/CategoryPage.vue'
+import CategoryInfoCard from './components/category/CategoryInfoCard.vue'
 import TagPage from './views/TagPage.vue'
 import SearchPage from './views/SearchPage.vue'
 import ArticlePage from './views/ArticlePage.vue'
@@ -28,8 +30,14 @@ const router = createRouter({
       component: MainLayout,
       children: [
         { path: '', component: HomePage, name: 'home' },
-        { path: '/category/:slug', component: CategoryPage, name: 'category' },
-        { path: '/category/:categorySlug/:subSlug', component: CategoryPage, name: 'subcategory' },
+        { 
+          path: '/category/:slug', 
+          components: {
+            default: CategoryPage,
+            categoryCard: CategoryInfoCard
+          },
+          name: 'category' 
+        },
         { path: '/tag/:slug', component: TagPage, name: 'tag' },
         { path: '/search', component: SearchPage, name: 'search' },
         { path: '/article/:slug', component: ArticlePage, name: 'article' },
@@ -82,6 +90,7 @@ app.use(store)
 app.use(vuetify)
 app.use(i18n)
 app.component('Icon', Icon)
+app.config.globalProperties.$config = APP_CONFIG
 
 // Initialize authentication and theme state before mounting
 Promise.all([

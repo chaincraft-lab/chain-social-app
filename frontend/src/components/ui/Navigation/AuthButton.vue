@@ -7,13 +7,13 @@
     @mouseout="$event.target.style.backgroundColor = 'var(--color-auth-bg)'"
   >
     <Icon icon="heroicons:arrow-right-on-rectangle" class="w-4 h-4" />
-    <span>{{ buttonText }}</span>
+    <span>{{ buttonText || $t('auth.login.submit') }}</span>
   </button>
 </template>
 
 <script setup>
 defineProps({
-  buttonText: { type: String, default: 'Giriş Yap' }
+  buttonText: { type: String, default: '' }
 })
 
 defineEmits(['login'])

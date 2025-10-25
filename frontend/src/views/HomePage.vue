@@ -35,8 +35,8 @@
           :is-loading="loadingMore"
           :show-end-message="!hasMorePosts && filteredNews.length > 0"
           :show-skeleton="isLoading"
-          button-text="Daha Fazla Haber Yükle"
-          end-message="Tüm haberler yüklendi"
+          :button-text="$t('pages.home.loadMoreNews')"
+          :end-message="$t('pages.home.allNewsLoaded')"
           @loadMore="loadMorePosts"
         />
       </div>

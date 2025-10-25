@@ -20,5 +20,5 @@ export default {
     subscribe: 'Abone Ol',
     successMessage: '{email} adresi bültene kaydedildi!'
   },
-  copyright: '© {year} ChainSocial. Tüm hakları saklıdır.'
+  copyright: '© {year} {appName}. Tüm hakları saklıdır.'
 }

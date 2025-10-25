@@ -23,6 +23,15 @@ export default {
     noData: 'No data found',
     backToHome: 'Back to Home'
   },
+  shareOn: 'Share on {platform}',
+  widgets: {
+    cryptoMarket: {
+      title: 'Crypto Market',
+      loading: 'Loading market data...',
+      error: 'Failed to load market data',
+      emptyState: 'Loading market data...'
+    }
+  },
   time: {
     now: 'Now',
     today: 'Today',
