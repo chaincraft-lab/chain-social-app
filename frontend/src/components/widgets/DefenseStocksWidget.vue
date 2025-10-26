@@ -63,7 +63,7 @@
           :disabled="isLoading"
         >
           <Icon icon="heroicons:arrow-path" class="w-3 h-3 mr-1" :class="{ 'animate-spin': isLoading }" />
-          Yenile
+          {{ $t('common.ui.refresh') }}
         </button>
       </div>
     </template>
@@ -86,7 +86,7 @@ const isLoading = ref(false)
 const error = ref('')
 const lastUpdated = ref(new Date())
 
-// Türkiye'nin başlıca savunma sanayi şirketleri
+// {{ $t('common.comments.turkishDefenseCompanies') }}
 const defenseCompanies = [
   { symbol: 'ASELS.IS', name: 'ASELSAN', bist: 'ASELS' },
   { symbol: 'OTKAR.IS', name: 'Otokar', bist: 'OTKAR' },

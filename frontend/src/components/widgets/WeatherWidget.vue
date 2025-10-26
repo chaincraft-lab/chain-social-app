@@ -83,7 +83,7 @@
           :disabled="isLoading"
         >
           <Icon icon="heroicons:arrow-path" class="w-3 h-3 mr-1" :class="{ 'animate-spin': isLoading }" />
-          Yenile
+          {{ $t('common.ui.refresh') }}
         </button>
       </div>
     </template>

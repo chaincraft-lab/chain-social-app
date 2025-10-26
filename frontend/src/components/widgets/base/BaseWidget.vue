@@ -12,7 +12,7 @@
       <!-- Loading State -->
       <div v-if="isLoading" class="flex items-center justify-center py-8">
         <LoadingSpinner size="sm" />
-        <span class="ml-2 text-sm theme-text-secondary">{{ loadingText || 'Yükleniyor...' }}</span>
+        <span class="ml-2 text-sm theme-text-secondary">{{ loadingText || $t('common.actions.loading') }}</span>
       </div>
 
       <!-- Error State -->
@@ -25,7 +25,7 @@
           class="btn-sm btn-outline-primary"
         >
           <Icon icon="heroicons:arrow-path" class="w-4 h-4 mr-1" />
-          Yeniden Dene
+          {{ $t('common.ui.tryAgain') }}
         </button>
       </div>
 

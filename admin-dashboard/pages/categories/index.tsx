@@ -176,7 +176,7 @@ function CategoriesPage() {
   return (
     <>
       <Head>
-        <title>Kategoriler - ChainSocial Admin</title>
+        <title>Categories - ChainSocial Admin</title>
       </Head>
       <Container maxWidth="xl" sx={{ pt: 4 }}>
         <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={3}>
@@ -196,24 +196,24 @@ function CategoriesPage() {
                       onClick={handleRefresh}
                       disabled={loading}
                     >
-                      Yenile
+                      Refresh
                     </Button>
                     <Button
                       variant="contained"
                       startIcon={<AddTwoToneIcon fontSize="small" />}
                       onClick={handleCreateClick}
                     >
-                      Yeni Kategori
+                      New Category
                     </Button>
                   </Box>
                 }
-                title="Kategori Listesi"
+                title="Category List"
               />
               <CardContent>
                 <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center' }}>
                   <TextField
                     flex="1"
-                    placeholder="Kategori ara..."
+                    placeholder="Search categories..."
                     value={searchTerm}
                     onChange={handleSearchChange}
                     InputProps={{
@@ -226,15 +226,15 @@ function CategoriesPage() {
                     sx={{ flex: 1 }}
                   />
                   <FormControl sx={{ minWidth: 150 }}>
-                    <InputLabel>Durum</InputLabel>
+                    <InputLabel>Status</InputLabel>
                     <Select
                       value={statusFilter}
                       onChange={handleStatusFilterChange}
-                      label="Durum"
+                      label="Status"
                     >
-                      <MenuItem value="all">Tümü</MenuItem>
-                      <MenuItem value="active">Aktif</MenuItem>
-                      <MenuItem value="inactive">Pasif</MenuItem>
+                      <MenuItem value="all">All</MenuItem>
+                      <MenuItem value="active">Active</MenuItem>
+                      <MenuItem value="inactive">Inactive</MenuItem>
                     </Select>
                   </FormControl>
                 </Box>
@@ -249,13 +249,13 @@ function CategoriesPage() {
                       <Table sx={{ minWidth: 900 }}>
                         <TableHead>
                           <TableRow>
-                            <TableCell sx={{ width: '20%' }}>Kategori Adı</TableCell>
+                            <TableCell sx={{ width: '20%' }}>Category Name</TableCell>
                             <TableCell sx={{ width: '15%' }}>Slug</TableCell>
-                            <TableCell sx={{ width: '25%' }}>Açıklama</TableCell>
-                            <TableCell sx={{ width: '10%' }}>Durum</TableCell>
-                            <TableCell sx={{ width: '10%' }}>Makale Sayısı</TableCell>
-                            <TableCell sx={{ width: '12%' }}>Oluşturulma Tarihi</TableCell>
-                            <TableCell align="right" sx={{ width: '8%' }}>İşlemler</TableCell>
+                            <TableCell sx={{ width: '25%' }}>Description</TableCell>
+                            <TableCell sx={{ width: '10%' }}>Status</TableCell>
+                            <TableCell sx={{ width: '10%' }}>Article Count</TableCell>
+                            <TableCell sx={{ width: '12%' }}>Created Date</TableCell>
+                            <TableCell align="right" sx={{ width: '8%' }}>Actions</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -263,7 +263,7 @@ function CategoriesPage() {
                             <TableRow>
                               <TableCell colSpan={7} align="center">
                                 <Typography variant="body2" color="text.secondary">
-                                  {searchTerm ? 'Arama kriterinize uygun kategori bulunamadı.' : 'Henüz kategori eklenmemiş.'}
+                                  {searchTerm ? 'No categories found matching your search criteria.' : 'No categories have been added yet.'}
                                 </Typography>
                               </TableCell>
                             </TableRow>
@@ -300,7 +300,7 @@ function CategoriesPage() {
                                 </TableCell>
                                 <TableCell>
                                   <Chip
-                                    label={category.isActive ? 'Aktif' : 'Pasif'}
+                                    label={category.isActive ? 'Active' : 'Inactive'}
                                     color={category.isActive ? 'success' : 'default'}
                                     size="small"
                                   />
@@ -332,7 +332,7 @@ function CategoriesPage() {
                                       {category.isActive ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
                                     </IconButton>
                                   </Tooltip> */}
-                                  <Tooltip title="Düzenle" arrow>
+                                  <Tooltip title="Edit" arrow>
                                     <IconButton
                                       sx={{
                                         '&:hover': {
@@ -347,7 +347,7 @@ function CategoriesPage() {
                                       <EditTwoToneIcon fontSize="small" />
                                     </IconButton>
                                   </Tooltip>
-                                  <Tooltip title="Sil" arrow>
+                                  <Tooltip title="Delete" arrow>
                                     <IconButton
                                       sx={{
                                         '&:hover': {
@@ -396,21 +396,21 @@ function CategoriesPage() {
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            Kategoriyi Sil
+            Delete Category
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Bu kategoriyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+              Are you sure you want to delete this category? This action cannot be undone.
               {categoryToDelete && (
                 <Typography component="div" sx={{ mt: 1, fontWeight: 'bold' }}>
-                  Silinecek kategori: {categories.find(c => c.id === categoryToDelete)?.name}
+                  Category to delete: {categories.find(c => c.id === categoryToDelete)?.name}
                 </Typography>
               )}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleDeleteCancel} disabled={loadingDelete}>
-              İptal
+              Cancel
             </Button>
             <Button
               onClick={handleDeleteConfirm}
@@ -419,7 +419,7 @@ function CategoriesPage() {
               disabled={loadingDelete}
               startIcon={loadingDelete ? <CircularProgress size={16} /> : null}
             >
-              Sil
+              Delete
             </Button>
           </DialogActions>
         </Dialog>

@@ -58,7 +58,7 @@ const UserModal: React.FC<UserModalProps> = ({
 
   const { createUser, updateUser, loadingCreate, loadingUpdate } = useUserStore();
 
-  // Form verilerini sıfırla
+  // Reset form data
   const resetForm = () => {
     setFormData({
       name: '',
@@ -77,7 +77,7 @@ const UserModal: React.FC<UserModalProps> = ({
     setLocalError('');
   };
 
-  // Modal açıldığında form verilerini ayarla
+  // Set form data when modal opens
   useEffect(() => {
     if (open) {
       if (mode === 'edit' && user) {
@@ -100,14 +100,14 @@ const UserModal: React.FC<UserModalProps> = ({
     }
   }, [open, mode, user]);
 
-  // Input değişikliklerini handle et
+  // Handle input changes
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
 
-    // Hata varsa temizle
+    // Clear error if exists
     if (errors[field]) {
       setErrors(prev => ({
         ...prev,
@@ -116,40 +116,40 @@ const UserModal: React.FC<UserModalProps> = ({
     }
   };
 
-  // Form validasyonu
+  // Form validation
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    // Ad zorunlu
+    // Name is required
     if (!formData.name.trim()) {
-      newErrors.name = 'Ad zorunludur';
+      newErrors.name = 'Name is required';
     }
 
-    // E-posta zorunlu ve format kontrolü
+    // Email is required and format validation
     if (!formData.email.trim()) {
-      newErrors.email = 'E-posta zorunludur';
+      newErrors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Geçerli bir e-posta adresi giriniz';
+      newErrors.email = 'Please enter a valid email address';
     }
 
-    // Yeni kullanıcı oluştururken şifre zorunlu
+    // Password is required when creating new user
     if (mode === 'create') {
       if (!formData.password) {
-        newErrors.password = 'Şifre zorunludur';
+        newErrors.password = 'Password is required';
       } else if (formData.password.length < 6) {
-        newErrors.password = 'Şifre en az 6 karakter olmalıdır';
+        newErrors.password = 'Password must be at least 6 characters';
       }
 
       if (!formData.confirmPassword) {
-        newErrors.confirmPassword = 'Şifre tekrarı zorunludur';
+        newErrors.confirmPassword = 'Password confirmation is required';
       } else if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = 'Şifreler eşleşmiyor';
+        newErrors.confirmPassword = 'Passwords do not match';
       }
     }
 
-    // Username varsa format kontrolü
+    // Username format validation if provided
     if (formData.username && !/^[a-zA-Z0-9._-]+$/.test(formData.username)) {
-      newErrors.username = 'Kullanıcı adı sadece harf, rakam, nokta, tire ve alt çizgi içerebilir';
+      newErrors.username = 'Username can only contain letters, numbers, dots, hyphens and underscores';
     }
 
     setErrors(newErrors);
@@ -197,11 +197,11 @@ const UserModal: React.FC<UserModalProps> = ({
         onSuccess();
       }
     } catch (error: any) {
-      setLocalError(error.message || 'Bir hata oluştu');
+      setLocalError(error.message || 'An error occurred');
     }
   };
 
-  // Modal kapatma
+  // Close modal
   const handleClose = () => {
     resetForm();
     onClose();
@@ -220,7 +220,7 @@ const UserModal: React.FC<UserModalProps> = ({
       }}
     >
       <DialogTitle>
-        {mode === 'create' ? 'Yeni Kullanıcı Oluştur' : 'Kullanıcı Düzenle'}
+        {mode === 'create' ? 'Create New User' : 'Edit User'}
       </DialogTitle>
 
       <DialogContent dividers>
@@ -271,11 +271,11 @@ const UserModal: React.FC<UserModalProps> = ({
             />
           </Grid>
 
-          {/* Ad */}
+          {/* First Name */}
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              label="Ad *"
+              label="First Name *"
               value={formData.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
               error={!!errors.name}
@@ -283,11 +283,11 @@ const UserModal: React.FC<UserModalProps> = ({
             />
           </Grid>
 
-          {/* Soyad */}
+          {/* Last Name */}
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              label="Soyad"
+              label="Last Name"
               value={formData.surname}
               onChange={(e) => handleInputChange('surname', e.target.value)}
               error={!!errors.surname}
@@ -295,24 +295,24 @@ const UserModal: React.FC<UserModalProps> = ({
             />
           </Grid>
 
-          {/* Kullanıcı Adı */}
+          {/* Username */}
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              label="Kullanıcı Adı"
+              label="Username"
               value={formData.username}
               onChange={(e) => handleInputChange('username', e.target.value)}
               error={!!errors.username}
               helperText={errors.username}
-              placeholder="ornek.kullanici"
+              placeholder="example.user"
             />
           </Grid>
 
-          {/* E-posta */}
+          {/* Email */}
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              label="E-posta *"
+              label="Email *"
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
@@ -321,13 +321,13 @@ const UserModal: React.FC<UserModalProps> = ({
             />
           </Grid>
 
-          {/* Şifre (sadece create modda) */}
+          {/* Password (only in create mode) */}
           {mode === 'create' && (
             <>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Şifre *"
+                  label="Password *"
                   type="password"
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
@@ -339,7 +339,7 @@ const UserModal: React.FC<UserModalProps> = ({
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Şifre Tekrarı *"
+                  label="Confirm Password *"
                   type="password"
                   value={formData.confirmPassword}
                   onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
@@ -350,25 +350,25 @@ const UserModal: React.FC<UserModalProps> = ({
             </>
           )}
 
-          {/* Rol */}
+          {/* Role */}
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <InputLabel>Rol</InputLabel>
+              <InputLabel>Role</InputLabel>
               <Select
                 value={formData.role}
                 onChange={(e) => handleInputChange('role', e.target.value)}
-                label="Rol"
+                label="Role"
               >
-                <MenuItem value="USER">Kullanıcı</MenuItem>
-                <MenuItem value="AUTHOR">Yazar</MenuItem>
-                <MenuItem value="EDITOR">Editör</MenuItem>
+                <MenuItem value="USER">User</MenuItem>
+                <MenuItem value="AUTHOR">Author</MenuItem>
+                <MenuItem value="EDITOR">Editor</MenuItem>
                 <MenuItem value="ADMIN">Admin</MenuItem>
-                <MenuItem value="SUPER_ADMIN">Süper Admin</MenuItem>
+                <MenuItem value="SUPER_ADMIN">Super Admin</MenuItem>
               </Select>
             </FormControl>
           </Grid>
 
-          {/* Durum Switches (sadece edit modda) */}
+          {/* Status Switches (only in edit mode) */}
           {mode === 'edit' && (
             <Grid item xs={12} sm={6}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -379,7 +379,7 @@ const UserModal: React.FC<UserModalProps> = ({
                       onChange={(e) => handleInputChange('isActive', e.target.checked)}
                     />
                   }
-                  label="Aktif"
+                  label="Active"
                 />
                 <FormControlLabel
                   control={
@@ -388,22 +388,22 @@ const UserModal: React.FC<UserModalProps> = ({
                       onChange={(e) => handleInputChange('isBlocked', e.target.checked)}
                     />
                   }
-                  label="Bloklu"
+                  label="Blocked"
                 />
               </Box>
             </Grid>
           )}
 
-          {/* Biyografi */}
+          {/* Biography */}
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Biyografi"
+              label="Biography"
               multiline
               rows={3}
               value={formData.bio}
               onChange={(e) => handleInputChange('bio', e.target.value)}
-              placeholder="Kullanıcı hakkında kısa bilgi..."
+              placeholder="Brief information about the user..."
             />
           </Grid>
         </Grid>
@@ -414,7 +414,7 @@ const UserModal: React.FC<UserModalProps> = ({
           onClick={handleClose}
           disabled={isLoading}
         >
-          İptal
+          Cancel
         </Button>
         <Button
           onClick={handleSubmit}
@@ -422,7 +422,7 @@ const UserModal: React.FC<UserModalProps> = ({
           disabled={isLoading}
           startIcon={isLoading ? <CircularProgress size={16} /> : null}
         >
-          {mode === 'create' ? 'Oluştur' : 'Güncelle'}
+          {mode === 'create' ? 'Create' : 'Update'}
         </Button>
       </DialogActions>
     </Dialog>

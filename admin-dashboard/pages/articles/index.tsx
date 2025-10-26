@@ -239,23 +239,23 @@ function ArticlesPage() {
                       onClick={handleRefresh}
                       disabled={loading}
                     >
-                      Yenile
+                      Refresh
                     </Button>
                     <Button
                       variant="contained"
                       startIcon={<AddTwoToneIcon fontSize="small" />}
                       onClick={handleCreateClick}
                     >
-                      Yeni Makale
+                      New Article
                     </Button>
                   </Box>
                 }
-                title="Makale Listesi"
+                title="Article List"
               />
               <CardContent>
                 <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
                   <TextField
-                    placeholder="Makale ara..."
+                    placeholder="Search articles..."
                     value={searchTerm}
                     onChange={handleSearchChange}
                     InputProps={{
@@ -268,25 +268,25 @@ function ArticlesPage() {
                     sx={{ flex: 1, minWidth: 250 }}
                   />
                   <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel>Durum</InputLabel>
+                    <InputLabel>Status</InputLabel>
                     <Select
                       value={statusFilter}
                       onChange={handleStatusFilterChange}
-                      label="Durum"
+                      label="Status"
                     >
-                      <MenuItem value="all">Tümü</MenuItem>
-                      <MenuItem value="active">Aktif</MenuItem>
-                      <MenuItem value="inactive">Pasif</MenuItem>
+                      <MenuItem value="all">All</MenuItem>
+                      <MenuItem value="active">Active</MenuItem>
+                      <MenuItem value="inactive">Inactive</MenuItem>
                     </Select>
                   </FormControl>
                   <FormControl sx={{ minWidth: 150 }}>
-                    <InputLabel>Kategori</InputLabel>
+                    <InputLabel>Category</InputLabel>
                     <Select
                       value={categoryFilter}
                       onChange={handleCategoryFilterChange}
-                      label="Kategori"
+                      label="Category"
                     >
-                      <MenuItem value="">Tümü</MenuItem>
+                      <MenuItem value="">All</MenuItem>
                       {categories.map((category) => (
                         <MenuItem key={category.id} value={category.id}>
                           {category.name}
@@ -295,13 +295,13 @@ function ArticlesPage() {
                     </Select>
                   </FormControl>
                   <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel>Etiket</InputLabel>
+                    <InputLabel>Tag</InputLabel>
                     <Select
                       value={tagFilter}
                       onChange={handleTagFilterChange}
-                      label="Etiket"
+                      label="Tag"
                     >
-                      <MenuItem value="">Tümü</MenuItem>
+                      <MenuItem value="">All</MenuItem>
                       {tags.map((tag) => (
                         <MenuItem key={tag.id} value={tag.id}>
                           {tag.name}
@@ -310,26 +310,26 @@ function ArticlesPage() {
                     </Select>
                   </FormControl>
                   <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel>Öne Çıkarma</InputLabel>
+                    <InputLabel>Featured</InputLabel>
                     <Select
                       value={featuredFilter}
                       onChange={handleFeaturedFilterChange}
-                      label="Öne Çıkarma"
+                      label="Featured"
                     >
-                      <MenuItem value="all">Tümü</MenuItem>
-                      <MenuItem value="featured">Öne Çıkan</MenuItem>
+                      <MenuItem value="all">All</MenuItem>
+                      <MenuItem value="featured">Featured</MenuItem>
                       <MenuItem value="normal">Normal</MenuItem>
                     </Select>
                   </FormControl>
                   <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel>Son Dakika</InputLabel>
+                    <InputLabel>Breaking News</InputLabel>
                     <Select
                       value={breakingFilter}
                       onChange={handleBreakingFilterChange}
-                      label="Son Dakika"
+                      label="Breaking News"
                     >
-                      <MenuItem value="all">Tümü</MenuItem>
-                      <MenuItem value="breaking">Son Dakika</MenuItem>
+                      <MenuItem value="all">All</MenuItem>
+                      <MenuItem value="breaking">Breaking News</MenuItem>
                       <MenuItem value="normal">Normal</MenuItem>
                     </Select>
                   </FormControl>
@@ -345,14 +345,14 @@ function ArticlesPage() {
                       <Table sx={{ minWidth: 1000 }}>
                         <TableHead>
                           <TableRow>
-                            <TableCell sx={{ width: '30%' }}>Başlık</TableCell>
-                            <TableCell sx={{ width: '10%' }}>Yazar</TableCell>
-                            <TableCell sx={{ width: '8%' }}>Kategori</TableCell>
-                            <TableCell sx={{ width: '12%' }}>Etiketler</TableCell>
-                            <TableCell sx={{ width: '8%' }}>Durum</TableCell>
-                            <TableCell sx={{ width: '10%' }}>İstatistikler</TableCell>
-                            <TableCell sx={{ width: '9%' }}>Yayın Tarihi</TableCell>
-                            <TableCell align="right" sx={{ width: '13%' }}>İşlemler</TableCell>
+                            <TableCell sx={{ width: '30%' }}>Title</TableCell>
+                            <TableCell sx={{ width: '10%' }}>Author</TableCell>
+                            <TableCell sx={{ width: '8%' }}>Category</TableCell>
+                            <TableCell sx={{ width: '12%' }}>Tags</TableCell>
+                            <TableCell sx={{ width: '8%' }}>Status</TableCell>
+                            <TableCell sx={{ width: '10%' }}>Statistics</TableCell>
+                            <TableCell sx={{ width: '9%' }}>Publish Date</TableCell>
+                            <TableCell align="right" sx={{ width: '13%' }}>Actions</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -361,8 +361,8 @@ function ArticlesPage() {
                               <TableCell colSpan={8} align="center">
                                 <Typography variant="body2" color="text.secondary">
                                   {searchTerm || statusFilter !== 'all' || categoryFilter || tagFilter || featuredFilter !== 'all' || breakingFilter !== 'all'
-                                    ? 'Arama kriterinize uygun makale bulunamadı.' 
-                                    : 'Henüz makale eklenmemiş.'}
+                                    ? 'No articles found matching your search criteria.' 
+                                    : 'No articles have been added yet.'}
                                 </Typography>
                               </TableCell>
                             </TableRow>
@@ -455,7 +455,7 @@ function ArticlesPage() {
                                 </TableCell>
                                 <TableCell>
                                   <Chip
-                                    label={article.isActive ? 'Aktif' : 'Pasif'}
+                                    label={article.isActive ? 'Active' : 'Inactive'}
                                     color={article.isActive ? 'success' : 'default'}
                                     variant={article.isActive ? 'filled' : 'outlined'}
                                     size="small"
@@ -483,7 +483,7 @@ function ArticlesPage() {
                                   </Typography>
                                 </TableCell>
                                 <TableCell align="right">
-                                  <Tooltip title={article.isActive ? 'Pasifleştir' : 'Aktifleştir'} arrow>
+                                  <Tooltip title={article.isActive ? 'Deactivate' : 'Activate'} arrow>
                                     <IconButton
                                       sx={{
                                         '&:hover': {
@@ -499,7 +499,7 @@ function ArticlesPage() {
                                       {article.isActive ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
                                     </IconButton>
                                   </Tooltip>
-                                  <Tooltip title="Düzenle" arrow>
+                                  <Tooltip title="Edit" arrow>
                                     <IconButton
                                       sx={{
                                         '&:hover': {
@@ -514,7 +514,7 @@ function ArticlesPage() {
                                       <EditTwoToneIcon fontSize="small" />
                                     </IconButton>
                                   </Tooltip>
-                                  <Tooltip title="Sil" arrow>
+                                  <Tooltip title="Delete" arrow>
                                     <IconButton
                                       sx={{
                                         '&:hover': {
@@ -563,16 +563,16 @@ function ArticlesPage() {
           aria-describedby="delete-dialog-description"
         >
           <DialogTitle id="delete-dialog-title">
-            Makaleyi Sil
+            Delete Article
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="delete-dialog-description">
-              Bu makaleyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+              Are you sure you want to delete this article? This action cannot be undone.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleDeleteCancel} disabled={loadingDelete}>
-              İptal
+              Cancel
             </Button>
             <Button 
               onClick={handleDeleteConfirm} 
@@ -581,7 +581,7 @@ function ArticlesPage() {
               disabled={loadingDelete}
               startIcon={loadingDelete ? <CircularProgress size={16} /> : null}
             >
-              Sil
+              Delete
             </Button>
           </DialogActions>
         </Dialog>

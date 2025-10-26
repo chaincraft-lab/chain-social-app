@@ -69,7 +69,7 @@ function Dashboard() {
         setError(null);
       } catch (err: any) {
         console.error('Dashboard stats fetch error:', err);
-        setError('Dashboard verileri yüklenirken bir hata oluştu');
+        setError('An error occurred while loading dashboard data');
       } finally {
         setLoading(false);
       }
@@ -114,10 +114,10 @@ function Dashboard() {
                   {stats.totalArticles}
                 </Typography>
                 <Typography className="stats-label">
-                  Toplam Makale
+                  Total Articles
                 </Typography>
                 <Typography variant="caption" color="textSecondary" sx={{ display: 'block', mt: 1 }}>
-                  Bugün: +{stats.todayStats.articlesCreated}
+                  Today: +{stats.todayStats.articlesCreated}
                 </Typography>
               </CardContent>
             </StatsCard>
@@ -131,7 +131,7 @@ function Dashboard() {
                   {stats.totalCategories}
                 </Typography>
                 <Typography className="stats-label">
-                  Kategori
+                  Categories
                 </Typography>
               </CardContent>
             </StatsCard>
@@ -145,10 +145,10 @@ function Dashboard() {
                   {stats.totalUsers}
                 </Typography>
                 <Typography className="stats-label">
-                  Kullanıcı
+                  Users
                 </Typography>
                 <Typography variant="caption" color="textSecondary" sx={{ display: 'block', mt: 1 }}>
-                  Bugün: +{stats.todayStats.newUsers}
+                  Today: +{stats.todayStats.newUsers}
                 </Typography>
               </CardContent>
             </StatsCard>
@@ -162,10 +162,10 @@ function Dashboard() {
                   {stats.pendingComments}
                 </Typography>
                 <Typography className="stats-label">
-                  Bekleyen Yorum
+                  Pending Comments
                 </Typography>
                 <Typography variant="caption" color="textSecondary" sx={{ display: 'block', mt: 1 }}>
-                  Bugün: +{stats.todayStats.commentsReceived}
+                  Today: +{stats.todayStats.commentsReceived}
                 </Typography>
               </CardContent>
             </StatsCard>
@@ -174,7 +174,7 @@ function Dashboard() {
           {/* Recent Activity */}
           <Grid item xs={12} md={6}>
             <Card>
-              <CardHeader title="Son Makaleler" />
+              <CardHeader title="Recent Articles" />
               <CardContent>
                 <Box>
                   {stats.recentArticles.length > 0 ? (
@@ -188,7 +188,7 @@ function Dashboard() {
                     ))
                   ) : (
                     <Typography variant="body2" color="textSecondary">
-                      Henüz makale yok
+                      No articles yet
                     </Typography>
                   )}
                 </Box>
@@ -198,23 +198,23 @@ function Dashboard() {
 
           <Grid item xs={12} md={6}>
             <Card>
-              <CardHeader title="Bugünün Özeti" />
+              <CardHeader title="Today's Summary" />
               <CardContent>
                 <Box>
                   <Typography variant="body2" sx={{ mb: 1 }}>
-                    • {stats.todayStats.articlesCreated} yeni makale oluşturuldu
+                    • {stats.todayStats.articlesCreated} new articles created
                   </Typography>
                   <Typography variant="body2" sx={{ mb: 1 }}>
-                    • {stats.pendingComments} yorum modere edilmeyi bekliyor
+                    • {stats.pendingComments} comments awaiting moderation
                   </Typography>
                   <Typography variant="body2" sx={{ mb: 1 }}>
-                    • {stats.todayStats.newUsers} yeni kullanıcı kaydı
+                    • {stats.todayStats.newUsers} new user registrations
                   </Typography>
                   <Typography variant="body2" sx={{ mb: 1 }}>
-                    • {stats.todayStats.commentsReceived} yeni yorum alındı
+                    • {stats.todayStats.commentsReceived} new comments received
                   </Typography>
                   <Typography variant="body2">
-                    • Toplam {stats.totalCategories} kategori mevcut
+                    • Total {stats.totalCategories} categories available
                   </Typography>
                 </Box>
               </CardContent>

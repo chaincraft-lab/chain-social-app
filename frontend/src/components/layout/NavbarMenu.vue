@@ -31,7 +31,7 @@
         <div class="relative z-10 h-full w-80 max-w-sm theme-bg-primary shadow-xl transform transition-transform duration-300 ease-out">
           <!-- Mobile Header -->
           <div class="flex items-center justify-between p-6 border-b theme-border-primary">
-            <h2 class="text-lg font-semibold theme-text-primary">Kategoriler</h2>
+            <h2 class="text-lg font-semibold theme-text-primary">{{ $t('common.ui.categories') }}</h2>
             <button
               @click="closeMobileMenu"
               class="p-2 rounded-full hover:theme-bg-secondary theme-text-secondary"
@@ -59,7 +59,7 @@
           <div class="p-4 border-t theme-border-primary">
             <SearchBox
               v-model="mobileSearchQuery"
-              placeholder="Kategori ara..."
+              :placeholder="$t('common.ui.searchCategory')"
               @search="handleMobileSearch"
             />
           </div>

@@ -104,17 +104,6 @@ const formatFollowerCount = (count) => {
   return count.toString()
 }
 
-const formatLastUpdate = (date) => {
-  if (!date) return 'Bilinmiyor'
-  const now = new Date()
-  const updated = new Date(date)
-  const diffInHours = Math.floor((now - updated) / (1000 * 60 * 60))
-  
-  if (diffInHours < 1) return 'Az önce'
-  if (diffInHours < 24) return `${diffInHours} saat önce`
-  if (diffInHours < 168) return `${Math.floor(diffInHours / 24)} gün önce`
-  return updated.toLocaleDateString('tr-TR')
-}
 </script>
 
 <style scoped>

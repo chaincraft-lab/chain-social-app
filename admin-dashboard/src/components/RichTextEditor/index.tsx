@@ -15,7 +15,7 @@ const ReactQuill = dynamic(() => import('react-quill'), {
         justifyContent: 'center'
       }}
     >
-      <Typography color="textSecondary">Editör yükleniyor...</Typography>
+      <Typography color="textSecondary">Loading editor...</Typography>
     </Box>
   )
 });
@@ -31,7 +31,7 @@ interface RichTextEditorProps {
 export default function RichTextEditor({ 
   content, 
   onChange, 
-  placeholder = "İçeriğinizi yazın...",
+  placeholder = "Write your content...",
   error = false,
   helperText 
 }: RichTextEditorProps) {
@@ -40,14 +40,14 @@ export default function RichTextEditor({
   useEffect(() => {
     setIsMounted(true);
     
-    // Quill CSS'ini programatik olarak yükle
+    // Load Quill CSS programmatically
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = 'https://cdn.quilljs.com/1.3.6/quill.snow.css';
     document.head.appendChild(link);
     
     return () => {
-      // Cleanup: CSS linkini kaldır
+      // Cleanup: Remove CSS link
       document.head.removeChild(link);
     };
   }, []);
@@ -82,7 +82,7 @@ export default function RichTextEditor({
             justifyContent: 'center'
           }}
         >
-          <Typography color="textSecondary">Editör yükleniyor...</Typography>
+          <Typography color="textSecondary">Loading editor...</Typography>
         </Box>
         {helperText && (
           <Typography 

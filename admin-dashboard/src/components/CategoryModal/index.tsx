@@ -21,7 +21,7 @@ interface CategoryModalProps {
   open: boolean;
   onClose: () => void;
   onSuccess?: () => void;
-  category?: CategoryResponse | null; // Düzenleme için
+  category?: CategoryResponse | null; // For editing
   mode: 'create' | 'edit';
 }
 
@@ -41,7 +41,7 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
 
   const { createCategory, updateCategory, loadingCreate, loadingUpdate, error } = useCategoryStore();
 
-  // Modal açıldığında form verilerini set et
+  // Set form data when modal opens
   useEffect(() => {
     if (open) {
       if (mode === 'edit' && category) {
@@ -73,31 +73,31 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Kategori adı gereklidir';
+      newErrors.name = 'Category name is required';
     } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Kategori adı en az 2 karakter olmalıdır';
+      newErrors.name = 'Category name must be at least 2 characters';
     } else if (formData.name.trim().length > 50) {
-      newErrors.name = 'Kategori adı en fazla 50 karakter olabilir';
+      newErrors.name = 'Category name cannot exceed 50 characters';
     }
 
     if (formData.description && formData.description.length > 200) {
-      newErrors.description = 'Açıklama en fazla 200 karakter olabilir';
+      newErrors.description = 'Description cannot exceed 200 characters';
     }
 
     if (formData.icon && formData.icon.length > 50) {
-      newErrors.icon = 'İkon adı en fazla 50 karakter olabilir';
+      newErrors.icon = 'Icon name cannot exceed 50 characters';
     }
 
     if (formData.website && formData.website.length > 255) {
-      newErrors.website = 'Website URL en fazla 255 karakter olabilir';
+      newErrors.website = 'Website URL cannot exceed 255 characters';
     }
 
     if (formData.tokenSymbol && formData.tokenSymbol.length > 10) {
-      newErrors.tokenSymbol = 'Token sembolü en fazla 10 karakter olabilir';
+      newErrors.tokenSymbol = 'Token symbol cannot exceed 10 characters';
     }
 
     if (formData.blockchain && formData.blockchain.length > 50) {
-      newErrors.blockchain = 'Blockchain adı en fazla 50 karakter olabilir';
+      newErrors.blockchain = 'Blockchain name cannot exceed 50 characters';
     }
 
     setErrors(newErrors);
@@ -132,7 +132,7 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
       [field]: event.target.value
     }));
     
-    // Hata varsa temizle
+    // Clear error if exists
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
@@ -153,7 +153,7 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
       aria-labelledby="category-modal-title"
     >
       <DialogTitle id="category-modal-title">
-        {mode === 'create' ? 'Yeni Protokol Oluştur' : 'Protokolü Düzenle'}
+        {mode === 'create' ? 'Create New Protocol' : 'Edit Protocol'}
       </DialogTitle>
       
       <DialogContent dividers>
@@ -164,20 +164,20 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
         )}
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          {/* Kategori Adı */}
+          {/* Category Name */}
           <TextField
-            label="Kategori Adı *"
+            label="Category Name *"
             value={formData.name}
             onChange={handleInputChange('name')}
             error={!!errors.name}
             helperText={errors.name}
             fullWidth
-            placeholder="Teknoloji, Spor, Ekonomi..."
+            placeholder="Technology, Sports, Economy..."
           />
 
-          {/* Açıklama */}
+          {/* Description */}
           <TextField
-            label="Açıklama"
+            label="Description"
             value={formData.description}
             onChange={handleInputChange('description')}
             error={!!errors.description}
@@ -185,12 +185,12 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
             fullWidth
             multiline
             rows={3}
-            placeholder="Kategori hakkında kısa bir açıklama..."
+            placeholder="A brief description about the category..."
           />
 
-          {/* Renk Seçici */}
+          {/* Color Picker */}
           <FormControl>
-            <FormLabel component="legend">Kategori Rengi</FormLabel>
+            <FormLabel component="legend">Category Color</FormLabel>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 1 }}>
               <Box
                 sx={{
@@ -225,20 +225,20 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
             )}
           </FormControl>
 
-          {/* İkon */}
+          {/* Icon */}
           <TextField
-            label="İkon"
+            label="Icon"
             value={formData.icon}
             onChange={handleInputChange('icon')}
             error={!!errors.icon}
-            helperText={errors.icon || 'Material Design Icons (mdi-laptop, mdi-sports gibi)'}
+            helperText={errors.icon || 'Material Design Icons (e.g. mdi-laptop, mdi-sports)'}
             fullWidth
             placeholder="mdi-laptop"
           />
 
-          {/* Blockchain Protocol Alanları */}
+          {/* Blockchain Protocol Fields */}
           <Typography variant="h6" sx={{ mt: 2, mb: 1, color: 'primary.main' }}>
-            Blockchain Protocol Bilgileri
+            Blockchain Protocol Information
           </Typography>
 
           {/* Website */}
@@ -247,29 +247,29 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
             value={formData.website}
             onChange={handleInputChange('website')}
             error={!!errors.website}
-            helperText={errors.website || 'Protokolün resmi websitesi'}
+            helperText={errors.website || 'Official protocol website'}
             fullWidth
             placeholder="https://arbitrum.io"
           />
 
           {/* Token Symbol */}
           <TextField
-            label="Token Sembolü"
+            label="Token Symbol"
             value={formData.tokenSymbol}
             onChange={handleInputChange('tokenSymbol')}
             error={!!errors.tokenSymbol}
-            helperText={errors.tokenSymbol || 'Protokolün token sembolü (ARB, AVAX, etc.)'}
+            helperText={errors.tokenSymbol || 'Protocol token symbol (ARB, AVAX, etc.)'}
             fullWidth
             placeholder="ARB"
           />
 
           {/* Blockchain */}
           <TextField
-            label="Ana Blockchain"
+            label="Main Blockchain"
             value={formData.blockchain}
             onChange={handleInputChange('blockchain')}
             error={!!errors.blockchain}
-            helperText={errors.blockchain || 'Protokolün çalıştığı ana blockchain'}
+            helperText={errors.blockchain || 'Main blockchain the protocol runs on'}
             fullWidth
             placeholder="Ethereum"
           />
@@ -278,7 +278,7 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
 
       <DialogActions sx={{ p: 2 }}>
         <Button onClick={onClose} disabled={isLoading}>
-          İptal
+          Cancel
         </Button>
         <Button
           onClick={handleSubmit}
@@ -286,7 +286,7 @@ export default function CategoryModal({ open, onClose, onSuccess, category, mode
           disabled={isLoading}
           startIcon={isLoading ? <CircularProgress size={16} /> : null}
         >
-          {mode === 'create' ? 'Oluştur' : 'Güncelle'}
+          {mode === 'create' ? 'Create' : 'Update'}
         </Button>
       </DialogActions>
     </Dialog>

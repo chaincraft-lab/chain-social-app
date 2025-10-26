@@ -49,13 +49,13 @@ const LoginPage = () => {
     } catch (err: any) {
       // API hata kodlarına göre mesaj belirle
       if (err.response?.status === 401) {
-        setError('Kullanıcı adı veya şifre hatalı');
+        setError('Invalid username or password');
       } else if (err.response?.status === 400) {
         setError('Geçersiz bilgiler girdiniz');
       } else if (err.message?.includes('admin yetkisi')) {
         setError(err.message);
       } else {
-        setError('Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.');
+        setError('An error occurred during login. Please try again.');
       }
     } finally {
       setLoading(false);
@@ -65,8 +65,8 @@ const LoginPage = () => {
   return (
     <>
       <Head>
-        <title>Admin Girişi - ChainSocial Dashboard</title>
-        <meta name="description" content="Admin panel girişi" />
+        <title>Admin Login - ChainSocial Dashboard</title>
+        <meta name="description" content="Admin panel login" />
       </Head>
       
       <LoginContainer maxWidth={false}>
@@ -74,10 +74,10 @@ const LoginPage = () => {
           <Box sx={{ mb: 4, textAlign: 'center' }}>
             <Logo />
             <Typography variant="h4" sx={{ mt: 2, mb: 1 }}>
-              Admin Girişi
+              Admin Login
             </Typography>
             <Typography color="text.secondary">
-              Dashboard'a erişmek için giriş yapın
+              Login to access the dashboard
             </Typography>
           </Box>
 
@@ -102,7 +102,7 @@ const LoginPage = () => {
             
             <TextField
               fullWidth
-              label="Şifre"
+              label="Password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -119,12 +119,12 @@ const LoginPage = () => {
               disabled={loading}
               sx={{ mt: 3, mb: 2 }}
             >
-              {loading ? <CircularProgress size={24} /> : 'Giriş Yap'}
+              {loading ? <CircularProgress size={24} /> : 'Login'}
             </Button>
           </form>
 
           <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
-            Sadece admin yetkisine sahip kullanıcılar giriş yapabilir
+            Only users with admin privileges can log in
           </Typography>
         </LoginCard>
       </LoginContainer>
