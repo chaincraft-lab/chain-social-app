@@ -37,7 +37,6 @@ docker compose logs -f backend
 **What happens automatically:**
 - ✅ PostgreSQL database setup
 - ✅ Database migrations applied
-- ✅ 10 blockchain protocols seeded
 - ✅ 5 sample users created  
 - ✅ 10 ChainSocial posts added
 - ✅ All services started

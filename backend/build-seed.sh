@@ -11,18 +11,18 @@ export DATABASE_URL="postgresql://builduser:buildpass@localhost:5432/builddb"
 echo "📦 Validating seed scripts..."
 
 # Protocol seed script'ini validate et
-if node -c scripts/seedProtocols.js; then
-  echo "✅ seedProtocols.js validated successfully"
+if node -c scripts/seedCategories.js; then
+  echo "✅ seedCategories.js validated successfully"
 else
-  echo "❌ seedProtocols.js validation failed"
+  echo "❌ seedCategories.js validation failed"
   exit 1
 fi
 
 # Blockchain data seed script'ini validate et
-if node -c scripts/seedMockData.js; then
-  echo "✅ seedMockData.js validated successfully"
+if node -c scripts/seedUsersData.js; then
+  echo "✅ seedUsersData.js validated successfully"
 else
-  echo "❌ seedMockData.js validation failed"
+  echo "❌ seedUsersData.js validation failed"
   exit 1
 fi
 

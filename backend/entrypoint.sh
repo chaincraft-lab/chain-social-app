@@ -42,11 +42,14 @@ USER_COUNT=$(psql "${DATABASE_URL}" -t -c "SELECT COUNT(*) FROM users;" 2>/dev/n
 if [ "$USER_COUNT" = "0" ] || [ "$USER_COUNT" = "" ]; then
   echo "🌱 Database is empty, running seed scripts..."
   
-  echo "🏗️ Seeding protocols..."
-  npm run seed:protocols || echo "⚠️ Protocol seeding failed"
+  echo "🏗️ Seeding categories..."
+  npm run seed:categories || echo "⚠️ Categories seeding failed"
   
-  echo "📰 Seeding blockchain data..."
-  npm run seed:blockchain-data || echo "⚠️ Blockchain data seeding failed"
+  echo "📰 Seeding users data..."
+  npm run seed:users-data || echo "⚠️ Blockchain data seeding failed"
+
+  echo "📰 Seeding articles data..."
+  npm run seed:articles-data || echo "⚠️ Blockchain data seeding failed"
   
   echo "✅ Seeding completed!"
 else

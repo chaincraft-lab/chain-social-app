@@ -5,7 +5,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: chainsocial-frontend-dev
+    container_name: arbitrumsocial-frontend-dev
     ports:
       - '8080:8080'
     volumes:
@@ -20,7 +20,7 @@ services:
     build:
       context: ./admin-dashboard
       dockerfile: Dockerfile.dev
-    container_name: chainsocial-admin-dev
+    container_name: arbitrumsocial-admin-dev
     ports:
       - '3000:3000'
     volumes:
@@ -38,7 +38,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: chainsocial-backend-dev
+    container_name: arbitrumsocial-backend-dev
     ports:
       - '8020:3000'
     env_file:

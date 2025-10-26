@@ -1,7 +1,7 @@
 {
-  "name": "chainsocial-backend",
+  "name": "arbitrumsocial-backend",
   "version": "0.0.1",
-  "description": "ChainSocial Backend API - NestJS",
+  "description": "ArbitrumSocial Backend API - NestJS",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
@@ -18,9 +18,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "seed:protocols": "node scripts/seedProtocols.js",
-    "seed:blockchain-data": "node scripts/seedMockData.js",
-    "seed:mock-data": "node scripts/seedMockData.js"
+    "seed:categories": "node scripts/seedCategories.js",
+    "seed:users-data": "node scripts/seedUsersData.js",
+    "seed:articles-data": "node scripts/batchImportArticles.js"
   },
   "dependencies": {
     "@nestjs/axios": "^3.0.2",
@@ -32,8 +32,9 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.4.0",
     "@prisma/client": "5.16.1",
-    "axios": "^1.7.2",
+    "axios": "^1.12.2",
     "bcrypt": "^5.1.1",
+    "cheerio": "^1.1.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "cookie-parser": "^1.4.6",
@@ -42,6 +43,7 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "prisma": "^5.16.1",
+    "react-quill": "^2.0.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },

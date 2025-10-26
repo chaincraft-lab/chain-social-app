@@ -39,7 +39,17 @@ export default function RichTextEditor({
 
   useEffect(() => {
     setIsMounted(true);
-    import('react-quill/dist/quill.snow.css');
+    
+    // Quill CSS'ini programatik olarak yükle
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://cdn.quilljs.com/1.3.6/quill.snow.css';
+    document.head.appendChild(link);
+    
+    return () => {
+      // Cleanup: CSS linkini kaldır
+      document.head.removeChild(link);
+    };
   }, []);
 
   const modules = {

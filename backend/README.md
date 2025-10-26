@@ -1,6 +1,6 @@
 ## Description
 
-ChainSocial Backend API - NestJS tabanlı blockchain sosyal medya sistemi
+ArbitrumSocial Backend API - NestJS tabanlı blockchain sosyal medya sistemi
 
 ## Installation and running the app with docker
 
@@ -16,7 +16,7 @@ $ docker compose up -d
 
 ```bash
 # build
-$ docker exec -ti chainsocial-backend sh
+$ docker exec -ti arbitrumsocial-backend sh
 
 # create schema
 $ npx prisma generate

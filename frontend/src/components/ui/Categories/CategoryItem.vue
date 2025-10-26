@@ -55,7 +55,7 @@ const getCategoryIcon = (category) => {
     'nft': '🎨',
     'infrastructure': '⚙️',
     'grants': '💰',
-    'finans': '📈'
+    'finance': '📈'
   }
   
   return iconMap[category.slug] || category.name.charAt(0).toUpperCase()
