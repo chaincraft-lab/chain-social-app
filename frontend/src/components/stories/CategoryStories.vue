@@ -20,7 +20,7 @@
             />
             <div v-else class="magazine-placeholder">
               <div class="magazine-no-image">
-                <span class="magazine-no-image-text">{{ article.category?.name || 'Haber' }}</span>
+                <span class="magazine-no-image-text">{{ article.category?.name || t('common.news') }}</span>
               </div>
             </div>
           </div>
@@ -30,7 +30,7 @@
             <div class="magazine-content">
               <h3 class="magazine-title">{{ article.title }}</h3>
               <div class="magazine-subtitle-wrapper">
-                <p class="magazine-subtitle">{{ article.category?.name || 'Popüler' }}</p>
+                <p class="magazine-subtitle">{{ article.category?.name || t('common.popular') }}</p>
                 <div class="magazine-view-count">
                   <Icon icon="heroicons:eye" class="view-count-icon" />
                   <span class="view-count-text">{{ getStoryViewCount(article) }}</span>
@@ -71,7 +71,7 @@
                 </div>
               </div>
               <div class="story-details">
-                <h3 class="category-name">{{ currentArticle?.category?.name || 'Popüler Haber' }}</h3>
+                <h3 class="category-name">{{ currentArticle?.category?.name || t('common.popularNews') }}</h3>
                 <span class="story-time">{{ formatTime(currentArticle?.publishedAt) }}</span>
               </div>
               <button class="close-button" @click="closeStories">
@@ -93,7 +93,7 @@
               <!-- Title Overlay on Image -->
               <div class="story-title-overlay">
                 <h2 class="story-overlay-title">{{ currentArticle.title }}</h2>
-                <p class="story-overlay-category">{{ currentArticle.category?.name || 'Popüler Haber' }}</p>
+                <p class="story-overlay-category">{{ currentArticle.category?.name || t('common.popularNews') }}</p>
               </div>
             </div>
 
@@ -111,7 +111,7 @@
                 class="read-more-btn"
                 @click="goToArticle(currentArticle)"
               >
-                Haberi Oku
+                {{ t('common.readNews') }}
               </button>
             </div>
           </div>
@@ -129,6 +129,9 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   categories: { type: Array, default: () => [] }, // Keep for compatibility but not used
@@ -268,9 +271,9 @@ const formatTime = (date) => {
   const storyDate = new Date(date)
   const diffHours = Math.floor((now - storyDate) / (1000 * 60 * 60))
   
-  if (diffHours < 1) return 'Az önce'
-  if (diffHours < 24) return `${diffHours} saat önce`
-  return `${Math.floor(diffHours / 24)} gün önce`
+  if (diffHours < 1) return t('common.time.now')
+  if (diffHours < 24) return t('common.time.hoursAgo', { count: diffHours })
+  return t('common.time.daysAgo', { count: Math.floor(diffHours / 24) })
 }
 
 const goToArticle = (article) => {

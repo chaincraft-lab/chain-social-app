@@ -33,6 +33,7 @@ import { useArticleStore } from 'src/stores/articleStore';
 import { useCategoryStore } from 'src/stores/categoryStore';
 import { useTagStore } from 'src/stores/tagStore';
 import { CreateArticleRequest, UpdateArticleRequest, ArticleResponse } from 'src/services';
+import RichTextEditor from 'src/components/RichTextEditor';
 
 interface ArticleModalProps {
   open: boolean;
@@ -238,8 +239,7 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="md"
-      fullWidth
+      fullScreen
       aria-labelledby="article-modal-title"
     >
       <DialogTitle id="article-modal-title">
@@ -443,17 +443,23 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
           <Divider />
 
           {/* İçerik */}
-          <TextField
-            label="Makale İçeriği *"
-            value={formData.content}
-            onChange={handleInputChange('content')}
-            error={!!errors.content}
-            helperText={errors.content}
-            fullWidth
-            multiline
-            rows={10}
-            placeholder="Makalenizin içeriğini yazın..."
-          />
+          <Box>
+            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+              Makale İçeriği *
+            </Typography>
+            <RichTextEditor
+              content={formData.content}
+              onChange={(content) => {
+                setFormData(prev => ({ ...prev, content }));
+                if (errors.content) {
+                  setErrors(prev => ({ ...prev, content: '' }));
+                }
+              }}
+              placeholder="Makalenizin içeriğini yazın..."
+              error={!!errors.content}
+              helperText={errors.content}
+            />
+          </Box>
 
         </Box>
       </DialogContent>

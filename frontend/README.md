@@ -1,4 +1,4 @@
-# ChainSocial
+# ArbitrumSocial
 
 Modern, responsive blockchain social media platform built with Vue.js and Tailwind CSS.
 

@@ -306,5 +306,5 @@ interface NativeFeatures {
 ---
 
 *Created: January 2025*  
-*Project: ChainSocial - Blockchain Social Media Platform*  
+*Project: ArbitrumSocial - Blockchain Social Media Platform*  
 *Author: Development Team*

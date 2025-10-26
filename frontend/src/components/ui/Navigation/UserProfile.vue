@@ -11,7 +11,7 @@
         <Icon icon="heroicons:user" class="w-5 h-5 text-white" />
       </div>
       <span v-if="showName" class="text-sm font-medium hidden md:block">
-        {{ user?.name || "Kullanıcı" }}
+        {{ user?.name || t('navigation.user') }}
       </span>
       <Icon
         v-if="showName"
@@ -36,7 +36,7 @@
           </div>
           <div>
             <p class="text-sm font-medium theme-text-primary">
-              {{ user?.name || "Kullanıcı" }}
+              {{ user?.name || t('navigation.user') }}
             </p>
             <p class="text-xs theme-text-muted">
               {{ user?.email }}
@@ -69,7 +69,7 @@
             icon="heroicons:arrow-right-on-rectangle"
             class="w-4 h-4 mr-3"
           />
-          Çıkış Yap
+          {{ t('navigation.logout') }}
         </button>
       </div>
     </div>
@@ -77,33 +77,40 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useI18n } from 'vue-i18n';
 
-defineProps({
+const { t } = useI18n();
+
+const props = defineProps({
   user: { type: Object, default: () => ({}) },
   showName: { type: Boolean, default: true },
   showUserInfo: { type: Boolean, default: true },
   menuItems: {
     type: Array,
-    default: () => [
-      {
-        path: "/profile",
-        label: "Profilim",
-        icon: "heroicons:user",
-      },
-      {
-        path: "/bookmarks",
-        label: "Kaydettiklerim",
-        icon: "heroicons:bookmark",
-      },
-      {
-        path: "/likes",
-        label: "Beğendiklerim",
-        icon: "heroicons:heart",
-      },
-    ],
+    default: () => []
   },
 });
+
+const defaultMenuItems = computed(() => [
+  {
+    path: "/profile",
+    label: t('navigation.profile'),
+    icon: "heroicons:user",
+  },
+  {
+    path: "/bookmarks",
+    label: t('navigation.bookmarks'),
+    icon: "heroicons:bookmark",
+  },
+  {
+    path: "/likes",
+    label: t('navigation.likes'),
+    icon: "heroicons:heart",
+  },
+]);
+
+const menuItems = computed(() => props.menuItems.length > 0 ? props.menuItems : defaultMenuItems.value);
 
 defineEmits(["logout"]);
 

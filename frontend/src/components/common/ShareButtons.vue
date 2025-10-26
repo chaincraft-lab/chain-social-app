@@ -8,7 +8,7 @@
         'p-2 rounded-lg transition-colors duration-200',
         'hover:bg-gray-100 text-gray-600 hover:text-gray-800'
       ]"
-      :title="`${platform.name}'de paylaş`"
+      :title="t('common.shareOn', { platform: platform.name })"
     >
       <span class="sr-only">{{ platform.name }}</span>
       
@@ -19,6 +19,9 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   url: { type: String, required: true },

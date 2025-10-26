@@ -4,7 +4,7 @@
       <input
         v-model="query"
         type="text"
-        :placeholder="placeholder"
+        :placeholder="placeholder || $t('navigation.search.placeholder')"
         :class="[
           'py-2 pl-10 pr-4 text-sm border-none rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors',
           inputClass
@@ -23,10 +23,13 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
-  placeholder: { type: String, default: 'Ara...' },
+  placeholder: { type: String, default: '' },
   inputClass: { type: String, default: 'w-64 theme-input placeholder-opacity-70' }
 })
 

@@ -1,14 +1,17 @@
 <template>
-  <div v-if="showCategories" class="theme-card rounded-lg shadow-sm mb-4">
+  <div v-if="showCategories" class="rounded-lg  mb-4">
     <!-- Header -->
-    <SectionHeader title="Kategoriler">
-      <template #icon>
-        <Icon icon="heroicons:folder" class="w-6 h-6 mr-2 text-primary" />
-      </template>
-    </SectionHeader>
+    <div class="px-4 py-3 border-b border-gray-700">
+      <div class="flex items-center">
+        <div class="w-6 h-6 bg-teal-500 rounded-md flex items-center justify-center mr-3">
+          <span class="text-white text-xs font-bold">C</span>
+        </div>
+        <h3 class="text-white font-medium text-sm">Categories</h3>
+      </div>
+    </div>
 
     <!-- Categories Content -->
-    <div class="p-3">
+    <div class="p-2">
       <!-- Loading State -->
       <div v-if="isLoading" class="space-y-2">
         <SkeletonLoader v-for="i in 4" :key="i" type="list" />
@@ -33,7 +36,6 @@
 </template>
 
 <script setup>
-import SectionHeader from '../common/SectionHeader.vue'
 import CategoryItem from './Categories/CategoryItem.vue'
 import EmptyState from '../common/EmptyState.vue'
 import SkeletonLoader from '../common/SkeletonLoader.vue'

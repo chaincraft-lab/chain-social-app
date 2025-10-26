@@ -1,31 +1,30 @@
 <template>
   <BaseWidget
-    title="⚡ Top Blockchain Protokolleri"
-    icon="heroicons:currency-dollar"
+    :title="$t('common.widgets.cryptoMarket.title')"
+    icon="heroicons:chart-bar"
     :is-loading="isLoading"
-    loading-text="Protocol verileri alınıyor..."
+    :loading-text="$t('common.widgets.cryptoMarket.loading')"
     :error="error"
-    @retry="fetchProtocols"
+    @retry="fetchCryptoData"
   >
-    <!-- Protocols Content -->
-    <div v-if="protocolsData && protocolsData.length > 0" class="space-y-3">
+    <!-- Crypto Data Content -->
+    <div v-if="cryptoData && cryptoData.length > 0" class="space-y-3">
       <div 
-        v-for="protocol in protocolsData" 
-        :key="protocol.id"
-        class="flex items-center justify-between p-3 theme-bg-secondary rounded-lg hover:shadow-md transition-all duration-200 cursor-pointer"
-        @click="navigateToProtocol(protocol.slug)"
+        v-for="crypto in cryptoData" 
+        :key="crypto.id"
+        class="flex items-center justify-between p-3 theme-bg-secondary rounded-lg hover:shadow-md transition-all duration-200"
       >
         <div class="flex items-center gap-3 flex-1">
           <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
             <Icon 
-              :icon="protocol.icon || 'heroicons:cube'" 
+              :icon="crypto.icon || 'heroicons:currency-dollar'" 
               class="w-4 h-4 text-white"
             />
           </div>
           <div class="flex-1">
-            <h4 class="font-semibold text-sm theme-text-primary">{{ protocol.name }}</h4>
+            <h4 class="font-semibold text-sm theme-text-primary">{{ crypto.symbol }}</h4>
             <p class="text-xs theme-text-secondary">
-              {{ protocol.tokenSymbol }} • {{ protocol.blockchain }}
+              {{ crypto.name }}
             </p>
           </div>
         </div>
@@ -33,17 +32,17 @@
         <div class="text-right">
           <div class="flex items-center gap-2">
             <span class="font-bold text-sm theme-text-primary">
-              {{ formatPrice(protocol.price) }}
+              {{ formatPrice(crypto.price) }}
             </span>
           </div>
           <div class="flex items-center gap-1 text-xs">
             <Icon 
-              :icon="protocol.change >= 0 ? 'heroicons:arrow-trending-up' : 'heroicons:arrow-trending-down'"
-              :class="protocol.change >= 0 ? 'text-green-500' : 'text-red-500'"
+              :icon="crypto.change >= 0 ? 'heroicons:arrow-trending-up' : 'heroicons:arrow-trending-down'"
+              :class="crypto.change >= 0 ? 'text-green-500' : 'text-red-500'"
               class="w-3 h-3"
             />
-            <span :class="protocol.change >= 0 ? 'text-green-500' : 'text-red-500'">
-              {{ formatChange(protocol.change) }}%
+            <span :class="crypto.change >= 0 ? 'text-green-500' : 'text-red-500'">
+              {{ formatChange(crypto.change) }}%
             </span>
           </div>
         </div>
@@ -53,18 +52,8 @@
     <!-- Empty State -->
     <div v-else-if="!isLoading && !error" class="text-center py-8">
       <Icon icon="heroicons:chart-bar" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
-      <p class="theme-text-secondary text-sm">Henüz protocol verisi bulunmuyor</p>
+      <p class="theme-text-secondary text-sm">{{ $t('common.widgets.cryptoMarket.emptyState') }}</p>
     </div>
-
-    <!-- Footer Link -->
-    <template #footer>
-      <router-link 
-        to="/protocols" 
-        class="block w-full text-center py-2 text-sm font-medium theme-text-primary hover:theme-text-secondary transition-colors"
-      >
-        Tüm Protokolleri Gör →
-      </router-link>
-    </template>
   </BaseWidget>
 </template>
 
@@ -79,96 +68,62 @@ const router = useRouter()
 // Reactive data
 const isLoading = ref(false)
 const error = ref(null)
-const protocolsData = ref([])
+const cryptoData = ref([])
 
-// Mock data for development
-const mockProtocols = [
+// Mock crypto data for display
+const mockCryptoData = [
   {
     id: 1,
     name: 'Arbitrum',
-    slug: 'arbitrum',
-    tokenSymbol: 'ARB',
-    blockchain: 'Ethereum',
+    symbol: 'ARB',
     price: 1.25,
     change: 5.67,
-    tvl: 2100000000,
     icon: 'cryptocurrency:arb'
   },
   {
     id: 2,
-    name: 'Optimism',
-    slug: 'optimism', 
-    tokenSymbol: 'OP',
-    blockchain: 'Ethereum',
-    price: 2.34,
-    change: -2.31,
-    tvl: 950000000,
-    icon: 'cryptocurrency:op'
+    name: 'Ethereum',
+    symbol: 'ETH',
+    price: 2341.89,
+    change: -2.34,
+    icon: 'cryptocurrency:eth'
   },
   {
     id: 3,
-    name: 'Polygon',
-    slug: 'polygon',
-    tokenSymbol: 'MATIC',
-    blockchain: 'Ethereum',
-    price: 0.87,
-    change: 3.45,
-    tvl: 850000000,
-    icon: 'cryptocurrency:matic'
+    name: 'Bitcoin',
+    symbol: 'BTC',
+    price: 43256.78,
+    change: 1.23,
+    icon: 'cryptocurrency:btc'
   },
   {
     id: 4,
-    name: 'Avalanche',
-    slug: 'avalanche',
-    tokenSymbol: 'AVAX',
-    blockchain: 'Avalanche',
-    price: 28.45,
-    change: 1.23,
-    tvl: 1200000000,
-    icon: 'cryptocurrency:avax'
-  },
-  {
-    id: 5,
-    name: 'Solana',
-    slug: 'solana',
-    tokenSymbol: 'SOL',
-    blockchain: 'Solana',
-    price: 145.67,
-    change: -4.56,
-    tvl: 1800000000,
-    icon: 'cryptocurrency:sol'
+    name: 'Polygon',
+    symbol: 'MATIC',
+    price: 0.89,
+    change: 4.12,
+    icon: 'cryptocurrency:matic'
   }
 ]
 
 // Methods
-const fetchProtocols = async () => {
+const fetchCryptoData = async () => {
   try {
     isLoading.value = true
     error.value = null
     
-    // Simulating API call
+    // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000))
     
-    // In real implementation, this would be:
-    // const response = await CategoryService.getActiveCategories()
-    // protocolsData.value = response.data.map(protocol => ({
-    //   ...protocol,
-    //   price: Math.random() * 100,
-    //   change: (Math.random() - 0.5) * 20
-    // }))
-    
-    protocolsData.value = mockProtocols
+    // In real implementation, this would be an API call to get crypto prices
+    cryptoData.value = mockCryptoData
     
   } catch (err) {
-    console.error('Error fetching protocols:', err)
-    error.value = 'Protocol verileri alınamadı'
+    console.error('Error fetching crypto data:', err)
+    error.value = 'Failed to load market data'
   } finally {
     isLoading.value = false
   }
-}
-
-const navigateToProtocol = (slug) => {
-  router.push(`/protocol/${slug}`)
 }
 
 const formatPrice = (price) => {
@@ -176,7 +131,7 @@ const formatPrice = (price) => {
   if (price < 1) {
     return `$${price.toFixed(4)}`
   }
-  return `$${price.toFixed(2)}`
+  return `$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
 }
 
 const formatChange = (change) => {
@@ -186,7 +141,7 @@ const formatChange = (change) => {
 
 // Lifecycle
 onMounted(() => {
-  fetchProtocols()
+  fetchCryptoData()
 })
 </script>
 

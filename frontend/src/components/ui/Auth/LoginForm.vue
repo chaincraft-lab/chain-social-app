@@ -3,7 +3,7 @@
     <FormInput
       v-model="formData.email"
       type="email"
-      label="E-posta"
+      :label="$t('auth.login.email')"
       autocomplete="email"
       required
       :error="errors.email"
@@ -11,13 +11,13 @@
 
     <div>
       <div class="flex items-center justify-between">
-        <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">Şifre</span>
+        <span class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('auth.login.password') }}</span>
         <button
           type="button"
           @click="$emit('forgotPassword')"
           class="text-sm text-primary hover:text-primary/80"
         >
-          Şifremi unuttum?
+          {{ $t('auth.login.forgotPassword') }}
         </button>
       </div>
       <FormInput
@@ -32,7 +32,7 @@
     <FormButton
       type="submit"
       variant="primary"
-      text="Giriş Yap"
+      :text="$t('auth.login.submit')"
       :is-loading="isLoading"
       full-width
     />

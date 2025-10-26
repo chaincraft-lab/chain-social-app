@@ -3,7 +3,7 @@
     <FormInput
       v-model="formData.name"
       type="text"
-      label="Ad Soyad"
+      :label="$t('auth.register.fullName')"
       autocomplete="name"
       required
       :error="errors.name"
@@ -12,7 +12,7 @@
     <FormInput
       v-model="formData.email"
       type="email"
-      label="E-posta"
+      :label="$t('auth.register.email')"
       autocomplete="email"
       required
       :error="errors.email"
@@ -22,17 +22,17 @@
       <FormInput
         v-model="formData.password"
         type="password"
-        label="Şifre"
+        :label="$t('auth.register.password')"
         autocomplete="new-password"
         required
         :error="errors.password"
-        help-text="Şifre en az 6 karakter, bir küçük harf, bir büyük harf ve bir rakam/özel karakter içermelidir"
+        :help-text="$t('auth.register.passwordHelp')"
       />
 
       <FormInput
         v-model="formData.confirmPassword"
         type="password"
-        label="Şifre Tekrar"
+        :label="$t('auth.register.confirmPassword')"
         autocomplete="new-password"
         required
         :error="errors.confirmPassword"
@@ -41,14 +41,14 @@
 
     <FormCheckbox
       v-model="formData.acceptTerms"
-      :label="termsLabel"
+      :label="termsLabel || $t('auth.register.acceptTerms')"
       align-top
     />
 
     <FormButton
       type="submit"
       variant="primary"
-      text="Kayıt Ol"
+      :text="$t('auth.register.submit')"
       :is-loading="isLoading"
       full-width
     />
@@ -66,7 +66,7 @@ defineProps({
   isLoading: { type: Boolean, default: false },
   termsLabel: {
     type: String,
-    default: '<a href="/terms" target="_blank" class="text-indigo-400 hover:text-indigo-300">Kullanım Şartları</a>\'nı ve <a href="/privacy" target="_blank" class="text-indigo-400 hover:text-indigo-300">Gizlilik Politikası</a>\'nı kabul ediyorum'
+    default: ''
   }
 })
 

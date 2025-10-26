@@ -21,7 +21,7 @@
     <SocialLoginButton
       v-if="currentMode !== 'forgot'"
       provider="Google"
-      :action-text="currentMode === 'login' ? 'Giriş Yap' : 'Kayıt Ol'"
+      :action-text="currentMode === 'login' ? $t('auth.social.loginAction') : $t('auth.social.registerAction')"
       :is-loading="isGoogleLoading"
       @click="handleGoogleLogin"
     />
@@ -137,17 +137,17 @@ export default {
     },
     currentModeTitle() {
       const titles = {
-        login: 'NewsHub',
-        register: 'NewsHub',
-        forgot: 'Şifre Sıfırlama'
+        login: this.$t('auth.header.title'),
+        register: this.$t('auth.header.title'),
+        forgot: this.$t('auth.forgotPassword.title')
       }
       return titles[this.currentMode]
     },
     currentModeSubtitle() {
       const subtitles = {
-        login: 'Haberin ve Bilginin Sosyal Medyası',
-        register: 'Haberin ve Bilginin Sosyal Medyası',
-        forgot: 'E-posta adresinizi girin'
+        login: this.$t('auth.header.subtitle'),
+        register: this.$t('auth.header.subtitle'),
+        forgot: this.$t('auth.forgotPassword.description')
       }
       return subtitles[this.currentMode]
     }
@@ -212,15 +212,15 @@ export default {
       let isValid = true
       
       if (!this.loginData.email) {
-        this.errors.email = 'E-posta gereklidir'
+        this.errors.email = this.$t('auth.validation.emailRequired')
         isValid = false
       } else if (!/\S+@\S+\.\S+/.test(this.loginData.email)) {
-        this.errors.email = 'Geçerli bir e-posta adresi girin'
+        this.errors.email = this.$t('auth.validation.emailInvalid')
         isValid = false
       }
       
       if (!this.loginData.password) {
-        this.errors.password = 'Şifre gereklidir'
+        this.errors.password = this.$t('auth.validation.passwordRequired')
         isValid = false
       }
       
@@ -232,62 +232,62 @@ export default {
       let isValid = true
       
       if (!this.registerData.name) {
-        this.errors.name = 'Ad soyad gereklidir'
+        this.errors.name = this.$t('auth.validation.nameRequired')
         isValid = false
       }
       
       if (!this.registerData.email) {
-        this.errors.email = 'E-posta gereklidir'
+        this.errors.email = this.$t('auth.validation.emailRequired')
         isValid = false
       } else if (!/\S+@\S+\.\S+/.test(this.registerData.email)) {
-        this.errors.email = 'Geçerli bir e-posta adresi girin'
+        this.errors.email = this.$t('auth.validation.emailInvalid')
         isValid = false
       }
       
       // Şifre validasyonu
       if (!this.registerData.password) {
-        this.errors.password = 'Şifre gereklidir'
+        this.errors.password = this.$t('auth.validation.passwordRequired')
         isValid = false
       } else {
         const password = this.registerData.password
         const passwordErrors = []
         
         if (password.length < 6) {
-          passwordErrors.push('en az 6 karakter')
+          passwordErrors.push(this.$t('auth.validation.passwordRequirements.minLength'))
         }
         
         if (!/[a-z]/.test(password)) {
-          passwordErrors.push('en az bir küçük harf')
+          passwordErrors.push(this.$t('auth.validation.passwordRequirements.lowercase'))
         }
         
         if (!/[A-Z]/.test(password)) {
-          passwordErrors.push('en az bir büyük harf')
+          passwordErrors.push(this.$t('auth.validation.passwordRequirements.uppercase'))
         }
         
         if (!/[\d\W]/.test(password)) {
-          passwordErrors.push('en az bir rakam veya özel karakter')
+          passwordErrors.push(this.$t('auth.validation.passwordRequirements.numberOrSpecial'))
         }
         
         if (passwordErrors.length > 0) {
-          this.errors.password = `Şifre ${passwordErrors.join(', ')} içermelidir`
+          this.errors.password = this.$t('auth.validation.passwordRequirements', { requirements: passwordErrors.join(', ') })
           isValid = false
         }
       }
       
       // Şifre tekrar validasyonu
       if (!this.registerData.confirmPassword) {
-        this.errors.confirmPassword = 'Şifre tekrarı gereklidir'
+        this.errors.confirmPassword = this.$t('auth.validation.confirmPasswordRequired')
         isValid = false
       } else if (this.registerData.confirmPassword.length < 6) {
-        this.errors.confirmPassword = 'Şifre tekrarı en az 6 karakter olmalıdır'
+        this.errors.confirmPassword = this.$t('auth.validation.confirmPasswordMinLength')
         isValid = false
       } else if (this.registerData.password !== this.registerData.confirmPassword) {
-        this.errors.confirmPassword = 'Şifreler eşleşmiyor'
+        this.errors.confirmPassword = this.$t('auth.validation.passwordMismatch')
         isValid = false
       }
       
       if (!this.registerData.acceptTerms) {
-        this.showAlert('Kullanım şartlarını kabul etmelisiniz')
+        this.showAlert(this.$t('auth.validation.termsRequired'))
         isValid = false
       }
       
@@ -310,16 +310,16 @@ export default {
         const result = await this.login(loginPayload)
         
         if (result.success) {
-          this.showAlert('Giriş başarılı! Hoş geldiniz.', 'success')
+          this.showAlert(this.$t('auth.messages.loginSuccess'), 'success')
           this.$emit('success', 'login')
           setTimeout(() => {
             this.closeDialog()
           }, 1500)
         } else {
-          this.showAlert(result.error || 'Giriş yapılırken bir hata oluştu')
+          this.showAlert(result.error || this.$t('auth.messages.loginError'))
         }
       } catch (error) {
-        this.showAlert('Giriş yapılırken bir hata oluştu')
+        this.showAlert(this.$t('auth.messages.loginError'))
       } finally {
         this.isLoading = false
       }
@@ -340,7 +340,7 @@ export default {
         })
         
         if (result.success) {
-          this.showAlert('Kayıt başarılı! Hoş geldiniz.', 'success')
+          this.showAlert(this.$t('auth.messages.registerSuccess'), 'success')
           this.$emit('success', 'register')
           setTimeout(() => {
             this.closeDialog()
@@ -351,7 +351,7 @@ export default {
             const errorMessage = result.details.join('. ')
             this.showAlert(errorMessage)
           } else {
-            this.showAlert(result.error || 'Kayıt olurken bir hata oluştu')
+            this.showAlert(result.error || this.$t('auth.messages.registerError'))
           }
         }
       } catch (error) {
@@ -362,7 +362,7 @@ export default {
         } else if (error.response?.data?.message) {
           this.showAlert(error.response.data.message)
         } else {
-          this.showAlert('Kayıt olurken bir hata oluştu')
+          this.showAlert(this.$t('auth.messages.registerError'))
         }
       } finally {
         this.isLoading = false
@@ -371,12 +371,12 @@ export default {
     
     async handleForgotPassword() {
       if (!this.forgotData.email) {
-        this.errors.email = 'E-posta gereklidir'
+        this.errors.email = this.$t('auth.validation.emailRequired')
         return
       }
       
       if (!/\S+@\S+\.\S+/.test(this.forgotData.email)) {
-        this.errors.email = 'Geçerli bir e-posta adresi girin'
+        this.errors.email = this.$t('auth.validation.emailInvalid')
         return
       }
       
@@ -388,15 +388,15 @@ export default {
         const result = await this.forgotPassword(this.forgotData.email)
         
         if (result.success) {
-          this.showAlert('Şifre sıfırlama bağlantısı e-postanıza gönderildi.', 'success')
+          this.showAlert(this.$t('auth.messages.forgotPasswordSuccess'), 'success')
           setTimeout(() => {
             this.setMode('login')
           }, 2000)
         } else {
-          this.showAlert(result.error || 'Şifre sıfırlama e-postası gönderilirken bir hata oluştu')
+          this.showAlert(result.error || this.$t('auth.messages.forgotPasswordError'))
         }
       } catch (error) {
-        this.showAlert('Şifre sıfırlama e-postası gönderilirken bir hata oluştu')
+        this.showAlert(this.$t('auth.messages.forgotPasswordError'))
       } finally {
         this.isLoading = false
       }
@@ -408,9 +408,9 @@ export default {
       
       try {
         // Google login implementation would go here
-        this.showAlert('Google girişi şu anda mevcut değil', 'info')
+        this.showAlert(this.$t('auth.messages.googleNotAvailable'), 'info')
       } catch (error) {
-        this.showAlert('Google ile giriş yapılırken bir hata oluştu')
+        this.showAlert(this.$t('auth.messages.googleError'))
       } finally {
         this.isGoogleLoading = false
       }

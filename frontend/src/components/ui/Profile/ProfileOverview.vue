@@ -15,13 +15,13 @@
       <div class="text-center p-4 theme-bg-secondary rounded-lg">
         <Icon icon="heroicons:heart" class="w-8 h-8 mx-auto mb-2 text-red-500" />
         <div class="text-2xl font-bold theme-text-primary">{{ userStats.likes }}</div>
-        <div class="text-sm theme-text-secondary">Beğeni</div>
+        <div class="text-sm theme-text-secondary">{{ t('profile.overview.stats.likes') }}</div>
       </div>
       
       <div class="text-center p-4 theme-bg-secondary rounded-lg">
         <Icon icon="heroicons:bookmark" class="w-8 h-8 mx-auto mb-2 text-blue-500" />
         <div class="text-2xl font-bold theme-text-primary">{{ userStats.bookmarks }}</div>
-        <div class="text-sm theme-text-secondary">Kayıt</div>
+        <div class="text-sm theme-text-secondary">{{ t('profile.overview.stats.bookmarks') }}</div>
       </div>
       
       <div class="text-center p-4 theme-bg-secondary rounded-lg">
@@ -87,8 +87,8 @@
         >
           <Icon icon="heroicons:heart" class="w-6 h-6 text-red-500 group-hover:scale-110 transition-transform" />
           <div>
-            <div class="font-medium theme-text-primary">Beğendiklerim</div>
-            <div class="text-sm theme-text-secondary">{{ userStats.likes }} beğendiğiniz haber</div>
+            <div class="font-medium theme-text-primary">{{ t('profile.overview.actions.likes') }}</div>
+            <div class="text-sm theme-text-secondary">{{ t('profile.overview.actions.likesDesc', { count: userStats.likes }) }}</div>
           </div>
         </button>
         
@@ -98,8 +98,8 @@
         >
           <Icon icon="heroicons:bookmark" class="w-6 h-6 text-blue-500 group-hover:scale-110 transition-transform" />
           <div>
-            <div class="font-medium theme-text-primary">Kaydettiklerim</div>
-            <div class="text-sm theme-text-secondary">{{ userStats.bookmarks }} kayıtlı haber</div>
+            <div class="font-medium theme-text-primary">{{ t('profile.overview.actions.bookmarks') }}</div>
+            <div class="text-sm theme-text-secondary">{{ t('profile.overview.actions.bookmarksDesc', { count: userStats.bookmarks }) }}</div>
           </div>
         </button>
         
@@ -213,6 +213,9 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue'
 import EmptyState from '@/components/common/EmptyState.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 // Props
 const props = defineProps({

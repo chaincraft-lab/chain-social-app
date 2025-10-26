@@ -4,7 +4,7 @@
     <LoadingSpinner 
       v-if="isLoading" 
       size="lg" 
-      text="Makale yükleniyor..." 
+      :text="t('pages.article.loading')" 
       :fullScreen="false" 
     />
     
@@ -27,7 +27,7 @@
       />
       
       <!-- Author Info -->
-      <AuthorInfo :author="article.author || { name: 'Editör' }" />
+      <AuthorInfo :author="article.author || { name: t('pages.article.defaultAuthor') }" />
       
       <!-- Article Featured Image -->
       <ArticleImage
@@ -44,7 +44,7 @@
       
       <!-- Share Buttons -->
       <div class="mb-8">
-        <div class="text-sm font-medium mb-3 text-gray-900">Paylaş:</div>
+        <div class="text-sm font-medium mb-3 text-gray-900">{{ t('pages.article.share') }}:</div>
         <ShareButtons
           :url="currentUrl"
           :title="article.title"
@@ -72,7 +72,7 @@
     <!-- Empty State -->
     <div v-else class="text-center py-12">
       <Icon icon="heroicons:document-text" class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-      <p class="text-gray-500 text-lg">Makale bulunamadı</p>
+      <p class="text-gray-500 text-lg">{{ t('pages.article.notFound') }}</p>
     </div>
   </div>
 </template>
@@ -81,6 +81,9 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 // Components
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
@@ -113,9 +116,9 @@ const currentUrl = computed(() => {
 
 const errorTitle = computed(() => {
   if (error.value?.includes('404') || error.value?.includes('bulunamadı')) {
-    return 'Makale Bulunamadı'
+    return t('pages.article.notFoundTitle')
   }
-  return 'Bir Hata Oluştu'
+  return t('pages.article.errorTitle')
 })
 
 // Methods
@@ -143,20 +146,20 @@ const loadArticle = async () => {
       {
         id: 1,
         author: 'Ahmet Yılmaz',
-        text: 'Harika bir makale, çok bilgilendirici.',
+        text: t('pages.article.sampleComment1'),
         createdAt: new Date(Date.now() - 3600000).toISOString()
       },
       {
         id: 2,
         author: 'Ayşe Demir',
-        text: 'Bu konuda daha fazla makale bekliyoruz.',
+        text: t('pages.article.sampleComment2'),
         createdAt: new Date(Date.now() - 7200000).toISOString()
       }
     ]
     
   } catch (err) {
     console.error('Article loading error:', err)
-    error.value = err.message || 'Makale yüklenirken bir hata oluştu. Lütfen tekrar deneyin.'
+    error.value = err.message || t('pages.article.loadError')
   }
 }
 
@@ -176,7 +179,7 @@ const handleCommentSubmit = async (commentData) => {
     comments.value.unshift(newComment)
     commentsCount.value++
     
-    console.log('Yorum başarıyla gönderildi!')
+    console.log(t('pages.article.commentSuccess'))
   } catch (error) {
     console.error('Comment submission error:', error)
   }

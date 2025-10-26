@@ -10,6 +10,23 @@
         <router-view />
       </div>
       
+      <!-- Category Page Layout (Custom Layout) -->
+      <div v-else-if="isCategoryPage" class="container mx-auto px-4 md:px-6">
+        <div class="grid grid-cols-12 gap-6 py-8">
+          <!-- Left Side - Category Card -->
+          <div class="col-span-12 lg:col-span-4">
+            <div class="sticky top-8">
+              <router-view name="categoryCard" />
+            </div>
+          </div>
+
+          <!-- Right Side - News Feed -->
+          <div class="col-span-12 lg:col-span-8">
+            <router-view />
+          </div>
+        </div>
+      </div>
+      
       <!-- Standard Layout with Sidebars -->
       <div v-else class="container mx-auto px-4 md:px-6">
         <div class="grid grid-cols-12 gap-6 py-8">
@@ -68,6 +85,9 @@ export default {
   computed: {
     isProfilePage() {
       return this.$route.name === 'profile'
+    },
+    isCategoryPage() {
+      return this.$route.name === 'category' || this.$route.name === 'subcategory'
     }
   },
   mounted() {

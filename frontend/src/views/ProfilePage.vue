@@ -1,60 +1,5 @@
 <template>
   <div class="profile-page">
-    <!-- Profile Header -->
-    <!-- <div class="profile-header">
-      <div class="container mx-auto px-4 py-8">
-        <div
-          class="flex flex-col md:flex-row items-start md:items-center gap-6"
-        >
-          <div class="relative">
-            <div
-              class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 border-4 border-white dark:border-gray-500 shadow-lg"
-            >
-              <img
-                :src="userInfo.avatar || defaultAvatar"
-                :alt="userInfo.name"
-                class="w-full h-full object-cover"
-                @error="handleAvatarError"
-              />
-            </div>
-            <button
-              @click="showAvatarUpload = true"
-              class="absolute bottom-0 right-0 w-8 h-8 bg-primary hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-700 rounded-full flex items-center justify-center text-white shadow-lg transition-colors"
-            >
-              <Icon icon="heroicons:camera" class="w-4 h-4" />
-            </button>
-          </div>
-
-          <div class="flex-1">
-            <h1
-              class="text-2xl md:text-3xl font-bold text-white dark:text-gray-100 mb-2"
-            >
-              {{ userInfo.name }}
-            </h1>
-            <p class="text-gray-200 dark:text-gray-300 mb-3">
-              {{ userInfo.email }}
-            </p>
-            <div
-              class="flex flex-wrap gap-4 text-sm text-gray-200 dark:text-gray-300"
-            >
-              <div class="flex items-center gap-1">
-                <Icon icon="heroicons:calendar" class="w-4 h-4" />
-                <span>{{ formatJoinDate(userInfo.joinDate) }}</span>
-              </div>
-              <div class="flex items-center gap-1">
-                <Icon icon="heroicons:heart" class="w-4 h-4" />
-                <span>{{ userStats.likes }} beğeni</span>
-              </div>
-              <div class="flex items-center gap-1">
-                <Icon icon="heroicons:bookmark" class="w-4 h-4" />
-                <span>{{ userStats.bookmarks }} kayıt</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
     <!-- Profile Content -->
     <div class="profile-content">
       <div class="container mx-auto px-4 py-8">
@@ -103,9 +48,14 @@ import ProfileUserInfo from "@/components/ui/Profile/ProfileUserInfo.vue";
 import ProfileChangePassword from "@/components/ui/Profile/ProfileChangePassword.vue";
 import ProfileDeleteAccount from "@/components/ui/Profile/ProfileDeleteAccount.vue";
 import ProfileAvatarUpload from "@/components/ui/Profile/ProfileAvatarUpload.vue";
+import { useI18n } from 'vue-i18n';
 
 export default {
   name: "ProfilePage",
+  setup() {
+    const { t } = useI18n();
+    return { t };
+  },
   components: {
     ProfileSidebar,
     ProfileOverview,
@@ -171,19 +121,19 @@ export default {
         date.toLocaleDateString("tr-TR", {
           year: "numeric",
           month: "long",
-        }) + " tarihinden beri üye"
+        }) + " " + this.t('profile.memberSince')
       );
     },
     getSectionName(section) {
       const sections = {
-        overview: "Genel Bakış",
-        likes: "Beğendiklerim",
-        bookmarks: "Kaydettiklerim",
-        "user-info": "Kişisel Bilgiler",
-        "change-password": "Şifre Değiştir",
-        "delete-account": "Hesabı Sil",
+        overview: this.t('profile.sidebar.overview'),
+        likes: this.t('profile.sidebar.likes'),
+        bookmarks: this.t('profile.sidebar.bookmarks'),
+        "user-info": this.t('profile.sidebar.userInfo'),
+        "change-password": this.t('profile.sidebar.changePassword'),
+        "delete-account": this.t('profile.sidebar.deleteAccount'),
       };
-      return sections[section] || "Bilinmeyen Bölüm";
+      return sections[section] || this.t('profile.unknownSection');
     },
     updateUserInfo(updatedInfo) {
       this.userInfo = { ...this.userInfo, ...updatedInfo };

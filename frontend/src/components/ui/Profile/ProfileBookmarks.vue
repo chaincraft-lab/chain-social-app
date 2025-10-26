@@ -5,9 +5,9 @@
       <div>
         <h2 class="text-2xl font-bold theme-text-primary flex items-center gap-2">
           <Icon icon="heroicons:bookmark" class="w-6 h-6 text-blue-500" />
-          Kaydettiklerim
+          {{ $t('profile.sidebar.bookmarks') }}
         </h2>
-        <p class="theme-text-secondary mt-1">Daha sonra okumak için kaydettiğiniz haberler</p>
+        <p class="theme-text-secondary mt-1">{{ $t('profile.bookmarks.description') }}</p>
       </div>
       
       <!-- Action Buttons -->

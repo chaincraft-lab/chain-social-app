@@ -5,9 +5,9 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 py-12">
         <!-- About -->
         <div>
-          <h3 class="text-xl font-semibold mb-4 theme-text-primary">Hakkımızda</h3>
+          <h3 class="text-xl font-semibold mb-4 theme-text-primary">{{ $t('footer.sections.about') }}</h3>
           <p class="text-light-200 mb-4">
-            Blockchain ve kripto dünyasının en güncel haberlerini sosyal medya tarzında paylaşıyoruz. Web3 topluluğunun merkezi burada!
+            {{ $t('footer.aboutDescription') }}
           </p>
           <div class="flex space-x-3 mt-4">
             <a href="#" class="text-light-200 hover:text-primary transition-colors">
@@ -27,7 +27,7 @@
         
         <!-- Categories -->
         <div>
-          <h3 class="text-xl font-semibold mb-4 theme-text-primary">Kategoriler</h3>
+          <h3 class="text-xl font-semibold mb-4 theme-text-primary">{{ $t('footer.sections.categories') }}</h3>
           <ul class="space-y-2">
             <li v-for="category in (categories || []).slice(0, 6)" :key="category?.id || Math.random()">
               <router-link 
@@ -42,36 +42,36 @@
         
         <!-- Quick Links -->
         <div>
-          <h3 class="text-xl font-semibold mb-4 theme-text-primary">Hızlı Linkler</h3>
+          <h3 class="text-xl font-semibold mb-4 theme-text-primary">{{ $t('footer.sections.quickLinks') }}</h3>
           <ul class="space-y-2">
             <li>
               <router-link to="/" class="text-light-200 hover:text-primary transition-colors">
-                Ana Sayfa
+                {{ $t('footer.links.home') }}
               </router-link>
             </li>
             <li>
               <a href="#" class="text-light-200 hover:text-primary transition-colors">
-                Hakkımızda
+                {{ $t('footer.links.about') }}
               </a>
             </li>
             <li>
               <a href="#" class="text-light-200 hover:text-primary transition-colors">
-                İletişim
+                {{ $t('footer.links.contact') }}
               </a>
             </li>
             <li>
               <a href="#" class="text-light-200 hover:text-primary transition-colors">
-                Künye
+                {{ $t('footer.links.imprint') }}
               </a>
             </li>
             <li>
               <a href="#" class="text-light-200 hover:text-primary transition-colors">
-                Gizlilik Politikası
+                {{ $t('footer.links.privacy') }}
               </a>
             </li>
             <li>
               <a href="#" class="text-light-200 hover:text-primary transition-colors">
-                Kullanım Şartları
+                {{ $t('footer.links.terms') }}
               </a>
             </li>
           </ul>
@@ -79,16 +79,16 @@
         
         <!-- Newsletter -->
         <div>
-          <h3 class="text-xl font-semibold mb-4 theme-text-primary">Bülten</h3>
+          <h3 class="text-xl font-semibold mb-4 theme-text-primary">{{ $t('footer.sections.newsletter') }}</h3>
           <p class="text-light-200 mb-4">
-            En son blockchain haberlerinden haberdar olmak için bültenimize abone olun.
+            {{ $t('footer.newsletter.description') }}
           </p>
           <form @submit.prevent="subscribeNewsletter" class="mt-4">
             <div class="flex">
               <input 
                 type="email" 
                 v-model="email" 
-                placeholder="E-posta adresiniz" 
+:placeholder="$t('footer.newsletter.emailPlaceholder')" 
                 class="w-full px-4 py-2 theme-input rounded-l-md focus:outline-none"
                 required
               />
@@ -96,7 +96,7 @@
                 type="submit" 
                 class="bg-primary hover:bg-primary-600 text-white px-4 py-2 rounded-r-md focus:outline-none"
               >
-                Abone Ol
+                {{ $t('footer.newsletter.subscribe') }}
               </button>
             </div>
           </form>
@@ -105,7 +105,7 @@
       
       <!-- Bottom Footer -->
       <div class="py-4 border-t theme-border-primary text-center theme-text-muted text-sm">
-        <p>© {{ new Date().getFullYear() }} ChainSocial. Tüm hakları saklıdır.</p>
+        <p>{{ $t('footer.copyright', { year: new Date().getFullYear(), appName: $config.name }) }}</p>
       </div>
     </div>
   </footer>
@@ -127,7 +127,7 @@ export default {
   methods: {
     subscribeNewsletter() {
       // Burada e-posta aboneliği işlemi yapılacak
-      alert(`${this.email} adresi bültene kaydedildi!`)
+      alert(this.$t('footer.newsletter.successMessage', { email: this.email }))
       this.email = ''
     }
   }

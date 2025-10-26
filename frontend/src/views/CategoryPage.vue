@@ -1,51 +1,44 @@
 <template>
-  <div class="category-page  theme-text-primary">
-    <!-- Tags Navigation -->
-    <CategoriesSlider 
-      :categories="categoryTags"
-      :is-loading="isLoading"
-      mode="back"
-      :back-title="currentCategory ? currentCategory.name : 'Kategori'"
-      link-type="tag"
-      @back="goBack"
-    />
-
-    <!-- Posts Feed -->
+  <div class="category-page theme-text-primary">
+    <!-- News Feed -->
     <div class="posts-feed">
-
       <!-- Loading State -->
-      <div v-if="isLoading" class="space-y-4 mt-4">
-        <SkeletonLoader v-for="i in 10" :key="i" type="news" />
+      <div v-if="isLoading" class="space-y-4">
+        <SkeletonLoader v-for="i in 6" :key="i" type="news" />
       </div>
 
       <!-- Category Posts -->
-      <div v-else class="posts-container">
+      <div v-else-if="categoryNews && categoryNews.length > 0" class="posts-container">
         <NewsPost
           v-for="news in categoryNews"
           :key="news?.id || Math.random()"
           :news="news"
+          class="mb-4"
         />
 
         <!-- Load More Button -->
         <LoadMoreButton
+          v-if="hasMorePosts"
           :has-more="hasMorePosts"
           :is-loading="loadingMore"
-          :show-end-message="categoryNews.length > 0 && !hasMorePosts"
-          button-text="Daha Fazla Yükle"
-          end-message="Bu kategorideki tüm haberleri görüntülediniz"
+          :button-text="$t('pages.category.loadMore')"
           @loadMore="loadMorePosts"
         />
 
-        <!-- No Posts Found -->
-        <StateMessage
-          v-if="categoryNews.length === 0"
-          type="empty"
-          title="Henüz haber yok"
-          message="Bu kategoride henüz haber bulunmuyor"
-          icon="mdi-newspaper-variant-outline"
-          :show-button="true"
-        />
+        <!-- End Message -->
+        <div v-else-if="categoryNews.length > 5" class="text-center py-4 text-gray-400">
+          {{ $t('pages.category.allNewsViewed') }}
+        </div>
       </div>
+
+      <!-- No Posts Found -->
+      <StateMessage
+        v-else
+        type="empty"
+        :title="$t('pages.category.noNewsTitle')"
+        :message="$t('pages.category.noNewsMessage')"
+        icon="mdi-newspaper-variant-outline"
+      />
     </div>
   </div>
 </template>
@@ -54,20 +47,20 @@
 import { computed, onMounted, watch, ref } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
+import { Icon } from "@iconify/vue";
 import NewsPost from "@/components/news/NewsPost.vue";
 import StateMessage from "@/components/common/StateMessage.vue";
 import SkeletonLoader from "@/components/common/SkeletonLoader.vue";
 import LoadMoreButton from "@/components/common/LoadMoreButton.vue";
-import CategoriesSlider from "@/components/ui/Categories/CategoriesSlider.vue";
 
 export default {
   name: "CategoryPage",
   components: {
+    Icon,
     NewsPost,
     StateMessage,
     SkeletonLoader,
     LoadMoreButton,
-    CategoriesSlider,
   },
   setup() {
     const store = useStore();
@@ -76,42 +69,20 @@ export default {
 
     const displayedPostsCount = ref(10);
     const loadingMore = ref(false);
+    const isFollowing = ref(false);
 
     const categories = computed(() => store.state.categories.categories || []);
     const currentCategory = computed(() => {
       const cats = categories.value;
       if (!Array.isArray(cats)) return null;
-      return cats.find((c) => c && c.slug === route.params.slug) || null;
+      const categorySlug = route.params.slug;
+      return cats.find((c) => c && c.slug === categorySlug) || null;
     });
 
-    const categoryTags = computed(() => {
-      // Get all tags from posts in this category
-      const categoryPosts = allCategoryNews.value || [];
-      const tagMap = new Map();
-      
-      categoryPosts.forEach(post => {
-        if (post.tags && Array.isArray(post.tags)) {
-          post.tags.forEach(tag => {
-            if (tag && tag.slug) {
-              if (!tagMap.has(tag.slug)) {
-                tagMap.set(tag.slug, {
-                  id: tag.id,
-                  name: tag.name,
-                  slug: tag.slug,
-                  articleCount: 0
-                });
-              }
-              tagMap.get(tag.slug).articleCount++;
-            }
-          });
-        }
-      });
-      
-      return Array.from(tagMap.values()).sort((a, b) => b.articleCount - a.articleCount);
-    });
 
     const allCategoryNews = computed(() => {
-      return store.getters["news/getCategoryNews"](route.params.slug);
+      const categorySlug = route.params.slug;
+      return store.getters["news/getCategoryNews"](categorySlug) || [];
     });
 
     const categoryNews = computed(() => {
@@ -127,19 +98,22 @@ export default {
     );
 
     const loadCategoryNews = async () => {
-      if (route.params.slug) {
+      const categorySlug = route.params.slug;
+      console.log('Loading category news for:', categorySlug);
+      if (categorySlug) {
         try {
-          // Önce kategori bilgisini çek
           await store.dispatch(
             "categories/fetchCategoryBySlug",
-            route.params.slug
+            categorySlug
           );
 
-          // Sonra o kategoriye ait haberleri çek
           await store.dispatch("news/fetchCategoryNews", {
-            categorySlug: route.params.slug,
-            limit: 50, // Load more posts to enable pagination
+            categorySlug: categorySlug,
+            limit: 50,
           });
+          
+          const news = store.getters["news/getCategoryNews"](categorySlug);
+          console.log('Category news loaded:', news);
         } catch (error) {
           console.error("Error loading category data:", error);
         }
@@ -170,6 +144,10 @@ export default {
       router.push({ name: 'home' });
     };
 
+    const toggleFollow = () => {
+      isFollowing.value = !isFollowing.value;
+    };
+
     onMounted(() => {
       loadCategoryNews();
     });
@@ -177,7 +155,7 @@ export default {
     watch(
       () => route.params.slug,
       () => {
-        displayedPostsCount.value = 10; // Reset pagination when category changes
+        displayedPostsCount.value = 10;
         loadCategoryNews();
       }
     );
@@ -185,7 +163,6 @@ export default {
     return {
       categories,
       currentCategory,
-      categoryTags,
       categoryNews,
       hasMorePosts,
       isLoading,
@@ -193,6 +170,8 @@ export default {
       loadMorePosts,
       formatDate,
       goBack,
+      isFollowing,
+      toggleFollow,
     };
   },
 };
@@ -201,9 +180,8 @@ export default {
 <style scoped>
 /* Category Page Layout */
 .category-page {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  width: 100%;
+  padding: 0;
   min-height: 100vh;
 }
 

@@ -14,15 +14,18 @@
     <div class="hidden md:block flex-1 max-w-lg mx-8">
       <SearchBox
         v-model="searchQuery"
-        placeholder="Haber ara..."
+        :placeholder="$t('navigation.search.newsPlaceholder')"
         @search="handleSearch"
       />
     </div>
 
     <!-- Right Actions -->
     <div class="flex items-center space-x-4">
-      <!-- Theme Toggle -->
-      <ThemeToggle class="hidden md:block" />
+      <!-- Language & Theme Controls -->
+      <div class="hidden md:flex items-center space-x-2">
+        <LanguageSelector @languageChanged="handleLanguageChange" />
+        <ThemeToggle />
+      </div>
 
       <!-- Auth Section -->
       <div class="flex items-center space-x-3">
@@ -63,6 +66,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import SearchBox from '@/components/ui/Navigation/SearchBox.vue'
 import ThemeToggle from '@/components/ui/Navigation/ThemeToggle.vue'
+import LanguageSelector from '@/components/ui/Navigation/LanguageSelector.vue'
 import UserProfile from '@/components/ui/Navigation/UserProfile.vue'
 import AuthButton from '@/components/ui/Navigation/AuthButton.vue'
 import MobileMenuButton from '@/components/ui/Navigation/MobileMenuButton.vue'
@@ -108,6 +112,10 @@ const handleLogout = async () => {
   } catch (error) {
     console.error('Logout error:', error)
   }
+}
+
+const handleLanguageChange = (language) => {
+  console.log('Language changed to:', language.code)
 }
 
 </script>

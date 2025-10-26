@@ -20,13 +20,13 @@
         @click="selectLanguage(language)"
         class="w-full text-left px-4 py-2 text-sm hover:theme-bg-secondary transition-colors flex items-center theme-text-secondary"
         :class="{
-          'bg-primary/10 text-primary': currentLanguage === language.name,
+          'bg-primary/10 text-primary': currentLang === language.code,
         }"
       >
         <span class="mr-2">{{ language.flag }}</span>
         <span>{{ language.name }}</span>
         <Icon
-          v-if="currentLanguage === language.name"
+          v-if="currentLang === language.code"
           icon="heroicons:check"
           class="w-4 h-4 ml-auto text-green-500"
         />
@@ -36,14 +36,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { LANGUAGE_OPTIONS } from '@/constants/general.js'
 
-defineProps({
-  languages: { type: Array, required: true },
-  currentLanguage: { type: String, required: true }
+const { locale } = useI18n()
+
+const props = defineProps({
+  languages: { type: Array, default: () => LANGUAGE_OPTIONS },
+  currentLanguage: { type: String, default: '' }
 })
 
 const emit = defineEmits(['languageChanged'])
+
+const currentLang = computed(() => {
+  return props.currentLanguage || locale.value
+})
 
 const showDropdown = ref(false)
 let dropdownTimeout = null
@@ -59,6 +67,11 @@ const hideDropdown = () => {
 }
 
 const selectLanguage = (language) => {
+  // Dili değiştir
+  locale.value = language.code
+  // localStorage'a kaydet
+  localStorage.setItem('language', language.code)
+  // Parent component'e bildir
   emit('languageChanged', language)
   showDropdown.value = false
   clearTimeout(dropdownTimeout)

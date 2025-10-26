@@ -17,16 +17,19 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps({
-  modelValue: { type: String, default: 'login' },
-  tabs: {
-    type: Array,
-    default: () => [
-      { value: 'login', label: 'Giriş Yap' },
-      { value: 'register', label: 'Kayıt Ol' }
-    ]
-  }
+  modelValue: { type: String, default: 'login' }
 })
+
+const tabs = computed(() => [
+  { value: 'login', label: t('auth.login.title') },
+  { value: 'register', label: t('auth.register.title') }
+])
 
 defineEmits(['update:modelValue'])
 </script>

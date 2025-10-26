@@ -33,20 +33,21 @@ model User {
 }
 
 model Category {
-  id           Int           @id @default(autoincrement())
-  name         String        @unique
-  slug         String        @unique
-  description  String?
-  color        String?
-  icon         String?
-  isActive     Boolean       @default(true)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  website      String?
-  tokenSymbol  String?
-  blockchain   String?
-  articles     Article[]
-  galleryItems GalleryItem[]
+  id                  Int                   @id @default(autoincrement())
+  name                String                @unique
+  slug                String                @unique
+  description         String?
+  color               String?
+  icon                String?
+  isActive            Boolean               @default(true)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  website             String?
+  tokenSymbol         String?
+  blockchain          String?
+  articles            Article[]
+  galleryItems        GalleryItem[]
+  protocol_menu_items protocol_menu_items[]
 
   @@map("categories")
 }
@@ -173,6 +174,23 @@ model GalleryItem {
   category    Category? @relation(fields: [categoryId], references: [id])
 
   @@map("gallery_items")
+}
+
+model protocol_menu_items {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String
+  description String?
+  color       String?
+  icon        String?
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  categoryId  Int
+  categories  Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, slug])
 }
 
 enum UserRole {

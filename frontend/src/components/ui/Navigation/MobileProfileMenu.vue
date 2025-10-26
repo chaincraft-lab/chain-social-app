@@ -10,7 +10,7 @@
       />
       <div>
         <p class="text-sm font-medium text-light">
-          {{ user?.name || "Kullanıcı" }}
+          {{ user?.name || t('navigation.user') }}
         </p>
         <p class="text-xs text-light/70">{{ user?.email }}</p>
       </div>
@@ -32,37 +32,46 @@
         class="flex items-center w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-dark-600 rounded-md transition-colors"
       >
         <Icon icon="heroicons:arrow-right-end-on-rectangle" class="w-4 h-4 mr-2" />
-        Çıkış Yap
+        {{ t('navigation.logout') }}
       </button>
     </div>
   </div>
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
+const props = defineProps({
   isVisible: { type: Boolean, default: false },
   user: { type: Object, default: () => ({}) },
   menuItems: {
     type: Array,
-    default: () => [
-      {
-        to: '/profile',
-        label: 'Profilim',
-        iconName: 'heroicons:user'
-      },
-      {
-        to: '/bookmarks',
-        label: 'Kaydettiklerim',
-        iconName: 'heroicons:bookmark'
-      },
-      {
-        to: '/likes',
-        label: 'Beğendiklerim',
-        iconName: 'heroicons:heart'
-      }
-    ]
+    default: () => []
   }
 })
+
+const defaultMenuItems = computed(() => [
+  {
+    to: '/profile',
+    label: t('navigation.profile'),
+    iconName: 'heroicons:user'
+  },
+  {
+    to: '/bookmarks',
+    label: t('navigation.bookmarks'),
+    iconName: 'heroicons:bookmark'
+  },
+  {
+    to: '/likes',
+    label: t('navigation.likes'),
+    iconName: 'heroicons:heart'
+  }
+])
+
+const menuItems = computed(() => props.menuItems.length > 0 ? props.menuItems : defaultMenuItems.value)
 
 defineEmits(['close', 'logout'])
 </script>
