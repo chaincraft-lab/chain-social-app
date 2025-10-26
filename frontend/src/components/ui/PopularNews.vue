@@ -1,7 +1,7 @@
 <template>
   <div v-if="showPopular" class="theme-card rounded-lg shadow-sm mb-4">
     <!-- Header -->
-    <SectionHeader title="Popüler Haberler">
+    <SectionHeader :title="$t('common.ui.popularNews')">
       <template #icon>
         <Icon icon="heroicons:chart-bar-square" class="w-6 h-6 mr-2 text-primary" />
       </template>
@@ -26,7 +26,7 @@
       </ul>
 
       <!-- Empty State -->
-      <EmptyState v-else message="Henüz popüler haber bulunmuyor">
+      <EmptyState v-else :message="$t('common.states.noPopularNews')">
         <template #icon>
           <Icon icon="heroicons:document-text" class="w-8 h-8 text-gray-400 mx-auto mb-2" />
         </template>

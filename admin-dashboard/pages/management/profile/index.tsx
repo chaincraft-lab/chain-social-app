@@ -43,7 +43,7 @@ function AdminProfile() {
   return (
     <>
       <Head>
-        <title>Admin Profili - ChainSocial Dashboard</title>
+        <title>Admin Profile - ChainSocial Dashboard</title>
       </Head>
       <Container sx={{ mt: 3 }} maxWidth="lg">
         <Grid container spacing={3}>
@@ -79,7 +79,7 @@ function AdminProfile() {
                       }
                     }}
                   >
-                    Profili Düzenle
+                    Edit Profile
                   </Button>
                 </Box>
               </CardContent>
@@ -90,11 +90,11 @@ function AdminProfile() {
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  Hesap Bilgileri
+                  Account Information
                 </Typography>
                 <Box sx={{ mt: 2 }}>
                   <Typography variant="body2" color="textSecondary">
-                    Kullanıcı ID
+                    User ID
                   </Typography>
                   <Typography variant="body1" sx={{ mb: 2 }}>
                     {user?.id}
@@ -108,10 +108,10 @@ function AdminProfile() {
                   </Typography>
                   
                   <Typography variant="body2" color="textSecondary">
-                    Rol
+                    Role
                   </Typography>
                   <Typography variant="body1">
-                    {user?.role === 'SUPER_ADMIN' ? 'Super Yönetici' : 'Yönetici'}
+                    {user?.role === 'SUPER_ADMIN' ? 'Super Admin' : 'Admin'}
                   </Typography>
                 </Box>
               </CardContent>
@@ -122,7 +122,7 @@ function AdminProfile() {
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  Hızlı Erişim
+                  Quick Access
                 </Typography>
                 <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
                   <Button 
@@ -130,21 +130,21 @@ function AdminProfile() {
                     onClick={() => router.push('/management/profile/settings')}
                     fullWidth
                   >
-                    Profil Ayarları
+                    Profile Settings
                   </Button>
                   <Button 
                     variant="outlined" 
                     onClick={() => router.push('/articles')}
                     fullWidth
                   >
-                    Makaleleri Yönet
+                    Manage Articles
                   </Button>
                   <Button 
                     variant="outlined" 
                     onClick={() => router.push('/users')}
                     fullWidth
                   >
-                    Kullanıcıları Yönet
+                    Manage Users
                   </Button>
                 </Box>
               </CardContent>

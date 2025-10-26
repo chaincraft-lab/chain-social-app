@@ -12,7 +12,7 @@
     <!-- Loading state for sub-categories -->
     <div v-else-if="showSubCategories && currentCategorySlug && (!categories || categories.length === 0)" 
          class="bg-gray-800 rounded-lg shadow-lg mb-4 p-4">
-      <div class="text-center text-gray-400">Kategoriler yükleniyor...</div>
+      <div class="text-center text-gray-400">{{ $t('common.ui.categoriesLoading') }}</div>
     </div>
 
     <!-- Show Main Categories otherwise -->

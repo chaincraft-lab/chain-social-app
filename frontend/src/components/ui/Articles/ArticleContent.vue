@@ -2,7 +2,7 @@
   <div class="prose max-w-none mb-8 text-gray-900">
     <div v-if="content" v-html="content"></div>
     <div v-else class="text-center py-8 text-gray-500">
-      <LoadingSpinner size="sm" text="Makale içeriği yükleniyor..." />
+      <LoadingSpinner size="sm" :text="$t('common.ui.articleContentLoading')" />
     </div>
   </div>
 </template>

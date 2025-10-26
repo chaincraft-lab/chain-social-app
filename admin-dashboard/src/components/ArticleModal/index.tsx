@@ -39,7 +39,7 @@ interface ArticleModalProps {
   open: boolean;
   onClose: () => void;
   onSuccess?: () => void;
-  article?: ArticleResponse | null; // Düzenleme için
+  article?: ArticleResponse | null; // For editing
   mode: 'create' | 'edit';
 }
 
@@ -75,11 +75,11 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
   const { categories, fetchCategories } = useCategoryStore();
   const { tags, fetchTags } = useTagStore();
 
-  // Modal açıldığında form verilerini set et ve kategorileri/tagları getir
+  // Set form data when modal opens and fetch categories/tags
   useEffect(() => {
     if (open) {
-      fetchCategories(1, 100); // Tüm kategorileri getir
-      fetchTags(1, 100); // Tüm tagları getir
+      fetchCategories(1, 100); // Fetch all categories
+      fetchTags(1, 100); // Fetch all tags
       
       if (mode === 'edit' && article) {
         setFormData({
@@ -114,29 +114,29 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
     const newErrors: Record<string, string> = {};
 
     if (!formData.title.trim()) {
-      newErrors.title = 'Makale başlığı gereklidir';
+      newErrors.title = 'Article title is required';
     } else if (formData.title.trim().length < 5) {
-      newErrors.title = 'Makale başlığı en az 5 karakter olmalıdır';
+      newErrors.title = 'Article title must be at least 5 characters';
     } else if (formData.title.trim().length > 200) {
-      newErrors.title = 'Makale başlığı en fazla 200 karakter olabilir';
+      newErrors.title = 'Article title cannot exceed 200 characters';
     }
 
     if (!formData.excerpt.trim()) {
-      newErrors.excerpt = 'Makale özeti gereklidir';
+      newErrors.excerpt = 'Article excerpt is required';
     } else if (formData.excerpt.trim().length < 20) {
-      newErrors.excerpt = 'Makale özeti en az 20 karakter olmalıdır';
+      newErrors.excerpt = 'Article excerpt must be at least 20 characters';
     } else if (formData.excerpt.trim().length > 500) {
-      newErrors.excerpt = 'Makale özeti en fazla 500 karakter olabilir';
+      newErrors.excerpt = 'Article excerpt cannot exceed 500 characters';
     }
 
     if (!formData.content.trim()) {
-      newErrors.content = 'Makale içeriği gereklidir';
+      newErrors.content = 'Article content is required';
     } else if (formData.content.trim().length < 100) {
-      newErrors.content = 'Makale içeriği en az 100 karakter olmalıdır';
+      newErrors.content = 'Article content must be at least 100 characters';
     }
 
     if (!formData.categoryId || formData.categoryId === 0) {
-      newErrors.categoryId = 'Kategori seçimi gereklidir';
+      newErrors.categoryId = 'Category selection is required';
     }
 
 
@@ -149,7 +149,7 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
 
     let success = false;
     
-    // Image alanını boşsa gönderme
+    // Don't send image field if empty
     const submitData = { ...formData };
     if (!submitData.image || (typeof submitData.image === 'string' && submitData.image.trim() === '')) {
       delete submitData.image;
@@ -180,7 +180,7 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
       [field]: value
     }));
     
-    // Hata varsa temizle
+    // Clear error if exists
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
@@ -201,15 +201,15 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Dosya türü kontrolü
+    // File type validation
     if (!file.type.startsWith('image/')) {
-      setErrors(prev => ({ ...prev, featuredImage: 'Lütfen bir resim dosyası seçin' }));
+      setErrors(prev => ({ ...prev, featuredImage: 'Please select an image file' }));
       return;
     }
 
-    // Dosya boyutu kontrolü (5MB)
+    // File size validation (5MB)
     if (file.size > 5 * 1024 * 1024) {
-      setErrors(prev => ({ ...prev, featuredImage: 'Resim boyutu 5MB\'dan küçük olmalıdır' }));
+      setErrors(prev => ({ ...prev, featuredImage: 'Image size must be less than 5MB' }));
       return;
     }
 
@@ -222,7 +222,7 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
         setErrors(prev => ({ ...prev, image: '' }));
       }
     } catch (error) {
-      setErrors(prev => ({ ...prev, image: 'Resim yüklenirken hata oluştu' }));
+      setErrors(prev => ({ ...prev, image: 'Error occurred while uploading image' }));
     } finally {
       setUploadingImage(false);
     }
@@ -243,7 +243,7 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
       aria-labelledby="article-modal-title"
     >
       <DialogTitle id="article-modal-title">
-        {mode === 'create' ? 'Yeni Makale Oluştur' : 'Makaleyi Düzenle'}
+        {mode === 'create' ? 'Create New Article' : 'Edit Article'}
       </DialogTitle>
       
       <DialogContent dividers>
@@ -254,28 +254,28 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
         )}
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          {/* Başlık */}
+          {/* Title */}
           <TextField
-            label="Makale Başlığı *"
+            label="Article Title *"
             value={formData.title}
             onChange={handleInputChange('title')}
             error={!!errors.title}
             helperText={errors.title}
             fullWidth
-            placeholder="Makalenizin başlığını girin..."
+            placeholder="Enter your article title..."
           />
 
-          {/* Kategori ve Durum Ayarları */}
+          {/* Category and Status Settings */}
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth error={!!errors.categoryId}>
-                <InputLabel>Kategori *</InputLabel>
+                <InputLabel>Category *</InputLabel>
                 <Select
                   value={formData.categoryId}
                   onChange={handleSelectChange('categoryId')}
-                  label="Kategori *"
+                  label="Category *"
                 >
-                  <MenuItem value={0}>Kategori Seçin</MenuItem>
+                  <MenuItem value={0}>Select Category</MenuItem>
                   {categories.map((category) => (
                     <MenuItem key={category.id} value={category.id}>
                       {category.name}
@@ -298,7 +298,7 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
                       onChange={handleInputChange('isFeatured')}
                     />
                   }
-                  label="Öne Çıkar"
+                  label="Featured"
                 />
                 <FormControlLabel
                   control={
@@ -307,15 +307,15 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
                       onChange={handleInputChange('isBreaking')}
                     />
                   }
-                  label="Son Dakika"
+                  label="Breaking News"
                 />
               </Box>
             </Grid>
           </Grid>
 
-          {/* Özet */}
+          {/* Excerpt */}
           <TextField
-            label="Makale Özeti *"
+            label="Article Excerpt *"
             value={formData.excerpt}
             onChange={handleInputChange('excerpt')}
             error={!!errors.excerpt}
@@ -323,10 +323,10 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
             fullWidth
             multiline
             rows={2}
-            placeholder="Makalenizin özetini yazın..."
+            placeholder="Write your article excerpt..."
           />
 
-          {/* Tag Seçimi */}
+          {/* Tag Selection */}
           <Autocomplete
             multiple
             id="tags-select"
@@ -351,9 +351,9 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Etiketler"
-                placeholder="Etiket seçin veya yazın..."
-                helperText="Makaleyle ilgili etiketleri seçin (opsiyonel)"
+                label="Tags"
+                placeholder="Select or type tags..."
+                helperText="Select tags related to the article (optional)"
               />
             )}
             renderOption={(props, option) => (
@@ -363,7 +363,7 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
                   {option.articlesCount && option.articlesCount > 0 && (
                     <Chip 
                       size="small" 
-                      label={`${option.articlesCount} makale`} 
+                      label={`${option.articlesCount} articles`} 
                       variant="outlined"
                       sx={{ ml: 1 }}
                     />
@@ -374,9 +374,9 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
             sx={{ mt: 1 }}
           />
 
-          {/* Öne Çıkarılan Resim */}
+          {/* Featured Image */}
           <Box>
-            <FormLabel component="legend" sx={{ mb: 1 }}>Öne Çıkarılan Resim</FormLabel>
+            <FormLabel component="legend" sx={{ mb: 1 }}>Featured Image</FormLabel>
             
             {imagePreview ? (
               <Card sx={{ mb: 2, position: 'relative' }}>
@@ -384,7 +384,7 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
                   component="img"
                   height="200"
                   image={imagePreview}
-                  alt="Öne çıkarılan resim"
+                  alt="Featured image"
                   sx={{ objectFit: 'cover' }}
                 />
                 <IconButton
@@ -414,7 +414,7 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
                 }}
               >
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  Resim yüklemek için tıklayın
+                  Click to upload image
                 </Typography>
               </Box>
             )}
@@ -425,7 +425,7 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
               startIcon={uploadingImage ? <CircularProgress size={16} /> : <CloudUploadIcon />}
               disabled={uploadingImage}
             >
-              {uploadingImage ? 'Yükleniyor...' : 'Resim Seç'}
+              {uploadingImage ? 'Uploading...' : 'Select Image'}
               <VisuallyHiddenInput
                 type="file"
                 accept="image/*"
@@ -442,10 +442,10 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
 
           <Divider />
 
-          {/* İçerik */}
+          {/* Content */}
           <Box>
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Makale İçeriği *
+              Article Content *
             </Typography>
             <RichTextEditor
               content={formData.content}
@@ -455,7 +455,7 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
                   setErrors(prev => ({ ...prev, content: '' }));
                 }
               }}
-              placeholder="Makalenizin içeriğini yazın..."
+              placeholder="Write your article content..."
               error={!!errors.content}
               helperText={errors.content}
             />
@@ -466,7 +466,7 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
 
       <DialogActions sx={{ p: 2 }}>
         <Button onClick={onClose} disabled={isLoading}>
-          İptal
+          Cancel
         </Button>
         <Button
           onClick={handleSubmit}
@@ -474,7 +474,7 @@ export default function ArticleModal({ open, onClose, onSuccess, article, mode }
           disabled={isLoading}
           startIcon={isLoading ? <CircularProgress size={16} /> : null}
         >
-          {mode === 'create' ? 'Oluştur' : 'Güncelle'}
+          {mode === 'create' ? 'Create' : 'Update'}
         </Button>
       </DialogActions>
     </Dialog>

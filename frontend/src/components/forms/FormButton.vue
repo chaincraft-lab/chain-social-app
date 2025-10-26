@@ -17,7 +17,7 @@
     <slot name="icon" />
     
     <!-- Button Text -->
-    <span>{{ isLoading ? loadingText : text }}</span>
+    <span>{{ isLoading ? (loadingText || $t('common.actions.loading')) : text }}</span>
   </button>
 </template>
 
@@ -28,7 +28,7 @@ const props = defineProps({
   type: { type: String, default: 'button' },
   variant: { type: String, default: 'primary' },
   text: { type: String, default: '' },
-  loadingText: { type: String, default: 'Yükleniyor...' },
+  loadingText: { type: String, default: '' },
   isLoading: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
   fullWidth: { type: Boolean, default: false }

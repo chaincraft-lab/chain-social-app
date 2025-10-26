@@ -144,21 +144,21 @@ function CommentsPage() {
   return (
     <>
       <Head>
-        <title>Yorumlar - ChainSocial Admin</title>
+        <title>Comments - ChainSocial Admin</title>
       </Head>
       <Container maxWidth="xl" sx={{ pt: 4 }}>
         <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={3}>
           <Grid item xs={12}>
             <Card>
               <CardHeader
-                title="Yorum Listesi"
-                subheader="Bekleyen yorumları onaylayın veya reddedin"
+                title="Comment List"
+                subheader="Approve or reject pending comments"
               />
               <CardContent>
                 <Box sx={{ mb: 3 }}>
                   <TextField
                     fullWidth
-                    placeholder="Yorum ara..."
+                    placeholder="Search comments..."
                     value={searchTerm}
                     onChange={handleSearchChange}
                     InputProps={{
@@ -175,11 +175,11 @@ function CommentsPage() {
                     <TableHead>
                       <TableRow>
                         <TableCell sx={{ width: '12%' }}>Yazar</TableCell>
-                        <TableCell sx={{ width: '30%' }}>Yorum</TableCell>
+                        <TableCell sx={{ width: '30%' }}>Comment</TableCell>
                         <TableCell sx={{ width: '20%' }}>Makale</TableCell>
-                        <TableCell sx={{ width: '10%' }}>Durum</TableCell>
+                        <TableCell sx={{ width: '10%' }}>Status</TableCell>
                         <TableCell sx={{ width: '8%' }}>Tip</TableCell>
-                        <TableCell sx={{ width: '12%' }}>Tarih</TableCell>
+                        <TableCell sx={{ width: '12%' }}>Date</TableCell>
                         <TableCell align="right" sx={{ width: '8%' }}>İşlemler</TableCell>
                       </TableRow>
                     </TableHead>
@@ -217,7 +217,7 @@ function CommentsPage() {
                           </TableCell>
                           <TableCell>
                             <Chip
-                              label={comment.isReply ? 'Yanıt' : 'Yorum'}
+                              label={comment.isReply ? 'Reply' : 'Comment'}
                               color={comment.isReply ? 'secondary' : 'primary'}
                               size="small"
                               variant="outlined"
@@ -275,7 +275,7 @@ function CommentsPage() {
                                 </Tooltip>
                               </>
                             )}
-                            <Tooltip title="Sil" arrow>
+                            <Tooltip title="Delete" arrow>
                               <IconButton
                                 sx={{
                                   '&:hover': {

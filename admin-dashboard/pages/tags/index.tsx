@@ -292,7 +292,7 @@ function TagsPage() {
                           }
                         }}
                       >
-                        Seçilenleri Sil
+                        Delete Selected
                       </Button>
                     )}
                     <Button
@@ -301,23 +301,23 @@ function TagsPage() {
                       onClick={handleRefresh}
                       disabled={loading}
                     >
-                      Yenile
+                      Refresh
                     </Button>
                     <Button
                       variant="contained"
                       startIcon={<AddTwoToneIcon fontSize="small" />}
                       onClick={handleCreateClick}
                     >
-                      Yeni Etiket
+                      New Tag
                     </Button>
                   </Box>
                 }
-                title="Etiket Listesi"
+                title="Etiket List"
               />
               <CardContent>
                 <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
                   <TextField
-                    placeholder="Etiket ara..."
+                    placeholder="Search tags..."
                     value={searchTerm}
                     onChange={handleSearchChange}
                     InputProps={{
@@ -336,9 +336,9 @@ function TagsPage() {
                       onChange={handleSortChange}
                       label="Sıralama"
                     >
-                      <MenuItem value="createdAt">Oluşturma Tarihi</MenuItem>
-                      <MenuItem value="name">İsim</MenuItem>
-                      <MenuItem value="articlesCount">Makale Sayısı</MenuItem>
+                      <MenuItem value="createdAt">Created Date</MenuItem>
+                      <MenuItem value="name">Name</MenuItem>
+                      <MenuItem value="articlesCount">Article Count</MenuItem>
                     </Select>
                   </FormControl>
                 </Box>
@@ -364,9 +364,9 @@ function TagsPage() {
                             </TableCell>
                             <TableCell sx={{ width: '22%' }}>Etiket Adı</TableCell>
                             <TableCell sx={{ width: '18%' }}>Slug</TableCell>
-                            <TableCell sx={{ width: '13%' }}>Makale Sayısı</TableCell>
+                            <TableCell sx={{ width: '13%' }}>Article Count</TableCell>
                             <TableCell sx={{ width: '13%' }}>Popülerlik</TableCell>
-                            <TableCell sx={{ width: '13%' }}>Oluşturulma Tarihi</TableCell>
+                            <TableCell sx={{ width: '13%' }}>Created Date</TableCell>
                             <TableCell align="right" sx={{ width: '8%' }}>İşlemler</TableCell>
                           </TableRow>
                         </TableHead>
@@ -376,8 +376,8 @@ function TagsPage() {
                               <TableCell colSpan={7} align="center">
                                 <Typography variant="body2" color="text.secondary">
                                   {searchTerm 
-                                    ? 'Arama kriterinize uygun etiket bulunamadı.' 
-                                    : 'Henüz etiket eklenmemiş.'}
+                                    ? 'No tags found matching your search criteria.' 
+                                    : 'No tags have been added yet.'}
                                 </Typography>
                               </TableCell>
                             </TableRow>
@@ -419,7 +419,7 @@ function TagsPage() {
                                   </TableCell>
                                   <TableCell>
                                     <Typography variant="body2" fontWeight="medium">
-                                      {tag.articlesCount || 0} makale
+                                      {tag.articlesCount || 0} articles
                                     </Typography>
                                   </TableCell>
                                   <TableCell>
@@ -436,7 +436,7 @@ function TagsPage() {
                                     </Typography>
                                   </TableCell>
                                   <TableCell align="right">
-                                    <Tooltip title="Düzenle" arrow>
+                                    <Tooltip title="Edit" arrow>
                                       <IconButton
                                         sx={{
                                           '&:hover': {
@@ -454,7 +454,7 @@ function TagsPage() {
                                         <EditTwoToneIcon fontSize="small" />
                                       </IconButton>
                                     </Tooltip>
-                                    <Tooltip title="Sil" arrow>
+                                    <Tooltip title="Delete" arrow>
                                       <IconButton
                                         sx={{
                                           '&:hover': {
@@ -507,18 +507,18 @@ function TagsPage() {
           aria-describedby="delete-dialog-description"
         >
           <DialogTitle id="delete-dialog-title">
-            Etiketi Sil
+            Delete Tag
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="delete-dialog-description">
-              Bu etiketi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+              Are you sure you want to delete this tag? This action cannot be undone.
               <br /><br />
-              <strong>Not:</strong> Etiket herhangi bir makalede kullanılıyorsa silinemez.
+              <strong>Note:</strong> Tag cannot be deleted if it is used in any articles.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleDeleteCancel} disabled={loadingDelete}>
-              İptal
+              Cancel
             </Button>
             <Button 
               onClick={handleDeleteConfirm} 
@@ -527,7 +527,7 @@ function TagsPage() {
               disabled={loadingDelete}
               startIcon={loadingDelete ? <CircularProgress size={16} /> : null}
             >
-              Sil
+              Delete
             </Button>
           </DialogActions>
         </Dialog>
@@ -540,18 +540,18 @@ function TagsPage() {
           aria-describedby="bulk-delete-dialog-description"
         >
           <DialogTitle id="bulk-delete-dialog-title">
-            Seçili Etiketleri Sil
+            Delete Selected Tags
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="bulk-delete-dialog-description">
-              {selectedTags.length} etiketi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+              Are you sure you want to delete {selectedTags.length} tags? This action cannot be undone.
               <br /><br />
-              <strong>Not:</strong> Herhangi bir makalede kullanılan etiketler silinemez ve işlem sonucunda hangi etiketlerin silinebildiği bildirilecektir.
+              <strong>Note:</strong> Tags used in any articles cannot be deleted and you will be notified which tags could be deleted after the operation.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleBulkDeleteCancel} disabled={loadingDelete}>
-              İptal
+              Cancel
             </Button>
             <Button 
               onClick={handleBulkDeleteConfirm} 
@@ -560,7 +560,7 @@ function TagsPage() {
               disabled={loadingDelete}
               startIcon={loadingDelete ? <CircularProgress size={16} /> : null}
             >
-              {selectedTags.length} Etiketi Sil
+              Delete {selectedTags.length} Tags
             </Button>
           </DialogActions>
         </Dialog>

@@ -139,7 +139,7 @@ function HeaderUserbox() {
         <Box sx={{ m: 1 }}>
           <Button color="primary" fullWidth onClick={handleLogout}>
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
-            Çıkış Yap
+            Logout
           </Button>
         </Box>
       </Popover>

@@ -197,7 +197,7 @@ function SidebarMenu() {
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
-              İçerik Yönetimi
+              Content Management
             </ListSubheader>
           }
         >
@@ -214,7 +214,7 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<ArticleTwoToneIcon />}
                   >
-                    Makaleler
+                    Articles
                   </Button>
                 </NextLink>
               </ListItem>
@@ -229,7 +229,7 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<CategoryTwoToneIcon />}
                   >
-                    Kategoriler
+                    Categories
                   </Button>
                 </NextLink>
               </ListItem>
@@ -244,7 +244,7 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<LabelTwoToneIcon />}
                   >
-                    Etiketler
+                    Tags
                   </Button>
                 </NextLink>
               </ListItem>
@@ -259,7 +259,7 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<CommentTwoToneIcon />}
                   >
-                    Yorumlar
+                    Comments
                   </Button>
                 </NextLink>
               </ListItem>
@@ -270,7 +270,7 @@ function SidebarMenu() {
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
-              Kullanıcı Yönetimi
+              User Management
             </ListSubheader>
           }
         >
@@ -287,7 +287,7 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<PeopleTwoToneIcon />}
                   >
-                    Kullanıcılar
+                    Users
                   </Button>
                 </NextLink>
               </ListItem>
@@ -298,7 +298,7 @@ function SidebarMenu() {
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
-              Hesap
+              Account
             </ListSubheader>
           }
         >
@@ -315,7 +315,7 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<AccountCircleTwoToneIcon />}
                   >
-                    Profil
+                    Profile
                   </Button>
                 </NextLink>
               </ListItem>
@@ -332,7 +332,7 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<DisplaySettingsTwoToneIcon />}
                   >
-                    Ayarlar
+                    Settings
                   </Button>
                 </NextLink>
               </ListItem>

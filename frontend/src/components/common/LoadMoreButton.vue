@@ -10,7 +10,7 @@
           <div v-if="isLoading" class="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
           <Icon v-else icon="heroicons:arrow-path" class="w-5 h-5 text-primary" />
           <span class="font-medium">
-            {{ isLoading ? 'Yükleniyor...' : buttonText }}
+            {{ isLoading ? $t('common.actions.loading') : buttonText }}
           </span>
         </button>
       </div>
@@ -30,8 +30,8 @@ defineProps({
   hasMore: { type: Boolean, default: false },
   isLoading: { type: Boolean, default: false },
   showEndMessage: { type: Boolean, default: false },
-  buttonText: { type: String, default: 'Daha Fazla Yükle' },
-  endMessage: { type: String, default: 'Tüm makaleler yüklendi' },
+  buttonText: { type: String, default: '' },
+  endMessage: { type: String, default: '' },
   showSkeleton: { type: Boolean, default: false }
 })
 

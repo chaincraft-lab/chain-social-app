@@ -13,14 +13,14 @@
       <LoadingSpinner 
         v-if="isLoading" 
         size="lg" 
-        text="Arama sonuçları yükleniyor..." 
+        :text="$t('common.ui.searchLoading')" 
         :fullScreen="false" 
       />
       
       <!-- Error State -->
       <ErrorState
         v-else-if="error"
-        title="Arama Hatası"
+        :title="$t('common.ui.searchError')"
         :message="error"
         @retry="performSearch"
       />
@@ -39,7 +39,7 @@
           :is-loading="loadingMore"
           :show-end-message="!hasMoreResults && searchResults.length > 0"
           button-text="Daha Fazla Sonuç"
-          end-message="Tüm arama sonuçları görüntülediniz"
+          :end-message="$t('common.ui.allSearchResults')"
           @loadMore="loadMoreResults"
         />
       </div>

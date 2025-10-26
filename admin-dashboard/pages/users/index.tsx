@@ -204,22 +204,22 @@ function UsersPage() {
   const getRoleLabel = (role: string) => {
     switch (role) {
       case 'SUPER_ADMIN':
-        return 'Süper Admin';
+        return 'Super Admin';
       case 'ADMIN':
         return 'Admin';
       case 'EDITOR':
-        return 'Editör';
+        return 'Editor';
       case 'AUTHOR':
-        return 'Yazar';
+        return 'Author';
       default:
-        return 'Kullanıcı';
+        return 'User';
     }
   };
 
   return (
     <>
       <Head>
-        <title>Kullanıcılar - ChainSocial Admin</title>
+        <title>Users - ChainSocial Admin</title>
       </Head>
       <Container maxWidth="xl" sx={{ pt: 4 }}>
         <Grid container direction="row" justifyContent="center" alignItems="stretch" spacing={3}>
@@ -239,23 +239,23 @@ function UsersPage() {
                       onClick={handleRefresh}
                       disabled={loading}
                     >
-                      Yenile
+                      Refresh
                     </Button>
                     <Button
                       variant="contained"
                       startIcon={<AddTwoToneIcon fontSize="small" />}
                       onClick={handleCreateClick}
                     >
-                      Yeni Kullanıcı
+                      New User
                     </Button>
                   </Box>
                 }
-                title="Kullanıcı Listesi"
+                title="User List"
               />
               <CardContent>
                 <Box sx={{ mb: 3, display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
                   <TextField
-                    placeholder="Kullanıcı ara..."
+                    placeholder="Search users..."
                     value={searchTerm}
                     onChange={handleSearchChange}
                     InputProps={{
@@ -268,42 +268,42 @@ function UsersPage() {
                     sx={{ flex: 1, minWidth: 250 }}
                   />
                   <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel>Rol</InputLabel>
+                    <InputLabel>Role</InputLabel>
                     <Select
                       value={roleFilter}
                       onChange={handleRoleFilterChange}
-                      label="Rol"
+                      label="Role"
                     >
-                      <MenuItem value="">Tümü</MenuItem>
-                      <MenuItem value="USER">Kullanıcı</MenuItem>
-                      <MenuItem value="AUTHOR">Yazar</MenuItem>
-                      <MenuItem value="EDITOR">Editör</MenuItem>
+                      <MenuItem value="">All</MenuItem>
+                      <MenuItem value="USER">User</MenuItem>
+                      <MenuItem value="AUTHOR">Author</MenuItem>
+                      <MenuItem value="EDITOR">Editor</MenuItem>
                       <MenuItem value="ADMIN">Admin</MenuItem>
-                      <MenuItem value="SUPER_ADMIN">Süper Admin</MenuItem>
+                      <MenuItem value="SUPER_ADMIN">Super Admin</MenuItem>
                     </Select>
                   </FormControl>
                   <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel>Durum</InputLabel>
+                    <InputLabel>Status</InputLabel>
                     <Select
                       value={statusFilter}
                       onChange={handleStatusFilterChange}
-                      label="Durum"
+                      label="Status"
                     >
-                      <MenuItem value="all">Tümü</MenuItem>
-                      <MenuItem value="active">Aktif</MenuItem>
-                      <MenuItem value="inactive">Pasif</MenuItem>
+                      <MenuItem value="all">All</MenuItem>
+                      <MenuItem value="active">Active</MenuItem>
+                      <MenuItem value="inactive">Inactive</MenuItem>
                     </Select>
                   </FormControl>
                   <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel>Blok Durumu</InputLabel>
+                    <InputLabel>Block Status</InputLabel>
                     <Select
                       value={blockFilter}
                       onChange={handleBlockFilterChange}
-                      label="Blok Durumu"
+                      label="Block Status"
                     >
-                      <MenuItem value="all">Tümü</MenuItem>
-                      <MenuItem value="blocked">Bloklu</MenuItem>
-                      <MenuItem value="unblocked">Bloksuz</MenuItem>
+                      <MenuItem value="all">All</MenuItem>
+                      <MenuItem value="blocked">Blocked</MenuItem>
+                      <MenuItem value="unblocked">Unblocked</MenuItem>
                     </Select>
                   </FormControl>
                 </Box>
@@ -318,13 +318,13 @@ function UsersPage() {
                       <Table sx={{ minWidth: 1000 }}>
                         <TableHead>
                           <TableRow>
-                            <TableCell sx={{ width: '25%' }}>Kullanıcı</TableCell>
-                            <TableCell sx={{ width: '20%' }}>E-posta</TableCell>
-                            <TableCell sx={{ width: '10%' }}>Rol</TableCell>
-                            <TableCell sx={{ width: '10%' }}>Durum</TableCell>
-                            <TableCell sx={{ width: '10%' }}>Blok Durumu</TableCell>
-                            <TableCell sx={{ width: '10%' }}>Kayıt Tarihi</TableCell>
-                            <TableCell align="right" sx={{ width: '15%' }}>İşlemler</TableCell>
+                            <TableCell sx={{ width: '25%' }}>User</TableCell>
+                            <TableCell sx={{ width: '20%' }}>Email</TableCell>
+                            <TableCell sx={{ width: '10%' }}>Role</TableCell>
+                            <TableCell sx={{ width: '10%' }}>Status</TableCell>
+                            <TableCell sx={{ width: '10%' }}>Block Status</TableCell>
+                            <TableCell sx={{ width: '10%' }}>Registration Date</TableCell>
+                            <TableCell align="right" sx={{ width: '15%' }}>Actions</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -333,8 +333,8 @@ function UsersPage() {
                               <TableCell colSpan={7} align="center">
                                 <Typography variant="body2" color="text.secondary">
                                   {searchTerm || roleFilter || statusFilter !== 'all' || blockFilter !== 'all'
-                                    ? 'Arama kriterinize uygun kullanıcı bulunamadı.' 
-                                    : 'Henüz kullanıcı eklenmemiş.'}
+                                    ? 'No users found matching your search criteria.' 
+                                    : 'No users have been added yet.'}
                                 </Typography>
                               </TableCell>
                             </TableRow>
@@ -376,7 +376,7 @@ function UsersPage() {
                                 </TableCell>
                                 <TableCell>
                                   <Chip
-                                    label={user.isActive ? 'Aktif' : 'Pasif'}
+                                    label={user.isActive ? 'Active' : 'Inactive'}
                                     color={user.isActive ? 'success' : 'default'}
                                     variant={user.isActive ? 'filled' : 'outlined'}
                                     size="small"
@@ -384,7 +384,7 @@ function UsersPage() {
                                 </TableCell>
                                 <TableCell>
                                   <Chip
-                                    label={user.isBlocked ? 'Bloklu' : 'Normal'}
+                                    label={user.isBlocked ? 'Blocked' : 'Normal'}
                                     color={user.isBlocked ? 'error' : 'success'}
                                     variant={user.isBlocked ? 'filled' : 'outlined'}
                                     size="small"
@@ -397,7 +397,7 @@ function UsersPage() {
                                 </TableCell>
                                 <TableCell align="right">
                                   {user.role !== 'SUPER_ADMIN' && (
-                                    <Tooltip title={user.isBlocked ? 'Bloktan Çıkar' : 'Blokla'} arrow>
+                                    <Tooltip title={user.isBlocked ? 'Unblock' : 'Block'} arrow>
                                       <IconButton
                                         sx={{
                                           '&:hover': {
@@ -414,7 +414,7 @@ function UsersPage() {
                                       </IconButton>
                                     </Tooltip>
                                   )}
-                                  <Tooltip title="Düzenle" arrow>
+                                  <Tooltip title="Edit" arrow>
                                     <IconButton
                                       sx={{
                                         '&:hover': {
@@ -430,7 +430,7 @@ function UsersPage() {
                                     </IconButton>
                                   </Tooltip>
                                   {user.role !== 'SUPER_ADMIN' && (
-                                    <Tooltip title="Sil" arrow>
+                                    <Tooltip title="Delete" arrow>
                                       <IconButton
                                         sx={{
                                           '&:hover': {
@@ -480,16 +480,16 @@ function UsersPage() {
           aria-describedby="delete-dialog-description"
         >
           <DialogTitle id="delete-dialog-title">
-            Kullanıcıyı Sil
+            Delete User
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="delete-dialog-description">
-              Bu kullanıcıyı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+              Are you sure you want to delete this user? This action cannot be undone.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleDeleteCancel} disabled={loadingDelete}>
-              İptal
+              Cancel
             </Button>
             <Button 
               onClick={handleDeleteConfirm} 
@@ -498,7 +498,7 @@ function UsersPage() {
               disabled={loadingDelete}
               startIcon={loadingDelete ? <CircularProgress size={16} /> : null}
             >
-              Sil
+              Delete
             </Button>
           </DialogActions>
         </Dialog>

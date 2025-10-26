@@ -63,7 +63,7 @@ function AdminSettings() {
   const { user } = useAuth();
   const router = useRouter();
 
-  // User yüklendiğinde form data'yı güncelle
+  // Update form data when user is loaded
   useEffect(() => {
     if (user) {
       setFormData(prev => ({
@@ -76,9 +76,9 @@ function AdminSettings() {
   }, [user]);
 
   const tabs = [
-    { value: 'profile', label: 'Profil Bilgileri' },
-    { value: 'security', label: 'Güvenlik' },
-    { value: 'preferences', label: 'Tercihler' }
+    { value: 'profile', label: 'Profile Information' },
+    { value: 'security', label: 'Security' },
+    { value: 'preferences', label: 'Preferences' }
   ];
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
@@ -102,20 +102,20 @@ function AdminSettings() {
   const handlePasswordChange = async () => {
     setPasswordMessage(null);
     
-    // Validasyonlar
+    // Validations
     if (!formData.currentPassword || !formData.newPassword || !formData.confirmPassword) {
       setPasswordMessage({
         type: 'error',
-        text: 'Lütfen tüm alanları doldurun'
+        text: 'Please fill in all fields'
       });
       return;
     }
 
-    // Şifre eşleşme kontrolü artık backend'de de yapılıyor
+    // Password matching validation is now also done on the backend
     if (formData.newPassword !== formData.confirmPassword) {
       setPasswordMessage({
         type: 'error',
-        text: 'Yeni şifreler eşleşmiyor'
+        text: 'New passwords do not match'
       });
       return;
     }
@@ -123,7 +123,7 @@ function AdminSettings() {
     if (formData.newPassword.length < 8) {
       setPasswordMessage({
         type: 'error',
-        text: 'Yeni şifre en az 8 karakter olmalıdır'
+        text: 'New password must be at least 8 characters'
       });
       return;
     }
@@ -143,10 +143,10 @@ function AdminSettings() {
 
       setPasswordMessage({
         type: 'success',
-        text: 'Şifreniz başarıyla güncellendi'
+        text: 'Your password has been successfully updated'
       });
 
-      // Form'u temizle
+      // Clear the form
       setFormData(prev => ({
         ...prev,
         currentPassword: '',
@@ -155,12 +155,12 @@ function AdminSettings() {
       }));
 
     } catch (error: any) {
-      let errorMessage = 'Şifre güncellenirken bir hata oluştu';
+      let errorMessage = 'An error occurred while updating password';
       
       if (error.response?.status === 401) {
-        errorMessage = 'Mevcut şifre hatalı';
+        errorMessage = 'Current password is incorrect';
       } else if (error.response?.status === 400) {
-        errorMessage = 'Geçersiz şifre formatı';
+        errorMessage = 'Invalid password format';
       }
 
       setPasswordMessage({
@@ -195,7 +195,7 @@ function AdminSettings() {
           <Grid item xs={12} md={6}>
             <TextField
               fullWidth
-              label="Ad"
+              label="First Name"
               value={formData.name}
               disabled={!isEditing}
               onChange={(e) => handleInputChange('name', e.target.value)}
@@ -204,7 +204,7 @@ function AdminSettings() {
           <Grid item xs={12} md={6}>
             <TextField
               fullWidth
-              label="Soyad"
+              label="Last Name"
               value={formData.surname}
               disabled={!isEditing}
               onChange={(e) => handleInputChange('surname', e.target.value)}
@@ -213,7 +213,7 @@ function AdminSettings() {
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="E-posta"
+              label="Email"
               type="email"
               value={formData.email}
               disabled={!isEditing}
@@ -223,8 +223,8 @@ function AdminSettings() {
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Rol"
-              value={user?.role === 'SUPER_ADMIN' ? 'Super Yönetici' : 'Yönetici'}
+              label="Role"
+              value={user?.role === 'SUPER_ADMIN' ? 'Super Admin' : 'Admin'}
               disabled
             />
           </Grid>
@@ -236,18 +236,18 @@ function AdminSettings() {
               variant="contained" 
               onClick={() => setIsEditing(true)}
             >
-              Düzenle
+              Edit
             </Button>
           ) : (
             <Box display="flex" gap={2}>
               <Button variant="contained" color="primary">
-                Kaydet
+                Save
               </Button>
               <Button 
                 variant="outlined" 
                 onClick={() => setIsEditing(false)}
               >
-                İptal
+                Cancel
               </Button>
             </Box>
           )}
@@ -260,14 +260,14 @@ function AdminSettings() {
     <Card>
       <CardContent sx={{ p: 4 }}>
         <Typography variant="h6" gutterBottom>
-          Şifre Değiştir
+          Change Password
         </Typography>
         
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Mevcut Şifre"
+              label="Current Password"
               type={showPasswords.currentPassword ? 'text' : 'password'}
               value={formData.currentPassword}
               onChange={(e) => handleInputChange('currentPassword', e.target.value)}
@@ -288,7 +288,7 @@ function AdminSettings() {
           <Grid item xs={12} md={6}>
             <TextField
               fullWidth
-              label="Yeni Şifre"
+              label="New Password"
               type={showPasswords.newPassword ? 'text' : 'password'}
               value={formData.newPassword}
               onChange={(e) => handleInputChange('newPassword', e.target.value)}
@@ -309,7 +309,7 @@ function AdminSettings() {
           <Grid item xs={12} md={6}>
             <TextField
               fullWidth
-              label="Yeni Şifre Tekrar"
+              label="Confirm New Password"
               type={showPasswords.confirmPassword ? 'text' : 'password'}
               value={formData.confirmPassword}
               onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
@@ -342,12 +342,12 @@ function AdminSettings() {
             onClick={handlePasswordChange}
             disabled={passwordLoading}
           >
-            {passwordLoading ? 'Güncelleniyor...' : 'Şifreyi Güncelle'}
+            {passwordLoading ? 'Updating...' : 'Update Password'}
           </Button>
         </Box>
 
         <Alert severity="info" sx={{ mt: 3 }}>
-          Güvenlik için güçlü bir şifre kullanın. En az 8 karakter, büyük-küçük harf, sayı ve özel karakter içermelidir.
+          Use a strong password for security. It should contain at least 8 characters, uppercase and lowercase letters, numbers and special characters.
         </Alert>
       </CardContent>
     </Card>
@@ -357,37 +357,37 @@ function AdminSettings() {
     <Card>
       <CardContent sx={{ p: 4 }}>
         <Typography variant="h6" gutterBottom>
-          Dashboard Tercihleri
+          Dashboard Preferences
         </Typography>
         
         <Box mt={3}>
           <FormControlLabel
             control={<Switch defaultChecked />}
-            label="E-posta bildirimleri"
+            label="Email notifications"
           />
         </Box>
         <Box mt={2}>
           <FormControlLabel
             control={<Switch defaultChecked />}
-            label="Yeni kullanıcı kayıtları için bildirim"
+            label="Notification for new user registrations"
           />
         </Box>
         <Box mt={2}>
           <FormControlLabel
             control={<Switch defaultChecked />}
-            label="Sistem güncellemeleri için bildirim"
+            label="Notification for system updates"
           />
         </Box>
         <Box mt={2}>
           <FormControlLabel
             control={<Switch />}
-            label="Karanlık tema"
+            label="Dark theme"
           />
         </Box>
 
         <Box mt={3}>
           <Button variant="contained" color="primary">
-            Tercihleri Kaydet
+            Save Preferences
           </Button>
         </Box>
       </CardContent>
@@ -397,7 +397,7 @@ function AdminSettings() {
   return (
     <>
       <Head>
-        <title>Admin Ayarları - ChainSocial Dashboard</title>
+        <title>Admin Settings - ChainSocial Dashboard</title>
       </Head>
       <Container maxWidth="xl" sx={{ pt: 4 }}>
         <Grid
