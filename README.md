@@ -17,6 +17,22 @@ chain-social-app/
 └── docker-compose.yml # Docker configuration
 ```
 
+## Application Screenshots
+
+### Web Application
+| Home | Article Detail | Category | Story |
+|------|----------------|----------|-------|
+| <img src="frontend/src/assets/ui/web/home.png" width="150"> | <img src="frontend/src/assets/ui/web/article_detail.png" width="150"> | <img src="frontend/src/assets/ui/web/category.png" width="150"> | <img src="frontend/src/assets/ui/web/story.png" width="150"> |
+
+| Bookmarks | Likes |
+|-----------|-------|
+| <img src="frontend/src/assets/ui/web/bookmarks.png" width="150"> | <img src="frontend/src/assets/ui/web/likes.png" width="150"> |
+
+### Admin Dashboard
+| Dashboard | Articles | Categories | Users |
+|-----------|----------|------------|-------|
+| <img src="frontend/src/assets/ui/admin/admin-home.png" width="150"> | <img src="frontend/src/assets/ui/admin/admin-articles.png" width="150"> | <img src="frontend/src/assets/ui/admin/admin-categories.png" width="150"> | <img src="frontend/src/assets/ui/admin/admin-users.png" width="150"> |
+
 ## Quick Start
 
 ### 🚀 One-Command Setup (Recommended)

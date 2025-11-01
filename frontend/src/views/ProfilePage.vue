@@ -72,8 +72,8 @@ export default {
       showAvatarUpload: false,
       userInfo: {
         id: 1,
-        name: "Özkan Semiz",
-        email: "ozkan@hotmail.com",
+        name: "Batuhan Sekerci",
+        email: "batusekerci@gmail.com",
         avatar: null,
         bio: "Teknoloji ve savunma sanayi ile ilgili haberleri takip ediyorum.",
         phone: "+90 555 123 45 67",

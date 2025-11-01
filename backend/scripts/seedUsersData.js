@@ -7,8 +7,8 @@ const prisma = new PrismaClient();
 // Blockchain-focused user data with international names
 const usersData = [
   {
-    name: 'Özkan Semiz',
-    email: 'ozkan@hotmail.com',
+    name: 'Batuhan Sekerci',
+    email: 'batusekerci@gmail.com',
     password: 'password123',
     avatar: '/avatars/1.jpg',
     bio: 'Blockchain technology expert and DeFi researcher with 5+ years experience.',
