@@ -78,9 +78,55 @@ yarn lint
 npm run lint
 ```
 
+## Screenshots
+
+### Web Application
+
+#### Home Page
+![Home Page](src/assets/ui/web/home.png)
+*Main landing page with featured articles and navigation*
+
+#### Article Detail
+![Article Detail](src/assets/ui/web/article_detail.png)
+*Individual article view with content and metadata*
+
+#### Category Page
+![Category Page](src/assets/ui/web/category.png)
+*Category-based article filtering and browsing*
+
+#### Story Feature
+![Story Feature](src/assets/ui/web/story.png)
+*Story format content display*
+
+#### Bookmarks
+![Bookmarks](src/assets/ui/web/bookmarks.png)
+*User bookmarked articles collection*
+
+#### Likes
+![Likes](src/assets/ui/web/likes.png)
+*User liked articles overview*
+
+### Admin Dashboard
+
+#### Admin Home
+![Admin Home](src/assets/ui/admin/admin-home.png)
+*Admin dashboard overview and statistics*
+
+#### Article Management
+![Article Management](src/assets/ui/admin/admin-articles.png)
+*Content management and article administration*
+
+#### Category Management
+![Category Management](src/assets/ui/admin/admin-categories.png)
+*Category creation and management interface*
+
+#### User Management
+![User Management](src/assets/ui/admin/admin-users.png)
+*User administration and management panel*
+
 ## Future Enhancements
 
-- Admin panel for content management
+- Enhanced admin panel features
 - User authentication and subscription features
 - Banner ad management system
 - Analytics integration

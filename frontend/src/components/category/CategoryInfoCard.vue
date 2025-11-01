@@ -94,7 +94,7 @@ const toggleFollow = () => {
 }
 
 const formatFollowerCount = (count) => {
-  if (!count) return '20.356' // Default value
+  if (!count) return '10' // Default value
   if (count >= 1000000) {
     return `${(count / 1000000).toFixed(1)}M`
   }
